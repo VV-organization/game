@@ -32,6 +32,7 @@ import {
   type RaceState,
 } from './simulation';
 import type { Customization } from './types';
+import { getCarDesign } from '../shared/car-designs';
 import './Race.css';
 
 export type RaceResult = { position: number; time: number; trackId: string };
@@ -108,7 +109,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     const race = createRace(createTrack(trackId), saved.car);
     raceRef.current = race;
     setHud({ ...race });
-    if (saved.color) race.cars[0].color = saved.color;
+    race.cars[0].color = saved.color || getCarDesign(saved.car).color;
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -127,7 +128,14 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       scene = world.scene;
     const models = race.cars.map((car, i) => {
       const model = createKart(
-        i ? { color: car.color, helmet: car.color, suit: i % 2 ? '#f6efdf' : '#3a4650' } : saved,
+        i
+          ? {
+              car: [2, 3, 4, 6, 9][i - 1],
+              color: car.color,
+              helmet: car.color,
+              suit: i % 2 ? '#f6efdf' : '#3a4650',
+            }
+          : saved,
         i + 1,
       );
       scene.add(model);

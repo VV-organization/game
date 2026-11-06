@@ -43,7 +43,7 @@ function sharedRenderer() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
+    renderer.toneMappingExposure = 1.08;
     renderer.domElement.addEventListener('webglcontextlost', (event) => {
       event.preventDefault();
       renderer?.dispose();
@@ -72,15 +72,15 @@ function studioScene(config: Customization) {
   const scene = new THREE.Scene();
   const kart = createKart(config);
   scene.add(kart);
-  scene.add(new THREE.HemisphereLight('#fff8ec', '#697f99', 3));
-  const sun = new THREE.DirectionalLight('#ffffff', 4);
+  scene.add(new THREE.HemisphereLight('#fff8ec', '#697f99', 1.8));
+  const sun = new THREE.DirectionalLight('#ffffff', 3);
   sun.position.set(-3, 7, 5);
   sun.castShadow = true;
   sun.shadow.mapSize.set(512, 512);
   Object.assign(sun.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 0.1, far: 25 });
   sun.shadow.bias = -0.001;
   scene.add(sun);
-  const rim = new THREE.DirectionalLight('#b1d4ff', 2);
+  const rim = new THREE.DirectionalLight('#b1d4ff', 1.8);
   rim.position.set(4, 3, -5);
   scene.add(rim);
   const base = new THREE.Mesh(

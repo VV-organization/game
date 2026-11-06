@@ -1,5 +1,10 @@
 import * as THREE from 'three';
 import type { Customization } from './types';
+import { getCarDesign } from '../shared/car-designs';
+import { buildClassicVehicle } from './vehicles-classic';
+import { buildModernVehicle } from './vehicles-modern';
+import { mesh, rod, rounded } from './vehicle-parts';
+import { surfacePatch } from './vehicle-decals';
 
 export type KartModel = THREE.Group & {
   userData: {
@@ -13,6 +18,45 @@ export type KartModel = THREE.Group & {
 };
 const mat = (color: THREE.ColorRepresentation, roughness = 0.48, metalness = 0.05) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
+
+function supportCanard(
+  kart: THREE.Group,
+  shell: THREE.Mesh[],
+  canard: THREE.Mesh,
+  side: number,
+  material: THREE.Material,
+) {
+  canard.updateMatrixWorld(true);
+  const triangle = new THREE.Triangle(),
+    candidate = new THREE.Vector3();
+  for (const z of [-0.16, 0.16]) {
+    const mount = canard.localToWorld(new THREE.Vector3(-side * 0.08, 0, z));
+    let distance = Infinity;
+    const contact = new THREE.Vector3();
+    for (const surface of shell) {
+      const positions = surface.geometry.attributes.position,
+        indices = surface.geometry.index;
+      const count = indices?.count || positions.count;
+      for (let i = 0; i < count; i += 3) {
+        for (const [offset, vertex] of [triangle.a, triangle.b, triangle.c].entries())
+          vertex
+            .fromBufferAttribute(positions, indices ? indices.getX(i + offset) : i + offset)
+            .applyMatrix4(surface.matrixWorld);
+        triangle.closestPointToPoint(mount, candidate);
+        const squaredDistance = mount.distanceToSquared(candidate);
+        if (squaredDistance < distance) {
+          distance = squaredDistance;
+          contact.copy(candidate);
+        }
+      }
+    }
+    if (distance > 0.001 && Number.isFinite(distance)) {
+      // Overlap both ends with their parts; the bracket never stops just short of the shell.
+      contact.addScaledVector(contact.clone().sub(mount).normalize(), 0.035);
+      rod(kart, material, mount.toArray(), contact.toArray(), 0.037);
+    }
+  }
+}
 
 function vinylTexture(variant: number) {
   const pattern = (variant - 1) % 20,
@@ -191,18 +235,29 @@ function vinylTexture(variant: number) {
 
 export function createKart(customization: Customization = {}, number = 1): KartModel {
   const kart = new THREE.Group() as KartModel;
-  const color = customization.color || '#ff794b';
-  const upgradedCar = Boolean(customization.car);
-  const paint = mat(color, 0.32, 0.15),
+  const design = getCarDesign(customization.car);
+  const color = customization.color || design.color;
+  const paint = mat(color, 0.33, 0.18),
     dark = mat('#182329'),
-    rubber = mat('#111b22', 0.88),
-    silver = mat('#a0c2c7', 0.3, 0.65);
-  const accent = mat(
-      customization.decal
-        ? ['#fff7e3', '#142c3f', '#f6cc53', '#b9e5e9', '#fa92b3'][customization.decal % 5]
-        : '#eef5db',
-    ),
-    seatMat = mat('#293d47');
+    rubber = mat('#151b22', 0.9),
+    silver = mat('#b1c4cd', 0.27, 0.75);
+  paint.name = 'vehicle-paint';
+  const accent = mat('#f4f0dd', 0.38),
+    seatMat = mat('#26313c', 0.8),
+    glass = mat('#294b5e', 0.2, 0.48),
+    light = mat('#fff1bd', 0.24);
+  light.emissive.set('#ffe2a1');
+  light.emissiveIntensity = 0.3;
+  const materials = { paint, dark, metal: silver, accent, glass, light };
+  const layout =
+    design.variant <= 5
+      ? buildClassicVehicle(design.variant, kart, materials)
+      : buildModernVehicle(design.variant, kart, materials);
+  const shell: THREE.Mesh[] = [];
+  kart.traverse((part) => {
+    if (part instanceof THREE.Mesh && part.material === paint) shell.push(part);
+  });
+  kart.updateMatrixWorld(true);
   const add = (
     geometry: THREE.BufferGeometry,
     material: THREE.Material,
@@ -210,59 +265,39 @@ export function createKart(customization: Customization = {}, number = 1): KartM
     y: number,
     z: number,
     parent: THREE.Object3D = kart,
-  ) => {
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    parent.add(mesh);
-    return mesh;
-  };
-  // Local forward is +Z. Compact stepped fairing gives the kart a real silhouette.
-  add(new THREE.BoxGeometry(1.9, 0.25, 2.85), dark, 0, 0.52, -0.05);
-  add(new THREE.BoxGeometry(1.55, 0.45, 2.5), paint, 0, 0.78, -0.02);
-  const nose = add(new THREE.BoxGeometry(1.5, 0.3, 1.15), paint, 0, 0.84, 1.35);
-  nose.rotation.x = -0.13;
-  add(new THREE.BoxGeometry(upgradedCar ? 1.9 : 1.65, 0.18, 0.45), paint, 0, 0.61, 1.82);
-  add(new THREE.BoxGeometry(0.22, 0.035, 1.65), accent, -0.4, 1.02, 1.03);
-  add(new THREE.BoxGeometry(0.22, 0.035, 1.65), accent, 0.4, 1.02, 1.03);
-  add(new THREE.BoxGeometry(0.95, 0.36, 0.9), seatMat, 0, 1.02, -0.42);
-  const seat = add(new THREE.BoxGeometry(1.03, 1, 0.23), seatMat, 0, 1.37, -0.9);
-  seat.rotation.x = -0.12;
-  for (const side of [-1, 1]) {
-    add(
-      new THREE.BoxGeometry(upgradedCar ? 0.33 : 0.26, upgradedCar ? 0.45 : 0.34, 1.65),
-      paint,
-      side * 0.96,
-      0.81,
-      -0.12,
-    );
-    if (upgradedCar) add(new THREE.BoxGeometry(0.16, 0.53, 0.16), dark, side * 0.67, 1.13, -1.2);
-  }
-  if (upgradedCar) {
-    add(new THREE.BoxGeometry(2.2, 0.16, 0.5), paint, 0, 1.45, -1.36);
-    add(new THREE.BoxGeometry(1.3, 0.18, 0.33), dark, 0, 1.43, -1.37);
-  } else add(new THREE.BoxGeometry(1.8, 0.16, 0.35), dark, 0, 0.78, -1.38);
-  // Wheel groups are separately steerable; hub faces remain visible from chase camera.
+  ) => mesh(parent, geometry, material, x, y, z);
   const wheels: THREE.Group[] = [],
     frontWheels: THREE.Group[] = [];
-  for (const z of [-0.95, 1.05])
-    for (const x of [-1.07, 1.07]) {
+  for (const z of layout.axles)
+    for (const side of [-1, 1]) {
       const wheel = new THREE.Group();
-      wheel.position.set(x, 0.48, z);
+      const rearMuscle = design.variant === 6 && z === layout.axles[0];
+      const radius = layout.wheelRadius * (rearMuscle ? 1.08 : 1);
+      const tireWidth = layout.wheelWidth * (rearMuscle ? 1.15 : 1);
+      wheel.position.set(side * layout.track, radius, z);
       kart.add(wheel);
-      const tire = add(new THREE.CylinderGeometry(0.48, 0.48, 0.4, 12), rubber, 0, 0, 0, wheel);
+      const tire = add(
+        new THREE.CylinderGeometry(radius, radius, tireWidth, 20),
+        rubber,
+        0,
+        0,
+        0,
+        wheel,
+      );
       tire.rotation.z = Math.PI / 2;
       const wheelStyle = customization.wheels || 0;
       const rimMaterial = wheelStyle
         ? mat(['#d9c69a', '#171e29', '#d5e7f0', color, '#a6a0ff'][wheelStyle % 5], 0.23, 0.72)
-        : silver;
+        : design.variant === 4
+          ? silver
+          : mat('#c2cbd1', 0.22, 0.78);
+      const rimRadius = radius * (wheelStyle % 3 === 1 ? 0.71 : 0.59);
       const rim = add(
         new THREE.CylinderGeometry(
-          wheelStyle % 3 === 1 ? 0.34 : 0.27,
-          wheelStyle % 3 === 1 ? 0.34 : 0.27,
-          0.415,
-          wheelStyle % 3 === 2 ? 5 : 8,
+          rimRadius,
+          rimRadius,
+          tireWidth + 0.014,
+          wheelStyle % 3 === 2 ? 5 : 12,
         ),
         rimMaterial,
         0,
@@ -271,17 +306,66 @@ export function createKart(customization: Customization = {}, number = 1): KartM
         wheel,
       );
       rim.rotation.z = Math.PI / 2;
-      const hub = add(new THREE.CylinderGeometry(0.12, 0.12, 0.43, 6), paint, 0, 0, 0, wheel);
+      const hub = add(
+        new THREE.CylinderGeometry(radius * 0.24, radius * 0.24, tireWidth + 0.035, 8),
+        paint,
+        0,
+        0,
+        0,
+        wheel,
+      );
       hub.rotation.z = Math.PI / 2;
       if (wheelStyle > 0) {
-        const spoke = add(new THREE.BoxGeometry(0.44, 0.1, 0.57), rimMaterial, 0, 0, 0, wheel);
+        const spoke = add(
+          new THREE.BoxGeometry(tireWidth + 0.046, 0.08, rimRadius * 1.85),
+          rimMaterial,
+          0,
+          0,
+          0,
+          wheel,
+        );
         spoke.rotation.x = wheelStyle * 0.4;
       }
+      if (design.variant === 3)
+        for (let i = 0; i < 12; i++) {
+          const angle = (i * Math.PI) / 6;
+          const tread = add(
+            new THREE.BoxGeometry(tireWidth + 0.045, 0.13, 0.22),
+            rubber,
+            0,
+            Math.cos(angle) * radius,
+            Math.sin(angle) * radius,
+            wheel,
+          );
+          tread.rotation.x = angle;
+        }
+      if (design.variant === 4 && !wheelStyle)
+        for (let i = 0; i < 8; i++) {
+          const spoke = add(
+            new THREE.BoxGeometry(tireWidth + 0.025, 0.033, rimRadius * 1.8),
+            silver,
+            0,
+            0,
+            0,
+            wheel,
+          );
+          spoke.rotation.x = (i * Math.PI) / 8;
+        }
       wheels.push(wheel);
-      if (z > 0) frontWheels.push(wheel);
+      if (z === layout.axles[1]) frontWheels.push(wheel);
     }
+  rounded(kart, seatMat, [0.76, 0.25, 0.7], [0, layout.driverY, layout.driverZ - 0.05], 0.1);
+  const seat = rounded(
+    kart,
+    seatMat,
+    [0.77, 0.72, 0.2],
+    [0, layout.driverY + 0.3, layout.driverZ - 0.42],
+    0.09,
+  );
+  seat.rotation.x = -0.1;
   const driver = new THREE.Group();
-  driver.position.set(0, 1.18, -0.27);
+  driver.position.set(0, layout.driverY, layout.driverZ);
+  driver.scale.setScalar(0.88);
   kart.add(driver);
   const suit = mat(customization.suit || '#f8f4e8');
   add(new THREE.CapsuleGeometry(0.34, 0.4, 3, 8), suit, 0, 0.37, 0, driver);
@@ -318,7 +402,13 @@ export function createKart(customization: Customization = {}, number = 1): KartM
     arm.rotation.z = side * 0.3;
     add(new THREE.SphereGeometry(0.16, 8, 6), dark, side * 0.35, 0.25, 0.59, driver);
   }
-  const steering = add(new THREE.TorusGeometry(0.32, 0.055, 5, 12), dark, 0, 1.35, 0.65);
+  const steering = add(
+    new THREE.TorusGeometry(0.27, 0.045, 5, 12),
+    dark,
+    0,
+    layout.driverY + 0.25,
+    layout.driverZ + 0.6,
+  );
   steering.rotation.x = -0.75;
   const glow = new THREE.Mesh(
     new THREE.PlaneGeometry(3.3, 4.1),
@@ -333,8 +423,14 @@ export function createKart(customization: Customization = {}, number = 1): KartM
   glow.position.y = 0.07;
   kart.add(glow);
   const exhaust: THREE.Mesh[] = [];
-  for (const x of [-0.43, 0.43]) {
-    const pipe = add(new THREE.CylinderGeometry(0.13, 0.15, 0.45, 8), silver, x, 0.64, -1.62);
+  for (const x of [-layout.exhaust.x, layout.exhaust.x]) {
+    const pipe = add(
+      new THREE.CylinderGeometry(0.13, 0.15, 0.45, 8),
+      silver,
+      x,
+      layout.exhaust.y,
+      layout.exhaust.z,
+    );
     pipe.rotation.x = Math.PI / 2;
     const flame = add(
       new THREE.ConeGeometry(0.24, 1.5, 7),
@@ -344,8 +440,8 @@ export function createKart(customization: Customization = {}, number = 1): KartM
         opacity: 0.9,
       }),
       x,
-      0.64,
-      -2.18,
+      layout.exhaust.y,
+      layout.exhaust.z - 0.56,
     );
     flame.rotation.x = -Math.PI / 2;
     flame.visible = false;
@@ -377,43 +473,64 @@ export function createKart(customization: Customization = {}, number = 1): KartM
   ctx.font = '900 78px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(String(number).padStart(2, '0'), 64, 92);
-  const badge = add(
-    new THREE.PlaneGeometry(0.53, 0.53),
-    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(canvas) }),
-    0,
-    1.015,
-    1.47,
+  const hood = layout.hood;
+  const badge = surfacePatch(
+    shell,
+    new THREE.MeshBasicMaterial({
+      map: new THREE.CanvasTexture(canvas),
+      transparent: true,
+      side: THREE.DoubleSide,
+    }),
+    [hood.x, hood.y, hood.z],
+    Math.min(0.42, hood.width * 0.7),
+    Math.min(0.42, hood.length * 0.7),
   );
-  badge.rotation.x = -Math.PI / 2;
-  if (customization.body && customization.body % 3 === 0) {
-    const flag = add(new THREE.BoxGeometry(0.02, 1.4, 0.02), dark, 0.65, 2.1, -1.3);
-    flag.rotation.z = -0.12;
-    add(new THREE.BoxGeometry(0.6, 0.35, 0.025), accent, 0.95, 2.64, -1.3);
-  }
-  const carStyle = Math.max(0, (customization.car || 1) - 1);
-  kart.scale.set(
-    1 + (carStyle % 3) * 0.045,
-    1 - (carStyle % 2) * 0.045,
-    1 + Math.floor(carStyle / 3) * 0.035,
-  );
-  if (carStyle > 2) {
-    add(new THREE.BoxGeometry(2.3, 0.12, 0.7), dark, 0, 0.42, 1.93);
-    add(new THREE.BoxGeometry(2.1, 0.1, 0.55), accent, 0, 1.6, -1.46);
-  }
-  if (carStyle > 5)
-    for (const side of [-1, 1]) {
-      const fin = add(new THREE.BoxGeometry(0.12, 0.55, 0.8), paint, side * 1.05, 1.5, -1.3);
-      fin.rotation.x = -0.2;
-    }
+  kart.add(badge);
   if (customization.body) {
-    const style = customization.body % 4;
+    const style = (customization.body - 1) % 4;
     const finish = Math.min(4, Math.floor((customization.body - 1) / 4));
     const aero = mat(['#e9dec3', '#f48d73', '#9b9ae6', '#c7aa72', '#88d7bd'][finish], 0.3, 0.25);
+    // Small fitted canards keep each vehicle's negative space and wheel clearance intact.
     for (const side of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.18, 0.28 + style * 0.07, 2.1), aero, side * 1.15, 0.68, -0.1);
+      rounded(
+        kart,
+        aero,
+        [0.13 + style * 0.035, 0.13 + style * 0.05, layout.side.length],
+        [side * (layout.side.x + 0.025), layout.side.y - 0.18, layout.side.z],
+        0.045,
+      );
+      const canard = rounded(
+        kart,
+        aero,
+        [0.28, 0.055, 0.48 + style * 0.05],
+        [
+          side * Math.min(1.12, layout.bodyWidth * 0.43),
+          Math.max(0.29, layout.wheelRadius * 0.6),
+          layout.noseZ - 0.32,
+        ],
+        0.025,
+      );
+      canard.rotation.z = side * (0.1 + style * 0.07);
+      supportCanard(kart, shell, canard, side, silver);
     }
-    add(new THREE.BoxGeometry(2 + style * 0.15, 0.1, 0.5), aero, 0, 0.4, 1.9);
-    if (style > 1) add(new THREE.BoxGeometry(2.3, 0.12, 0.65), aero, 0, 1.7, -1.4);
+    if (style > 1) {
+      const rearWing = rounded(
+        kart,
+        aero,
+        [Math.min(2.25, layout.bodyWidth + 0.26), 0.1, 0.32 + style * 0.05],
+        [0, layout.rear.y + 0.52, layout.tailZ + 0.14],
+        0.04,
+      );
+      rearWing.rotation.x = style === 3 ? -0.13 : 0;
+      for (const side of [-1, 1])
+        rounded(
+          kart,
+          dark,
+          [0.07, 0.36, 0.09],
+          [side * layout.bodyWidth * 0.29, layout.rear.y + 0.3, layout.tailZ + 0.13],
+          0.025,
+        );
+    }
   }
   if (customization.decal) {
     const vinyl = new THREE.MeshBasicMaterial({
@@ -422,12 +539,19 @@ export function createKart(customization: Customization = {}, number = 1): KartM
       depthWrite: false,
       side: THREE.DoubleSide,
     });
-    const hood = add(new THREE.PlaneGeometry(1.18, 1.28), vinyl, 0, 1.075, 1.14);
-    hood.rotation.x = -Math.PI / 2;
-    for (const side of [-1, 1]) {
-      const panel = add(new THREE.PlaneGeometry(1.2, 0.32), vinyl, side * 1.135, 0.91, -0.02);
-      panel.rotation.y = (side * Math.PI) / 2;
-    }
+    kart.add(surfacePatch(shell, vinyl, [hood.x, hood.y, hood.z], hood.width, hood.length));
+    for (const side of [-1, 1])
+      kart.add(
+        surfacePatch(
+          shell,
+          vinyl,
+          [side * layout.side.x, layout.side.y, layout.side.z],
+          layout.side.length,
+          layout.side.height,
+          side,
+        ),
+      );
+    badge.visible = false;
   }
   if (customization.plate) {
     const plateCanvas = document.createElement('canvas');
@@ -444,8 +568,8 @@ export function createKart(customization: Customization = {}, number = 1): KartM
       new THREE.PlaneGeometry(0.85, 0.32),
       new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(plateCanvas) }),
       0,
-      0.92,
-      -1.65,
+      layout.rear.y,
+      layout.rear.z - 0.025,
     );
     plate.rotation.y = Math.PI;
   }

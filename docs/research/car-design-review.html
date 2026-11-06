@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FApix — сравнение десяти моделей</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #141720;
+        color: #f6f3ec;
+        font:
+          14px/1.4 system-ui,
+          sans-serif;
+        padding: 24px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 4px;
+      }
+      p {
+        color: #aeb9c9;
+        margin: 0;
+      }
+      nav {
+        display: flex;
+        gap: 8px;
+      }
+      a {
+        color: #e1e7f1;
+        background: #292e3c;
+        border-radius: 8px;
+        padding: 10px 14px;
+        text-decoration: none;
+      }
+      a[aria-current='page'] {
+        background: #ff8351;
+        color: #141720;
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 16px;
+      }
+      article {
+        border: 1px solid #3d4352;
+        background: #242936;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .image {
+        aspect-ratio: 4 / 3;
+        position: relative;
+        background: radial-gradient(ellipse at 50% 90%, #3a4358, #242936 75%);
+      }
+      .copy {
+        padding: 12px 14px 16px;
+      }
+      h2 {
+        font-size: 17px;
+        margin: 0 0 6px;
+      }
+      .copy p {
+        font-size: 12px;
+        min-height: 50px;
+      }
+      .number {
+        color: #ff996c;
+        font-size: 11px;
+        letter-spacing: 2px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      footer {
+        color: #9ca8ba;
+        margin-top: 16px;
+        font-size: 12px;
+      }
+      @media (max-width: 1000px) {
+        main {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        header {
+          align-items: start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/docs/research/car-design-review.ts"></script>
+  </body>
+</html>

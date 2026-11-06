@@ -2,7 +2,11 @@
 
 This plan is a checklist, not a declaration that the browser checks have passed. Browser ownership stays with the root agent. Capture a screenshot for each named state and record observed outcomes in a separate QA result report. The implementation was still changing during the static review on 2026-11-06.
 
-## Current handoff, 2026-11-06, checkpoint 20:56:24
+## Current handoff, 2026-11-06, checkpoint 21:33:13
+
+Ten cars and Origin have new real model builders, individual factory paints and vehicle-specific cosmetic mounts. Actual ten-car factory/gray/equipped renders were independently reviewed; Falcon was observed in the production Race component and main-app garage preview. All **111 tests**, formatting, type/build and diff checks pass. Assets: index-BF03n_EY.js and Race-D8i_QCvk.js. See [car-redesign-qa.md](car-redesign-qa.md) for screenshots and explicit boundaries. Factory appearance is the user-selected default; gray and shared equipment are QA modes only.
+
+## Previous handoff, 2026-11-06, checkpoint 20:56:24
 
 - Fixed user-reported inverted left/right steering at the input-to-world-yaw boundary, including both touch buttons.
 - Six new tests drive the real simulation through D/Right/A/Left and pointer events, asserting displacement toward the driver's requested side. All six failed before the fix; full suite now passes **111/111 tests**, alongside formatting, TypeScript/Vite build and diff check.
