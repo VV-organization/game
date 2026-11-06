@@ -2,7 +2,14 @@
 
 This plan is a checklist, not a declaration that the browser checks have passed. Browser ownership stays with the root agent. Capture a screenshot for each named state and record observed outcomes in a separate QA result report. The implementation was still changing during the static review on 2026-11-06.
 
-## Current handoff, 2026-11-06, checkpoint 14:32:59
+## Current handoff, 2026-11-06, checkpoint 20:56:24
+
+- Fixed user-reported inverted left/right steering at the input-to-world-yaw boundary, including both touch buttons.
+- Six new tests drive the real simulation through D/Right/A/Left and pointer events, asserting displacement toward the driver's requested side. All six failed before the fix; full suite now passes **111/111 tests**, alongside formatting, TypeScript/Vite build and diff check.
+- Assets: `index-BAQAayu_.js`, `Race-DP0yt6Xv.js`. Independent review confirmed the yaw/camera/wheel coordinate relationship.
+- Native Chrome verification was interrupted by the user changing the active window; no post-fix manual direction pass is claimed. Reload the game, accelerate, then verify D/Right turns right and A/Left turns left; repeat with touch controls.
+
+## Previous handoff, 2026-11-06, checkpoint 14:32:59
 
 - Full gate: **105/105 tests in 10 files**, format:check, TypeScript/Vite build, git diff --check passed. Latest assets: `index-CS1P-U7P.js`, `Race-CnoQw8w3.js`; runtime sources unchanged after this build. Three.js size warning remains.
 - Registration continuation, malformed API responses and payment restore failures now have regressions. A transient GET failure retains pending payment/intent and offers GET retry; it cannot silently offer another CREATE.

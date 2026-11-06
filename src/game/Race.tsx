@@ -304,9 +304,11 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
             : keys.has('ArrowDown') || keys.has('KeyS')
               ? -1
               : touch.throttle,
-        steer:
+        // Positive world-Y yaw turns left when driving along the model's +Z axis.
+        steer: -(
           (keys.has('ArrowRight') || keys.has('KeyD') ? 1 : 0) -
-            (keys.has('ArrowLeft') || keys.has('KeyA') ? 1 : 0) || touch.steer,
+            (keys.has('ArrowLeft') || keys.has('KeyA') ? 1 : 0) || touch.steer
+        ),
         brake: keys.has('ArrowDown') || keys.has('KeyS') || touch.brake,
         drift: keys.has('Space') || touch.drift,
         boost: keys.has('ShiftLeft') || keys.has('ShiftRight') || touch.boost,

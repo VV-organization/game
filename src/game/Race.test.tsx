@@ -134,7 +134,7 @@ describe('race finish lifecycle', () => {
   });
 });
 
-describe('touch control lifecycle', () => {
+describe('race controls', () => {
   function runningRace() {
     const race = simulation.createRace(simulation.createTrack('coast'), 1);
     race.phase = 'racing';
@@ -144,6 +144,33 @@ describe('touch control lifecycle', () => {
     render(<Race trackId="coast" onExit={() => {}} onFinish={() => {}} />);
     return race;
   }
+
+  it.each([
+    ['KeyD', 1],
+    ['ArrowRight', 1],
+    ['KeyA', -1],
+    ['ArrowLeft', -1],
+    ['Поворот направо', 1],
+    ['Поворот налево', -1],
+  ] as const)('moves toward the requested side with %s', (input, side) => {
+    const race = runningRace();
+    const player = race.cars[0];
+    const start = new THREE.Vector3(player.x, 0, player.z);
+    // Driver's right is forward × world-up, independent of the simulation's yaw sign.
+    const right = new THREE.Vector3(Math.sin(player.heading), 0, Math.cos(player.heading))
+      .cross(new THREE.Vector3(0, 1, 0))
+      .normalize();
+    if (input.startsWith('Поворот')) {
+      fireEvent.pointerDown(screen.getByRole('button', { name: 'Газ' }), { pointerId: 1 });
+      fireEvent.pointerDown(screen.getByRole('button', { name: input }), { pointerId: 2 });
+    } else {
+      fireEvent.keyDown(window, { code: 'KeyW' });
+      fireEvent.keyDown(window, { code: input });
+    }
+    for (let i = 0; i < 20; i++) advanceFrame();
+    const displacement = new THREE.Vector3(player.x, 0, player.z).sub(start);
+    expect(displacement.dot(right) * side).toBeGreaterThan(0.2);
+  });
 
   it.each(['pointerup', 'pointercancel', 'lostpointercapture'])(
     'releases the throttle on %s',
