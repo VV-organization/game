@@ -876,6 +876,35 @@ button:hover:not(:disabled) {
   max-width: 350px;
   font-size: 12px;
 }
+.garage-preview .mini-stats {
+  width: 100%;
+  max-width: 350px;
+  gap: 16px;
+  margin: 0 0 22px;
+}
+.garage-preview .mini-stats > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 11px;
+}
+.garage-preview .mini-stats .stat-label {
+  margin-bottom: 8px;
+}
+.garage-preview .mini-stats .stat-separator {
+  display: none;
+}
+.garage-preview .mini-stats .stat-value {
+  display: block;
+  margin-top: 5px;
+  color: #f5f4ef;
+  font-size: clamp(12px, 1.1vw, 14px);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.garage-preview .mini-stats meter {
+  margin-top: auto;
+}
 .game-loading {
   height: 100%;
   min-height: 340px;

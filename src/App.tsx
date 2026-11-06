@@ -25,6 +25,7 @@ import { Auth } from './components/Auth';
 import { Wallet, savedPaymentId } from './components/Wallet';
 import { Modal } from './components/Modal';
 import { Catalog, categoryNames, ProductArt } from './components/Catalog';
+import { CarStats, getStatMax } from './components/CarStats';
 import { customizationFor } from './lib/customization';
 const Race = lazy(() => import('./game/Race'));
 const KartPreview = lazy(() => import('./game/KartPreview'));
@@ -161,6 +162,8 @@ export default function App() {
     return () => clearTimeout(t);
   }, [toast]);
   const customization = useMemo(() => customizationFor(user?.equipped, products), [user, products]);
+  const statMax = useMemo(() => getStatMax(products), [products]);
+  const equippedCar = products.find((p) => p.id === user?.equipped.car);
   const shownCustomization = useMemo(
     () => customizationFor(user?.equipped, products, preview),
     [user, products, preview],
@@ -537,15 +540,12 @@ export default function App() {
                               : 'ПРИМЕРКА'
                             : 'ВЫБРАННЫЙ КАРТ'}
                         </span>
-                        <h2>
-                          {preview?.name ||
-                            products.find((p) => p.id === user?.equipped.car)?.name ||
-                            'Origin'}
-                        </h2>
+                        <h2>{preview?.name || equippedCar?.name || 'Origin'}</h2>
                         <p>
                           {preview?.description ||
                             'Все настройки машины и гонщика отправятся с тобой на трассу.'}
                         </p>
+                        <CarStats stats={(preview || equippedCar)?.stats} max={statMax} />
                         {preview && (
                           <>
                             <p>

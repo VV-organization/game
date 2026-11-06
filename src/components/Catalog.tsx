@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import type { Product, User } from '../lib/api';
 import { money } from '../lib/api';
+import { CarStats, getStatMax } from './CarStats';
 export const categoryNames: Record<string, string> = {
   car: 'Машины',
   color: 'Цвет',
@@ -51,11 +52,6 @@ export const categoryNames: Record<string, string> = {
   bundle: 'Комплекты',
   windowTint: 'Визоры',
 };
-const statDefinitions = [
-  { key: 'speed', label: 'Скорость', unit: ' км/ч' },
-  { key: 'acceleration', label: 'Разгон', unit: '' },
-  { key: 'handling', label: 'Контроль', unit: '' },
-] as const;
 const icons: Record<string, typeof Car> = {
   car: Car,
   color: Palette,
@@ -151,14 +147,7 @@ export function Catalog({
     [query, setQuery] = useState(''),
     [sort, setSort] = useState('default');
   const owned = useMemo(() => new Set(user?.owned || []), [user]);
-  const statMax = useMemo(
-    () => ({
-      speed: Math.max(1, ...products.map((p) => p.stats?.speed || 0)),
-      acceleration: Math.max(1, ...products.map((p) => p.stats?.acceleration || 0)),
-      handling: Math.max(1, ...products.map((p) => p.stats?.handling || 0)),
-    }),
-    [products],
-  );
+  const statMax = useMemo(() => getStatMax(products), [products]);
   const visible = useMemo(
     () =>
       products
@@ -245,24 +234,7 @@ export function Catalog({
                   <span className="eyebrow">{categoryNames[p.category]}</span>
                   <h3>{p.name}</h3>
                   <p>{p.description}</p>
-                  {p.stats && (
-                    <div className="mini-stats">
-                      {statDefinitions.map(({ key, label, unit }) => (
-                        <div key={key}>
-                          <span>
-                            {label} · {p.stats![key]}
-                            {unit}
-                          </span>
-                          <meter
-                            min={0}
-                            max={statMax[key]}
-                            value={p.stats![key]}
-                            aria-label={`${label}: ${p.stats![key]}${unit}`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <CarStats stats={p.stats} max={statMax} />
                   <div className="product-bottom">
                     <div>
                       <b>
