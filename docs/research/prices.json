@@ -1,0 +1,6112 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "issue": "VV-136",
+    "url": "https://linear.app/finext-io/issue/VV-136",
+    "retrievedAt": "2026-11-06",
+    "workbook": "Итог_300_чисел.xlsx",
+    "sha256": "6ae54e27daa4e6fcfe8d9fb49eb0abbad3ce5ab3dcce10e940a7e05c34475b5e",
+    "priceRange": "'Итог 300 чисел'!A2:D301",
+    "summaryRange": "'Сводка'!A1:B12",
+    "interpretation": "Column A is treated as RUB price guidance because VV-136 names these values as RUB; workbook itself labels the column only Число. It contains no product names, categories, SKU mapping or demand period."
+  },
+  "conversion": {
+    "rubToFapix": 2,
+    "fapixToRub": 0.5
+  },
+  "summary": {
+    "basePriceCount": 300,
+    "uniqueBasePriceCount": 300,
+    "minRub": 150,
+    "maxRub": 20059,
+    "combinedFrequencyTotal": 23176,
+    "magnitudeCounts": {
+      "Сотни (100–999)": 88,
+      "Тысячи (1000–9999)": 167,
+      "Десятки тысяч (10000+)": 45
+    },
+    "originalSourceNumberCount": 4542,
+    "baseNumbersBeforeSelection": 1536,
+    "allOriginalFrequencyTotal": 34029
+  },
+  "quickTopups": [
+    {
+      "rub": 311,
+      "fapix": 622,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "base-price",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 12,
+        "priceCell": "A12",
+        "frequencyCell": "B12",
+        "multiplesCell": "D12"
+      },
+      "baseRub": 311,
+      "frequency": 538,
+      "frequencyRank": 3
+    },
+    {
+      "rub": 584,
+      "fapix": 1168,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "base-price",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 81,
+        "priceCell": "A81",
+        "frequencyCell": "B81",
+        "multiplesCell": "D81"
+      },
+      "baseRub": 584,
+      "frequency": 293,
+      "frequencyRank": 12
+    },
+    {
+      "rub": 1039,
+      "fapix": 2078,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "base-price",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 100,
+        "priceCell": "A100",
+        "frequencyCell": "B100",
+        "multiplesCell": "D100"
+      },
+      "baseRub": 1039,
+      "frequency": 649,
+      "frequencyRank": 1
+    },
+    {
+      "rub": 2077,
+      "fapix": 4154,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "base-price",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 176,
+        "priceCell": "A176",
+        "frequencyCell": "B176",
+        "multiplesCell": "D176"
+      },
+      "baseRub": 2077,
+      "frequency": 159,
+      "frequencyRank": 50
+    },
+    {
+      "rub": 2903,
+      "fapix": 5806,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "base-price",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 222,
+        "priceCell": "A222",
+        "frequencyCell": "B222",
+        "multiplesCell": "D222"
+      },
+      "baseRub": 2903,
+      "frequency": 80,
+      "frequencyRank": 107
+    },
+    {
+      "rub": 5205,
+      "fapix": 10410,
+      "selectedBy": "Explicit amounts in VV-136 sections 2.3 and 3.2",
+      "sourceType": "excluded-multiple",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 34,
+        "priceCell": "D34",
+        "frequencyCell": "B34",
+        "multiplesCell": "D34"
+      },
+      "baseRub": 347,
+      "frequency": null,
+      "frequencyRank": null
+    }
+  ],
+  "proposedCategories": [
+    {
+      "id": "cars",
+      "name": "Машины",
+      "count": 10,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "colors",
+      "name": "Цвет",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "bodykits",
+      "name": "Обвес",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "wheels",
+      "name": "Диски",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "garages",
+      "name": "Помещение",
+      "count": 10,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "decor",
+      "name": "Декор",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "helmets",
+      "name": "Шлем",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "suits",
+      "name": "Комбинезон",
+      "count": 20,
+      "countBasis": "VV-136 explicit minimum addition"
+    },
+    {
+      "id": "plates",
+      "name": "Номера автомобиля",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "vinyls",
+      "name": "Винилы и наклейки",
+      "count": 40,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "tint",
+      "name": "Тонировка",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "neon",
+      "name": "Подсветка днища",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "spoilers",
+      "name": "Спойлеры",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "avatars",
+      "name": "Аватары",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    },
+    {
+      "id": "profile-frames",
+      "name": "Рамки аватара",
+      "count": 20,
+      "countBasis": "Proposed allocation to meet 300 total using VV-136 section 4.6 categories"
+    }
+  ],
+  "additionalPriceGuidance": [
+    {
+      "rub": 5205,
+      "fapix": 10410,
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "cell": "D34"
+      },
+      "reason": "Explicit quick top-up amount in VV-136; excluded multiple of 347, preserved as valid additional price guidance."
+    }
+  ],
+  "prices": [
+    {
+      "id": "price-001",
+      "rub": 150,
+      "fapix": 300,
+      "frequency": 349,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        600,
+        750,
+        1050,
+        1200,
+        1500,
+        1800,
+        2100,
+        2400,
+        2850,
+        3000,
+        3300,
+        3450,
+        3900,
+        4050,
+        4500,
+        5100,
+        5250,
+        5700,
+        5850,
+        6300,
+        6450,
+        7200,
+        7350,
+        8100,
+        10200,
+        10350,
+        12000,
+        14550,
+        14850,
+        15000,
+        17550,
+        18000,
+        25200,
+        25650,
+        28650,
+        29400
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 2,
+        "priceCell": "A2",
+        "frequencyCell": "B2",
+        "multiplesCell": "D2"
+      }
+    },
+    {
+      "id": "price-002",
+      "rub": 291,
+      "fapix": 582,
+      "frequency": 281,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        582,
+        873,
+        1164,
+        1455,
+        1746,
+        2037,
+        2328,
+        2619,
+        2910,
+        3201,
+        3492,
+        4074,
+        4365,
+        4656,
+        4947,
+        5238,
+        5820,
+        6111,
+        6984,
+        7275,
+        8730,
+        9312,
+        10476,
+        11640
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 3,
+        "priceCell": "A3",
+        "frequencyCell": "B3",
+        "multiplesCell": "D3"
+      }
+    },
+    {
+      "id": "price-003",
+      "rub": 297,
+      "fapix": 594,
+      "frequency": 179,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        594,
+        891,
+        1188,
+        1782,
+        2079,
+        2376,
+        2673,
+        3267,
+        3564,
+        4455,
+        4752,
+        5940,
+        6237,
+        10395,
+        14256,
+        15147,
+        17523,
+        25542,
+        29106
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 4,
+        "priceCell": "A4",
+        "frequencyCell": "B4",
+        "multiplesCell": "D4"
+      }
+    },
+    {
+      "id": "price-004",
+      "rub": 304,
+      "fapix": 608,
+      "frequency": 153,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        912,
+        1824,
+        2128,
+        2736,
+        6992,
+        7600,
+        10640,
+        15200
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 5,
+        "priceCell": "A5",
+        "frequencyCell": "B5",
+        "multiplesCell": "D5"
+      }
+    },
+    {
+      "id": "price-005",
+      "rub": 305,
+      "fapix": 610,
+      "frequency": 218,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        610,
+        915,
+        1525,
+        2135,
+        4575,
+        5185,
+        6405,
+        6710,
+        7320,
+        13115,
+        17690
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 6,
+        "priceCell": "A6",
+        "frequencyCell": "B6",
+        "multiplesCell": "D6"
+      }
+    },
+    {
+      "id": "price-006",
+      "rub": 306,
+      "fapix": 612,
+      "frequency": 190,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        612,
+        918,
+        1224,
+        1530,
+        1836,
+        3978,
+        5202,
+        5814,
+        6426,
+        6732,
+        10404,
+        11628,
+        18972
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 7,
+        "priceCell": "A7",
+        "frequencyCell": "B7",
+        "multiplesCell": "D7"
+      }
+    },
+    {
+      "id": "price-007",
+      "rub": 307,
+      "fapix": 614,
+      "frequency": 239,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        614,
+        921,
+        1228,
+        1535,
+        1842,
+        2456,
+        2763,
+        3991,
+        4298,
+        4605,
+        4912,
+        5219,
+        5526,
+        5833,
+        10438,
+        17192
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 8,
+        "priceCell": "A8",
+        "frequencyCell": "B8",
+        "multiplesCell": "D8"
+      }
+    },
+    {
+      "id": "price-008",
+      "rub": 308,
+      "fapix": 616,
+      "frequency": 128,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        616,
+        924,
+        1232,
+        1540,
+        3080,
+        4004,
+        4620,
+        5236,
+        6160,
+        6468,
+        8932,
+        10164,
+        10472
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 9,
+        "priceCell": "A9",
+        "frequencyCell": "B9",
+        "multiplesCell": "D9"
+      }
+    },
+    {
+      "id": "price-009",
+      "rub": 309,
+      "fapix": 618,
+      "frequency": 102,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        618,
+        927,
+        1236,
+        1545,
+        1854,
+        2163,
+        3090,
+        4017,
+        4944,
+        5253,
+        6489,
+        7416,
+        10506,
+        11742,
+        15141,
+        17304
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 10,
+        "priceCell": "A10",
+        "frequencyCell": "B10",
+        "multiplesCell": "D10"
+      }
+    },
+    {
+      "id": "price-010",
+      "rub": 310,
+      "fapix": 620,
+      "frequency": 186,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        620,
+        930,
+        1240,
+        1550,
+        2170,
+        3720,
+        4340,
+        4960,
+        5270,
+        5890,
+        8680,
+        14880,
+        28830
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 11,
+        "priceCell": "A11",
+        "frequencyCell": "B11",
+        "multiplesCell": "D11"
+      }
+    },
+    {
+      "id": "price-011",
+      "rub": 311,
+      "fapix": 622,
+      "frequency": 538,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        622,
+        933,
+        1244,
+        2488,
+        3110,
+        4043,
+        4665,
+        4976,
+        5287,
+        5909,
+        7153,
+        8708,
+        10574,
+        11507,
+        11818
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 12,
+        "priceCell": "A12",
+        "frequencyCell": "B12",
+        "multiplesCell": "D12"
+      }
+    },
+    {
+      "id": "price-012",
+      "rub": 312,
+      "fapix": 624,
+      "frequency": 395,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        624,
+        936,
+        1248,
+        1560,
+        1872,
+        2496,
+        4680,
+        4992,
+        7176,
+        8736,
+        10296,
+        23088,
+        25584
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 13,
+        "priceCell": "A13",
+        "frequencyCell": "B13",
+        "multiplesCell": "D13"
+      }
+    },
+    {
+      "id": "price-013",
+      "rub": 313,
+      "fapix": 626,
+      "frequency": 312,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        939,
+        1252,
+        2191,
+        2504,
+        3443,
+        4069,
+        5947,
+        6260,
+        6573,
+        7199,
+        11581,
+        25040
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 14,
+        "priceCell": "A14",
+        "frequencyCell": "B14",
+        "multiplesCell": "D14"
+      }
+    },
+    {
+      "id": "price-014",
+      "rub": 314,
+      "fapix": 628,
+      "frequency": 247,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        628,
+        942,
+        2198,
+        2512,
+        2826,
+        4082,
+        4710,
+        15072
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 15,
+        "priceCell": "A15",
+        "frequencyCell": "B15",
+        "multiplesCell": "D15"
+      }
+    },
+    {
+      "id": "price-015",
+      "rub": 315,
+      "fapix": 630,
+      "frequency": 208,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        630,
+        945,
+        1890,
+        2205,
+        2520,
+        4095,
+        4725,
+        5040,
+        8505,
+        25515
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 16,
+        "priceCell": "A16",
+        "frequencyCell": "B16",
+        "multiplesCell": "D16"
+      }
+    },
+    {
+      "id": "price-016",
+      "rub": 316,
+      "fapix": 632,
+      "frequency": 214,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        632,
+        948,
+        2212,
+        2528,
+        2844,
+        4108,
+        4424,
+        4740,
+        6636,
+        7268,
+        9164,
+        10428,
+        11692,
+        14536
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 17,
+        "priceCell": "A17",
+        "frequencyCell": "B17",
+        "multiplesCell": "D17"
+      }
+    },
+    {
+      "id": "price-017",
+      "rub": 317,
+      "fapix": 634,
+      "frequency": 153,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        634,
+        951,
+        1268,
+        2853,
+        6974,
+        8559,
+        8876,
+        10461,
+        14265,
+        29164
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 18,
+        "priceCell": "A18",
+        "frequencyCell": "B18",
+        "multiplesCell": "D18"
+      }
+    },
+    {
+      "id": "price-018",
+      "rub": 318,
+      "fapix": 636,
+      "frequency": 109,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        636,
+        954,
+        1272,
+        1590,
+        1908,
+        2544,
+        2862,
+        3180,
+        3498,
+        4452,
+        5088,
+        5724,
+        6360,
+        6678,
+        7314,
+        11448,
+        11766,
+        29256
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 19,
+        "priceCell": "A19",
+        "frequencyCell": "B19",
+        "multiplesCell": "D19"
+      }
+    },
+    {
+      "id": "price-019",
+      "rub": 319,
+      "fapix": 638,
+      "frequency": 149,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        638,
+        957,
+        1595,
+        1914,
+        2233,
+        2871,
+        3190,
+        3509,
+        3828,
+        4466,
+        5104,
+        5742,
+        6699,
+        7337,
+        10208,
+        11803,
+        14355,
+        29029
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 20,
+        "priceCell": "A20",
+        "frequencyCell": "B20",
+        "multiplesCell": "D20"
+      }
+    },
+    {
+      "id": "price-020",
+      "rub": 320,
+      "fapix": 640,
+      "frequency": 146,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        640,
+        1280,
+        1600,
+        2240,
+        2880,
+        3200,
+        4480,
+        5120,
+        6400,
+        7360,
+        10560,
+        17280,
+        20800
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 21,
+        "priceCell": "A21",
+        "frequencyCell": "B21",
+        "multiplesCell": "D21"
+      }
+    },
+    {
+      "id": "price-021",
+      "rub": 322,
+      "fapix": 644,
+      "frequency": 142,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        644,
+        2254,
+        2898,
+        4508,
+        5152,
+        5796,
+        8694,
+        9982,
+        10304,
+        14812,
+        15134
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 22,
+        "priceCell": "A22",
+        "frequencyCell": "B22",
+        "multiplesCell": "D22"
+      }
+    },
+    {
+      "id": "price-022",
+      "rub": 323,
+      "fapix": 646,
+      "frequency": 140,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        646,
+        969,
+        1292,
+        1615,
+        2261,
+        2584,
+        2907,
+        4845,
+        6783,
+        8721,
+        14535,
+        40052
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 23,
+        "priceCell": "A23",
+        "frequencyCell": "B23",
+        "multiplesCell": "D23"
+      }
+    },
+    {
+      "id": "price-023",
+      "rub": 324,
+      "fapix": 648,
+      "frequency": 165,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        648,
+        972,
+        1296,
+        1620,
+        1944,
+        2268,
+        2592,
+        2916,
+        5184,
+        5832,
+        7776,
+        10368,
+        19440
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 24,
+        "priceCell": "A24",
+        "frequencyCell": "B24",
+        "multiplesCell": "D24"
+      }
+    },
+    {
+      "id": "price-024",
+      "rub": 325,
+      "fapix": 650,
+      "frequency": 134,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        650,
+        975,
+        1300,
+        2600,
+        2925,
+        4550,
+        5200,
+        6175,
+        14950
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 25,
+        "priceCell": "A25",
+        "frequencyCell": "B25",
+        "multiplesCell": "D25"
+      }
+    },
+    {
+      "id": "price-025",
+      "rub": 326,
+      "fapix": 652,
+      "frequency": 91,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        652,
+        978,
+        1304,
+        1956,
+        2282,
+        2608,
+        2934,
+        4238,
+        4564,
+        5216,
+        6846,
+        9128,
+        10432,
+        17278,
+        29014
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 26,
+        "priceCell": "A26",
+        "frequencyCell": "B26",
+        "multiplesCell": "D26"
+      }
+    },
+    {
+      "id": "price-026",
+      "rub": 339,
+      "fapix": 678,
+      "frequency": 219,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        678,
+        1017,
+        1356,
+        1695,
+        2034,
+        4068,
+        4746,
+        5085,
+        5424,
+        7119,
+        8814,
+        9831,
+        10170,
+        29154
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 27,
+        "priceCell": "A27",
+        "frequencyCell": "B27",
+        "multiplesCell": "D27"
+      }
+    },
+    {
+      "id": "price-027",
+      "rub": 340,
+      "fapix": 680,
+      "frequency": 163,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        680,
+        1020,
+        2040,
+        2380,
+        3740,
+        4080,
+        5780,
+        7480,
+        7820,
+        25160,
+        29240
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 28,
+        "priceCell": "A28",
+        "frequencyCell": "B28",
+        "multiplesCell": "D28"
+      }
+    },
+    {
+      "id": "price-028",
+      "rub": 342,
+      "fapix": 684,
+      "frequency": 406,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        684,
+        1026,
+        1710,
+        2052,
+        3762,
+        4104,
+        4446,
+        5130,
+        7182,
+        10260,
+        14706,
+        28386
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 29,
+        "priceCell": "A29",
+        "frequencyCell": "B29",
+        "multiplesCell": "D29"
+      }
+    },
+    {
+      "id": "price-029",
+      "rub": 343,
+      "fapix": 686,
+      "frequency": 203,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        686,
+        1029,
+        1372,
+        1715,
+        2058,
+        2744,
+        3430,
+        4459,
+        5145,
+        5831,
+        6517,
+        8918,
+        9604,
+        10290,
+        11662,
+        17493,
+        28812,
+        29155
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 30,
+        "priceCell": "A30",
+        "frequencyCell": "B30",
+        "multiplesCell": "D30"
+      }
+    },
+    {
+      "id": "price-030",
+      "rub": 344,
+      "fapix": 688,
+      "frequency": 237,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        688,
+        1032,
+        2064,
+        2408,
+        3440,
+        3784,
+        4128,
+        5160,
+        5848,
+        6880,
+        7224,
+        9288
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 31,
+        "priceCell": "A31",
+        "frequencyCell": "B31",
+        "multiplesCell": "D31"
+      }
+    },
+    {
+      "id": "price-031",
+      "rub": 345,
+      "fapix": 690,
+      "frequency": 141,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        690,
+        1035,
+        1725,
+        2070,
+        4485,
+        5175,
+        5865,
+        8280
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 32,
+        "priceCell": "A32",
+        "frequencyCell": "B32",
+        "multiplesCell": "D32"
+      }
+    },
+    {
+      "id": "price-032",
+      "rub": 346,
+      "fapix": 692,
+      "frequency": 208,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        692,
+        1038,
+        1384,
+        1730,
+        2076,
+        2768,
+        3806,
+        5190,
+        6228,
+        6920,
+        10380
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 33,
+        "priceCell": "A33",
+        "frequencyCell": "B33",
+        "multiplesCell": "D33"
+      }
+    },
+    {
+      "id": "price-033",
+      "rub": 347,
+      "fapix": 694,
+      "frequency": 576,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        694,
+        1041,
+        1388,
+        2082,
+        2429,
+        3817,
+        4511,
+        5205,
+        6246,
+        7287,
+        10410,
+        19779,
+        20473,
+        45110
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 34,
+        "priceCell": "A34",
+        "frequencyCell": "B34",
+        "multiplesCell": "D34"
+      }
+    },
+    {
+      "id": "price-034",
+      "rub": 348,
+      "fapix": 696,
+      "frequency": 393,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        696,
+        1044,
+        2088,
+        2436,
+        5220,
+        5916,
+        7308,
+        10440,
+        25404
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 35,
+        "priceCell": "A35",
+        "frequencyCell": "B35",
+        "multiplesCell": "D35"
+      }
+    },
+    {
+      "id": "price-035",
+      "rub": 349,
+      "fapix": 698,
+      "frequency": 244,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        698,
+        1047,
+        1396,
+        1745,
+        2094,
+        2792,
+        3490,
+        5235,
+        8725,
+        10470,
+        11517
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 36,
+        "priceCell": "A36",
+        "frequencyCell": "B36",
+        "multiplesCell": "D36"
+      }
+    },
+    {
+      "id": "price-036",
+      "rub": 351,
+      "fapix": 702,
+      "frequency": 222,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        702,
+        1053,
+        1404,
+        1755,
+        2106,
+        2457,
+        3510,
+        4563,
+        6318,
+        10179,
+        20007,
+        28431
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 37,
+        "priceCell": "A37",
+        "frequencyCell": "B37",
+        "multiplesCell": "D37"
+      }
+    },
+    {
+      "id": "price-037",
+      "rub": 352,
+      "fapix": 704,
+      "frequency": 219,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        704,
+        1056,
+        1408,
+        1760,
+        2112,
+        4576,
+        5984,
+        11616
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 38,
+        "priceCell": "A38",
+        "frequencyCell": "B38",
+        "multiplesCell": "D38"
+      }
+    },
+    {
+      "id": "price-038",
+      "rub": 353,
+      "fapix": 706,
+      "frequency": 152,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        706,
+        1059,
+        1412,
+        1765,
+        2118,
+        3530,
+        4589,
+        4942,
+        5295,
+        10237,
+        17297,
+        19415
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 39,
+        "priceCell": "A39",
+        "frequencyCell": "B39",
+        "multiplesCell": "D39"
+      }
+    },
+    {
+      "id": "price-039",
+      "rub": 354,
+      "fapix": 708,
+      "frequency": 114,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        708,
+        1062,
+        1770,
+        2478,
+        4602,
+        4956,
+        6726,
+        7080,
+        10266,
+        11682,
+        15576
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 40,
+        "priceCell": "A40",
+        "frequencyCell": "B40",
+        "multiplesCell": "D40"
+      }
+    },
+    {
+      "id": "price-040",
+      "rub": 355,
+      "fapix": 710,
+      "frequency": 107,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        710,
+        1065,
+        1775,
+        2485,
+        2840,
+        4615,
+        4970,
+        5680,
+        6745,
+        7455,
+        8165,
+        28755
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 41,
+        "priceCell": "A41",
+        "frequencyCell": "B41",
+        "multiplesCell": "D41"
+      }
+    },
+    {
+      "id": "price-041",
+      "rub": 356,
+      "fapix": 712,
+      "frequency": 102,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        712,
+        1424,
+        2492,
+        2848,
+        3204,
+        4628,
+        4984,
+        6764,
+        7120,
+        10324,
+        11748,
+        17444,
+        23496
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 42,
+        "priceCell": "A42",
+        "frequencyCell": "B42",
+        "multiplesCell": "D42"
+      }
+    },
+    {
+      "id": "price-042",
+      "rub": 363,
+      "fapix": 726,
+      "frequency": 95,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1452,
+        2904,
+        3993,
+        4719,
+        5082,
+        5808,
+        17061,
+        34122
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 43,
+        "priceCell": "A43",
+        "frequencyCell": "B43",
+        "multiplesCell": "D43"
+      }
+    },
+    {
+      "id": "price-043",
+      "rub": 372,
+      "fapix": 744,
+      "frequency": 107,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        744,
+        1116,
+        1488,
+        2232,
+        2604,
+        4464,
+        5208,
+        6696
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 44,
+        "priceCell": "A44",
+        "frequencyCell": "B44",
+        "multiplesCell": "D44"
+      }
+    },
+    {
+      "id": "price-044",
+      "rub": 389,
+      "fapix": 778,
+      "frequency": 82,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        778,
+        1167,
+        1556,
+        1945,
+        2334,
+        3501,
+        3890,
+        4279,
+        4668,
+        5835,
+        7391,
+        10503,
+        10892
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 45,
+        "priceCell": "A45",
+        "frequencyCell": "B45",
+        "multiplesCell": "D45"
+      }
+    },
+    {
+      "id": "price-045",
+      "rub": 407,
+      "fapix": 814,
+      "frequency": 83,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1628,
+        2035,
+        2849,
+        4477,
+        5291,
+        5698,
+        6105,
+        6512,
+        10175,
+        10582,
+        15059,
+        17094
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 46,
+        "priceCell": "A46",
+        "frequencyCell": "B46",
+        "multiplesCell": "D46"
+      }
+    },
+    {
+      "id": "price-046",
+      "rub": 409,
+      "fapix": 818,
+      "frequency": 97,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        818,
+        1227,
+        1636,
+        2045,
+        2863,
+        4499,
+        7362,
+        10225
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 47,
+        "priceCell": "A47",
+        "frequencyCell": "B47",
+        "multiplesCell": "D47"
+      }
+    },
+    {
+      "id": "price-047",
+      "rub": 410,
+      "fapix": 820,
+      "frequency": 81,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        820,
+        2050,
+        2870,
+        4100,
+        6970
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 48,
+        "priceCell": "A48",
+        "frequencyCell": "B48",
+        "multiplesCell": "D48"
+      }
+    },
+    {
+      "id": "price-048",
+      "rub": 411,
+      "fapix": 822,
+      "frequency": 92,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        822,
+        1233,
+        2055,
+        2466,
+        2877,
+        4110,
+        4521,
+        4932,
+        6165,
+        10275,
+        15207,
+        25071
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 49,
+        "priceCell": "A49",
+        "frequencyCell": "B49",
+        "multiplesCell": "D49"
+      }
+    },
+    {
+      "id": "price-049",
+      "rub": 413,
+      "fapix": 826,
+      "frequency": 114,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        826,
+        1239,
+        1652,
+        2065,
+        2891,
+        4130,
+        4543,
+        5782,
+        11977,
+        28497
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 50,
+        "priceCell": "A50",
+        "frequencyCell": "B50",
+        "multiplesCell": "D50"
+      }
+    },
+    {
+      "id": "price-050",
+      "rub": 415,
+      "fapix": 830,
+      "frequency": 123,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        830,
+        1245,
+        2075,
+        2490,
+        2905,
+        3735,
+        4565
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 51,
+        "priceCell": "A51",
+        "frequencyCell": "B51",
+        "multiplesCell": "D51"
+      }
+    },
+    {
+      "id": "price-051",
+      "rub": 416,
+      "fapix": 832,
+      "frequency": 128,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        2080,
+        25376
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 52,
+        "priceCell": "A52",
+        "frequencyCell": "B52",
+        "multiplesCell": "D52"
+      }
+    },
+    {
+      "id": "price-052",
+      "rub": 417,
+      "fapix": 834,
+      "frequency": 199,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        834,
+        1251,
+        2085,
+        2502,
+        2919,
+        4587,
+        5004,
+        6672,
+        10425,
+        14595
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 53,
+        "priceCell": "A53",
+        "frequencyCell": "B53",
+        "multiplesCell": "D53"
+      }
+    },
+    {
+      "id": "price-053",
+      "rub": 418,
+      "fapix": 836,
+      "frequency": 153,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        836,
+        1254,
+        2090,
+        2508,
+        2926,
+        4598,
+        10450,
+        17138
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 54,
+        "priceCell": "A54",
+        "frequencyCell": "B54",
+        "multiplesCell": "D54"
+      }
+    },
+    {
+      "id": "price-054",
+      "rub": 419,
+      "fapix": 838,
+      "frequency": 104,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1257,
+        2095,
+        2514,
+        2933,
+        3771,
+        4609,
+        5447,
+        5866,
+        6704,
+        7123,
+        8799,
+        9218,
+        10475,
+        11732
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 55,
+        "priceCell": "A55",
+        "frequencyCell": "B55",
+        "multiplesCell": "D55"
+      }
+    },
+    {
+      "id": "price-055",
+      "rub": 440,
+      "fapix": 880,
+      "frequency": 115,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        880,
+        2200,
+        4840,
+        5720
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 56,
+        "priceCell": "A56",
+        "frequencyCell": "B56",
+        "multiplesCell": "D56"
+      }
+    },
+    {
+      "id": "price-056",
+      "rub": 445,
+      "fapix": 890,
+      "frequency": 91,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        890,
+        2225,
+        4450,
+        5785,
+        6230,
+        6675,
+        23585
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 57,
+        "priceCell": "A57",
+        "frequencyCell": "B57",
+        "multiplesCell": "D57"
+      }
+    },
+    {
+      "id": "price-057",
+      "rub": 446,
+      "fapix": 892,
+      "frequency": 166,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        892,
+        1338,
+        2230,
+        2676,
+        3122,
+        3568,
+        4014,
+        4460,
+        6690,
+        7136,
+        10258,
+        25868
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 58,
+        "priceCell": "A58",
+        "frequencyCell": "B58",
+        "multiplesCell": "D58"
+      }
+    },
+    {
+      "id": "price-058",
+      "rub": 500,
+      "fapix": 1000,
+      "frequency": 87,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1000,
+        2500,
+        5000,
+        29000
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 59,
+        "priceCell": "A59",
+        "frequencyCell": "B59",
+        "multiplesCell": "D59"
+      }
+    },
+    {
+      "id": "price-059",
+      "rub": 509,
+      "fapix": 1018,
+      "frequency": 85,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1018,
+        2036,
+        4072,
+        4581,
+        5090,
+        7126,
+        8653,
+        28504,
+        29013
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 60,
+        "priceCell": "A60",
+        "frequencyCell": "B60",
+        "multiplesCell": "D60"
+      }
+    },
+    {
+      "id": "price-060",
+      "rub": 511,
+      "fapix": 1022,
+      "frequency": 195,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1022,
+        1533,
+        2044,
+        4088,
+        4599,
+        7154,
+        14819
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 61,
+        "priceCell": "A61",
+        "frequencyCell": "B61",
+        "multiplesCell": "D61"
+      }
+    },
+    {
+      "id": "price-061",
+      "rub": 512,
+      "fapix": 1024,
+      "frequency": 108,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1024,
+        2048,
+        17408
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 62,
+        "priceCell": "A62",
+        "frequencyCell": "B62",
+        "multiplesCell": "D62"
+      }
+    },
+    {
+      "id": "price-062",
+      "rub": 514,
+      "fapix": 1028,
+      "frequency": 246,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1028,
+        2056,
+        4626,
+        5140,
+        5654,
+        6682,
+        7196,
+        10280,
+        25186,
+        27756
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 63,
+        "priceCell": "A63",
+        "frequencyCell": "B63",
+        "multiplesCell": "D63"
+      }
+    },
+    {
+      "id": "price-063",
+      "rub": 517,
+      "fapix": 1034,
+      "frequency": 91,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1034,
+        1551,
+        2068,
+        5687,
+        6721
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 64,
+        "priceCell": "A64",
+        "frequencyCell": "B64",
+        "multiplesCell": "D64"
+      }
+    },
+    {
+      "id": "price-064",
+      "rub": 518,
+      "fapix": 1036,
+      "frequency": 246,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1036,
+        1554,
+        2072,
+        7252
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 65,
+        "priceCell": "A65",
+        "frequencyCell": "B65",
+        "multiplesCell": "D65"
+      }
+    },
+    {
+      "id": "price-065",
+      "rub": 520,
+      "fapix": 1040,
+      "frequency": 204,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1040
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 66,
+        "priceCell": "A66",
+        "frequencyCell": "B66",
+        "multiplesCell": "D66"
+      }
+    },
+    {
+      "id": "price-066",
+      "rub": 521,
+      "fapix": 1042,
+      "frequency": 297,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1042,
+        2084,
+        2605,
+        3126,
+        4689,
+        5210,
+        5731,
+        7294,
+        10420
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 67,
+        "priceCell": "A67",
+        "frequencyCell": "B67",
+        "multiplesCell": "D67"
+      }
+    },
+    {
+      "id": "price-067",
+      "rub": 523,
+      "fapix": 1046,
+      "frequency": 405,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1046,
+        2092,
+        3138,
+        4707,
+        5230,
+        6276,
+        7322,
+        10460,
+        11506
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 68,
+        "priceCell": "A68",
+        "frequencyCell": "B68",
+        "multiplesCell": "D68"
+      }
+    },
+    {
+      "id": "price-068",
+      "rub": 524,
+      "fapix": 1048,
+      "frequency": 166,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1048,
+        2096,
+        5240,
+        5764
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 69,
+        "priceCell": "A69",
+        "frequencyCell": "B69",
+        "multiplesCell": "D69"
+      }
+    },
+    {
+      "id": "price-069",
+      "rub": 526,
+      "fapix": 1052,
+      "frequency": 151,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1052,
+        2104,
+        2630,
+        3156,
+        5260,
+        5786,
+        6312,
+        10520,
+        13150,
+        23670,
+        28404
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 70,
+        "priceCell": "A70",
+        "frequencyCell": "B70",
+        "multiplesCell": "D70"
+      }
+    },
+    {
+      "id": "price-070",
+      "rub": 527,
+      "fapix": 1054,
+      "frequency": 206,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1054,
+        1581,
+        2108,
+        4743
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 71,
+        "priceCell": "A71",
+        "frequencyCell": "B71",
+        "multiplesCell": "D71"
+      }
+    },
+    {
+      "id": "price-071",
+      "rub": 532,
+      "fapix": 1064,
+      "frequency": 80,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1064
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 72,
+        "priceCell": "A72",
+        "frequencyCell": "B72",
+        "multiplesCell": "D72"
+      }
+    },
+    {
+      "id": "price-072",
+      "rub": 571,
+      "fapix": 1142,
+      "frequency": 118,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1142,
+        1713,
+        2284,
+        2855,
+        3997,
+        4568,
+        5139,
+        5710,
+        7423,
+        8565
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 73,
+        "priceCell": "A73",
+        "frequencyCell": "B73",
+        "multiplesCell": "D73"
+      }
+    },
+    {
+      "id": "price-073",
+      "rub": 572,
+      "fapix": 1144,
+      "frequency": 120,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1144,
+        2288,
+        2860
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 74,
+        "priceCell": "A74",
+        "frequencyCell": "B74",
+        "multiplesCell": "D74"
+      }
+    },
+    {
+      "id": "price-074",
+      "rub": 573,
+      "fapix": 1146,
+      "frequency": 125,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1719,
+        2865,
+        6303
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 75,
+        "priceCell": "A75",
+        "frequencyCell": "B75",
+        "multiplesCell": "D75"
+      }
+    },
+    {
+      "id": "price-075",
+      "rub": 575,
+      "fapix": 1150,
+      "frequency": 131,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1150,
+        2875,
+        5750
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 76,
+        "priceCell": "A76",
+        "frequencyCell": "B76",
+        "multiplesCell": "D76"
+      }
+    },
+    {
+      "id": "price-076",
+      "rub": 577,
+      "fapix": 1154,
+      "frequency": 212,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1154,
+        1731,
+        2308,
+        2885,
+        3462,
+        4616,
+        5193,
+        6924,
+        10386,
+        29427
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 77,
+        "priceCell": "A77",
+        "frequencyCell": "B77",
+        "multiplesCell": "D77"
+      }
+    },
+    {
+      "id": "price-077",
+      "rub": 579,
+      "fapix": 1158,
+      "frequency": 148,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1737,
+        2895,
+        4053,
+        5211,
+        6369,
+        7527,
+        8685
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 78,
+        "priceCell": "A78",
+        "frequencyCell": "B78",
+        "multiplesCell": "D78"
+      }
+    },
+    {
+      "id": "price-078",
+      "rub": 581,
+      "fapix": 1162,
+      "frequency": 90,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1162,
+        1743,
+        5229,
+        7553
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 79,
+        "priceCell": "A79",
+        "frequencyCell": "B79",
+        "multiplesCell": "D79"
+      }
+    },
+    {
+      "id": "price-079",
+      "rub": 583,
+      "fapix": 1166,
+      "frequency": 348,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1166,
+        1749,
+        2332,
+        2915,
+        7579,
+        15158
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 80,
+        "priceCell": "A80",
+        "frequencyCell": "B80",
+        "multiplesCell": "D80"
+      }
+    },
+    {
+      "id": "price-080",
+      "rub": 584,
+      "fapix": 1168,
+      "frequency": 293,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1168,
+        2336,
+        4672,
+        7592
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 81,
+        "priceCell": "A81",
+        "frequencyCell": "B81",
+        "multiplesCell": "D81"
+      }
+    },
+    {
+      "id": "price-081",
+      "rub": 585,
+      "fapix": 1170,
+      "frequency": 109,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        9945
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 82,
+        "priceCell": "A82",
+        "frequencyCell": "B82",
+        "multiplesCell": "D82"
+      }
+    },
+    {
+      "id": "price-082",
+      "rub": 586,
+      "fapix": 1172,
+      "frequency": 262,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1172,
+        1758,
+        2344,
+        2930,
+        3516,
+        4688,
+        5274,
+        10548,
+        28714
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 83,
+        "priceCell": "A83",
+        "frequencyCell": "B83",
+        "multiplesCell": "D83"
+      }
+    },
+    {
+      "id": "price-083",
+      "rub": 587,
+      "fapix": 1174,
+      "frequency": 240,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1174,
+        1761,
+        2348,
+        2935,
+        4696,
+        5283,
+        7044,
+        15262
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 84,
+        "priceCell": "A84",
+        "frequencyCell": "B84",
+        "multiplesCell": "D84"
+      }
+    },
+    {
+      "id": "price-084",
+      "rub": 588,
+      "fapix": 1176,
+      "frequency": 94,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 85,
+        "priceCell": "A85",
+        "frequencyCell": "B85",
+        "multiplesCell": "D85"
+      }
+    },
+    {
+      "id": "price-085",
+      "rub": 589,
+      "fapix": 1178,
+      "frequency": 213,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1178,
+        1767,
+        2356,
+        2945,
+        3534,
+        4123,
+        4712
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 86,
+        "priceCell": "A86",
+        "frequencyCell": "B86",
+        "multiplesCell": "D86"
+      }
+    },
+    {
+      "id": "price-086",
+      "rub": 590,
+      "fapix": 1180,
+      "frequency": 187,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1180,
+        2950
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 87,
+        "priceCell": "A87",
+        "frequencyCell": "B87",
+        "multiplesCell": "D87"
+      }
+    },
+    {
+      "id": "price-087",
+      "rub": 591,
+      "fapix": 1182,
+      "frequency": 85,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        1773,
+        2955,
+        5319,
+        14775
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 88,
+        "priceCell": "A88",
+        "frequencyCell": "B88",
+        "multiplesCell": "D88"
+      }
+    },
+    {
+      "id": "price-088",
+      "rub": 697,
+      "fapix": 1394,
+      "frequency": 104,
+      "magnitude": "Сотни (100–999)",
+      "excludedMultiples": [
+        2091,
+        3485
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 89,
+        "priceCell": "A89",
+        "frequencyCell": "B89",
+        "multiplesCell": "D89"
+      }
+    },
+    {
+      "id": "price-089",
+      "rub": 1001,
+      "fapix": 2002,
+      "frequency": 23,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2002
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 90,
+        "priceCell": "A90",
+        "frequencyCell": "B90",
+        "multiplesCell": "D90"
+      }
+    },
+    {
+      "id": "price-090",
+      "rub": 1011,
+      "fapix": 2022,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3033,
+        5055,
+        15165
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 91,
+        "priceCell": "A91",
+        "frequencyCell": "B91",
+        "multiplesCell": "D91"
+      }
+    },
+    {
+      "id": "price-091",
+      "rub": 1015,
+      "fapix": 2030,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5075
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 92,
+        "priceCell": "A92",
+        "frequencyCell": "B92",
+        "multiplesCell": "D92"
+      }
+    },
+    {
+      "id": "price-092",
+      "rub": 1019,
+      "fapix": 2038,
+      "frequency": 204,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2038,
+        3057,
+        4076,
+        5095,
+        7133,
+        9171,
+        10190
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 93,
+        "priceCell": "A93",
+        "frequencyCell": "B93",
+        "multiplesCell": "D93"
+      }
+    },
+    {
+      "id": "price-093",
+      "rub": 1021,
+      "fapix": 2042,
+      "frequency": 248,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2042,
+        4084
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 94,
+        "priceCell": "A94",
+        "frequencyCell": "B94",
+        "multiplesCell": "D94"
+      }
+    },
+    {
+      "id": "price-094",
+      "rub": 1025,
+      "fapix": 2050,
+      "frequency": 46,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 95,
+        "priceCell": "A95",
+        "frequencyCell": "B95",
+        "multiplesCell": "D95"
+      }
+    },
+    {
+      "id": "price-095",
+      "rub": 1027,
+      "fapix": 2054,
+      "frequency": 173,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2054
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 96,
+        "priceCell": "A96",
+        "frequencyCell": "B96",
+        "multiplesCell": "D96"
+      }
+    },
+    {
+      "id": "price-096",
+      "rub": 1031,
+      "fapix": 2062,
+      "frequency": 51,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2062,
+        5155,
+        10310
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 97,
+        "priceCell": "A97",
+        "frequencyCell": "B97",
+        "multiplesCell": "D97"
+      }
+    },
+    {
+      "id": "price-097",
+      "rub": 1033,
+      "fapix": 2066,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2066,
+        7231,
+        10330
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 98,
+        "priceCell": "A98",
+        "frequencyCell": "B98",
+        "multiplesCell": "D98"
+      }
+    },
+    {
+      "id": "price-098",
+      "rub": 1037,
+      "fapix": 2074,
+      "frequency": 122,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2074,
+        4148
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 99,
+        "priceCell": "A99",
+        "frequencyCell": "B99",
+        "multiplesCell": "D99"
+      }
+    },
+    {
+      "id": "price-099",
+      "rub": 1039,
+      "fapix": 2078,
+      "frequency": 649,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2078,
+        5195,
+        6234,
+        7273,
+        10390
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 100,
+        "priceCell": "A100",
+        "frequencyCell": "B100",
+        "multiplesCell": "D100"
+      }
+    },
+    {
+      "id": "price-100",
+      "rub": 1043,
+      "fapix": 2086,
+      "frequency": 218,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2086,
+        7301,
+        11473
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 101,
+        "priceCell": "A101",
+        "frequencyCell": "B101",
+        "multiplesCell": "D101"
+      }
+    },
+    {
+      "id": "price-101",
+      "rub": 1045,
+      "fapix": 2090,
+      "frequency": 196,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 102,
+        "priceCell": "A102",
+        "frequencyCell": "B102",
+        "multiplesCell": "D102"
+      }
+    },
+    {
+      "id": "price-102",
+      "rub": 1049,
+      "fapix": 2098,
+      "frequency": 151,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2098,
+        3147,
+        5245,
+        6294,
+        7343
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 103,
+        "priceCell": "A103",
+        "frequencyCell": "B103",
+        "multiplesCell": "D103"
+      }
+    },
+    {
+      "id": "price-103",
+      "rub": 1051,
+      "fapix": 2102,
+      "frequency": 164,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2102,
+        5255,
+        7357
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 104,
+        "priceCell": "A104",
+        "frequencyCell": "B104",
+        "multiplesCell": "D104"
+      }
+    },
+    {
+      "id": "price-104",
+      "rub": 1055,
+      "fapix": 2110,
+      "frequency": 80,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5275,
+        11605
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 105,
+        "priceCell": "A105",
+        "frequencyCell": "B105",
+        "multiplesCell": "D105"
+      }
+    },
+    {
+      "id": "price-105",
+      "rub": 1057,
+      "fapix": 2114,
+      "frequency": 43,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        17969
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 106,
+        "priceCell": "A106",
+        "frequencyCell": "B106",
+        "multiplesCell": "D106"
+      }
+    },
+    {
+      "id": "price-106",
+      "rub": 1061,
+      "fapix": 2122,
+      "frequency": 38,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2122,
+        5305,
+        7427,
+        10610,
+        11671,
+        14854
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 107,
+        "priceCell": "A107",
+        "frequencyCell": "B107",
+        "multiplesCell": "D107"
+      }
+    },
+    {
+      "id": "price-107",
+      "rub": 1111,
+      "fapix": 2222,
+      "frequency": 24,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2222
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 108,
+        "priceCell": "A108",
+        "frequencyCell": "B108",
+        "multiplesCell": "D108"
+      }
+    },
+    {
+      "id": "price-108",
+      "rub": 1117,
+      "fapix": 2234,
+      "frequency": 30,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2234,
+        4468,
+        14521,
+        23457
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 109,
+        "priceCell": "A109",
+        "frequencyCell": "B109",
+        "multiplesCell": "D109"
+      }
+    },
+    {
+      "id": "price-109",
+      "rub": 1123,
+      "fapix": 2246,
+      "frequency": 21,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2246,
+        7861,
+        25829,
+        29198
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 110,
+        "priceCell": "A110",
+        "frequencyCell": "B110",
+        "multiplesCell": "D110"
+      }
+    },
+    {
+      "id": "price-110",
+      "rub": 1141,
+      "fapix": 2282,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 111,
+        "priceCell": "A111",
+        "frequencyCell": "B111",
+        "multiplesCell": "D111"
+      }
+    },
+    {
+      "id": "price-111",
+      "rub": 1145,
+      "fapix": 2290,
+      "frequency": 50,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 112,
+        "priceCell": "A112",
+        "frequencyCell": "B112",
+        "multiplesCell": "D112"
+      }
+    },
+    {
+      "id": "price-112",
+      "rub": 1147,
+      "fapix": 2294,
+      "frequency": 23,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2294,
+        3441,
+        4588,
+        5735,
+        6882
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 113,
+        "priceCell": "A113",
+        "frequencyCell": "B113",
+        "multiplesCell": "D113"
+      }
+    },
+    {
+      "id": "price-113",
+      "rub": 1151,
+      "fapix": 2302,
+      "frequency": 31,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2302,
+        3453,
+        4604,
+        5755,
+        10359
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 114,
+        "priceCell": "A114",
+        "frequencyCell": "B114",
+        "multiplesCell": "D114"
+      }
+    },
+    {
+      "id": "price-114",
+      "rub": 1153,
+      "fapix": 2306,
+      "frequency": 18,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2306,
+        5765,
+        8071
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 115,
+        "priceCell": "A115",
+        "frequencyCell": "B115",
+        "multiplesCell": "D115"
+      }
+    },
+    {
+      "id": "price-115",
+      "rub": 1157,
+      "fapix": 2314,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2314,
+        3471
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 116,
+        "priceCell": "A116",
+        "frequencyCell": "B116",
+        "multiplesCell": "D116"
+      }
+    },
+    {
+      "id": "price-116",
+      "rub": 1159,
+      "fapix": 2318,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2318,
+        3477,
+        15067
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 117,
+        "priceCell": "A117",
+        "frequencyCell": "B117",
+        "multiplesCell": "D117"
+      }
+    },
+    {
+      "id": "price-117",
+      "rub": 1163,
+      "fapix": 2326,
+      "frequency": 39,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2326,
+        3489,
+        4652,
+        5815,
+        6978,
+        10467
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 118,
+        "priceCell": "A118",
+        "frequencyCell": "B118",
+        "multiplesCell": "D118"
+      }
+    },
+    {
+      "id": "price-118",
+      "rub": 1165,
+      "fapix": 2330,
+      "frequency": 38,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5825
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 119,
+        "priceCell": "A119",
+        "frequencyCell": "B119",
+        "multiplesCell": "D119"
+      }
+    },
+    {
+      "id": "price-119",
+      "rub": 1169,
+      "fapix": 2338,
+      "frequency": 32,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        12859
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 120,
+        "priceCell": "A120",
+        "frequencyCell": "B120",
+        "multiplesCell": "D120"
+      }
+    },
+    {
+      "id": "price-120",
+      "rub": 1171,
+      "fapix": 2342,
+      "frequency": 39,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2342,
+        3513,
+        4684
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 121,
+        "priceCell": "A121",
+        "frequencyCell": "B121",
+        "multiplesCell": "D121"
+      }
+    },
+    {
+      "id": "price-121",
+      "rub": 1175,
+      "fapix": 2350,
+      "frequency": 25,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 122,
+        "priceCell": "A122",
+        "frequencyCell": "B122",
+        "multiplesCell": "D122"
+      }
+    },
+    {
+      "id": "price-122",
+      "rub": 1177,
+      "fapix": 2354,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2354,
+        5885
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 123,
+        "priceCell": "A123",
+        "frequencyCell": "B123",
+        "multiplesCell": "D123"
+      }
+    },
+    {
+      "id": "price-123",
+      "rub": 1181,
+      "fapix": 2362,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2362,
+        3543,
+        4724,
+        7086
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 124,
+        "priceCell": "A124",
+        "frequencyCell": "B124",
+        "multiplesCell": "D124"
+      }
+    },
+    {
+      "id": "price-124",
+      "rub": 1183,
+      "fapix": 2366,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      }
+    },
+    {
+      "id": "price-125",
+      "rub": 1187,
+      "fapix": 2374,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2374,
+        4748,
+        5935,
+        7122,
+        8309
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 126,
+        "priceCell": "A126",
+        "frequencyCell": "B126",
+        "multiplesCell": "D126"
+      }
+    },
+    {
+      "id": "price-126",
+      "rub": 1261,
+      "fapix": 2522,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2522
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 127,
+        "priceCell": "A127",
+        "frequencyCell": "B127",
+        "multiplesCell": "D127"
+      }
+    },
+    {
+      "id": "price-127",
+      "rub": 1283,
+      "fapix": 2566,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2566,
+        5132,
+        11547
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 128,
+        "priceCell": "A128",
+        "frequencyCell": "B128",
+        "multiplesCell": "D128"
+      }
+    },
+    {
+      "id": "price-128",
+      "rub": 1297,
+      "fapix": 2594,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2594,
+        3891,
+        11673,
+        37613
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 129,
+        "priceCell": "A129",
+        "frequencyCell": "B129",
+        "multiplesCell": "D129"
+      }
+    },
+    {
+      "id": "price-129",
+      "rub": 1301,
+      "fapix": 2602,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2602,
+        3903,
+        5204,
+        10408
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 130,
+        "priceCell": "A130",
+        "frequencyCell": "B130",
+        "multiplesCell": "D130"
+      }
+    },
+    {
+      "id": "price-130",
+      "rub": 1303,
+      "fapix": 2606,
+      "frequency": 24,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2606,
+        5212,
+        10424
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 131,
+        "priceCell": "A131",
+        "frequencyCell": "B131",
+        "multiplesCell": "D131"
+      }
+    },
+    {
+      "id": "price-131",
+      "rub": 1307,
+      "fapix": 2614,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2614,
+        5228
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 132,
+        "priceCell": "A132",
+        "frequencyCell": "B132",
+        "multiplesCell": "D132"
+      }
+    },
+    {
+      "id": "price-132",
+      "rub": 1333,
+      "fapix": 2666,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3999,
+        6665
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 133,
+        "priceCell": "A133",
+        "frequencyCell": "B133",
+        "multiplesCell": "D133"
+      }
+    },
+    {
+      "id": "price-133",
+      "rub": 1427,
+      "fapix": 2854,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2854,
+        5708,
+        7135
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 134,
+        "priceCell": "A134",
+        "frequencyCell": "B134",
+        "multiplesCell": "D134"
+      }
+    },
+    {
+      "id": "price-134",
+      "rub": 1429,
+      "fapix": 2858,
+      "frequency": 21,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2858,
+        7145,
+        10003
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 135,
+        "priceCell": "A135",
+        "frequencyCell": "B135",
+        "multiplesCell": "D135"
+      }
+    },
+    {
+      "id": "price-135",
+      "rub": 1433,
+      "fapix": 2866,
+      "frequency": 22,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2866,
+        8598,
+        10031,
+        11464
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 136,
+        "priceCell": "A136",
+        "frequencyCell": "B136",
+        "multiplesCell": "D136"
+      }
+    },
+    {
+      "id": "price-136",
+      "rub": 1439,
+      "fapix": 2878,
+      "frequency": 22,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2878,
+        7195
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 137,
+        "priceCell": "A137",
+        "frequencyCell": "B137",
+        "multiplesCell": "D137"
+      }
+    },
+    {
+      "id": "price-137",
+      "rub": 1441,
+      "fapix": 2882,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2882
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 138,
+        "priceCell": "A138",
+        "frequencyCell": "B138",
+        "multiplesCell": "D138"
+      }
+    },
+    {
+      "id": "price-138",
+      "rub": 1451,
+      "fapix": 2902,
+      "frequency": 29,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2902,
+        5804,
+        17412,
+        23216
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 139,
+        "priceCell": "A139",
+        "frequencyCell": "B139",
+        "multiplesCell": "D139"
+      }
+    },
+    {
+      "id": "price-139",
+      "rub": 1453,
+      "fapix": 2906,
+      "frequency": 46,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2906,
+        5812,
+        7265,
+        10171,
+        11624
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 140,
+        "priceCell": "A140",
+        "frequencyCell": "B140",
+        "multiplesCell": "D140"
+      }
+    },
+    {
+      "id": "price-140",
+      "rub": 1454,
+      "fapix": 2908,
+      "frequency": 86,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2908,
+        5816,
+        7270,
+        10178,
+        17448
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 141,
+        "priceCell": "A141",
+        "frequencyCell": "B141",
+        "multiplesCell": "D141"
+      }
+    },
+    {
+      "id": "price-141",
+      "rub": 1457,
+      "fapix": 2914,
+      "frequency": 51,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2914,
+        4371,
+        5828,
+        8742
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 142,
+        "priceCell": "A142",
+        "frequencyCell": "B142",
+        "multiplesCell": "D142"
+      }
+    },
+    {
+      "id": "price-142",
+      "rub": 1459,
+      "fapix": 2918,
+      "frequency": 66,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2918,
+        7295
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 143,
+        "priceCell": "A143",
+        "frequencyCell": "B143",
+        "multiplesCell": "D143"
+      }
+    },
+    {
+      "id": "price-143",
+      "rub": 1465,
+      "fapix": 2930,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10255
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 144,
+        "priceCell": "A144",
+        "frequencyCell": "B144",
+        "multiplesCell": "D144"
+      }
+    },
+    {
+      "id": "price-144",
+      "rub": 1469,
+      "fapix": 2938,
+      "frequency": 23,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2938
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 145,
+        "priceCell": "A145",
+        "frequencyCell": "B145",
+        "multiplesCell": "D145"
+      }
+    },
+    {
+      "id": "price-145",
+      "rub": 1471,
+      "fapix": 2942,
+      "frequency": 40,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2942,
+        4413,
+        5884,
+        7355,
+        10297
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 146,
+        "priceCell": "A146",
+        "frequencyCell": "B146",
+        "multiplesCell": "D146"
+      }
+    },
+    {
+      "id": "price-146",
+      "rub": 1481,
+      "fapix": 2962,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4443,
+        10367
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 147,
+        "priceCell": "A147",
+        "frequencyCell": "B147",
+        "multiplesCell": "D147"
+      }
+    },
+    {
+      "id": "price-147",
+      "rub": 1483,
+      "fapix": 2966,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2966,
+        4449,
+        8898,
+        14830
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 148,
+        "priceCell": "A148",
+        "frequencyCell": "B148",
+        "multiplesCell": "D148"
+      }
+    },
+    {
+      "id": "price-148",
+      "rub": 1487,
+      "fapix": 2974,
+      "frequency": 30,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2974,
+        4461,
+        5948,
+        10409
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 149,
+        "priceCell": "A149",
+        "frequencyCell": "B149",
+        "multiplesCell": "D149"
+      }
+    },
+    {
+      "id": "price-149",
+      "rub": 1489,
+      "fapix": 2978,
+      "frequency": 35,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2978,
+        4467,
+        7445,
+        10423,
+        14890
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 150,
+        "priceCell": "A150",
+        "frequencyCell": "B150",
+        "multiplesCell": "D150"
+      }
+    },
+    {
+      "id": "price-150",
+      "rub": 1493,
+      "fapix": 2986,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        2986,
+        4479,
+        10451,
+        14930
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 151,
+        "priceCell": "A151",
+        "frequencyCell": "B151",
+        "multiplesCell": "D151"
+      }
+    },
+    {
+      "id": "price-151",
+      "rub": 1558,
+      "fapix": 3116,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4674
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 152,
+        "priceCell": "A152",
+        "frequencyCell": "B152",
+        "multiplesCell": "D152"
+      }
+    },
+    {
+      "id": "price-152",
+      "rub": 1697,
+      "fapix": 3394,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5091,
+        10182
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 153,
+        "priceCell": "A153",
+        "frequencyCell": "B153",
+        "multiplesCell": "D153"
+      }
+    },
+    {
+      "id": "price-153",
+      "rub": 1709,
+      "fapix": 3418,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3418,
+        5127,
+        10254,
+        29053,
+        49561
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 154,
+        "priceCell": "A154",
+        "frequencyCell": "B154",
+        "multiplesCell": "D154"
+      }
+    },
+    {
+      "id": "price-154",
+      "rub": 1727,
+      "fapix": 3454,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 155,
+        "priceCell": "A155",
+        "frequencyCell": "B155",
+        "multiplesCell": "D155"
+      }
+    },
+    {
+      "id": "price-155",
+      "rub": 1733,
+      "fapix": 3466,
+      "frequency": 18,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5199,
+        10398
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 156,
+        "priceCell": "A156",
+        "frequencyCell": "B156",
+        "multiplesCell": "D156"
+      }
+    },
+    {
+      "id": "price-156",
+      "rub": 1741,
+      "fapix": 3482,
+      "frequency": 35,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3482,
+        5223,
+        8705,
+        10446,
+        17410
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 157,
+        "priceCell": "A157",
+        "frequencyCell": "B157",
+        "multiplesCell": "D157"
+      }
+    },
+    {
+      "id": "price-157",
+      "rub": 1747,
+      "fapix": 3494,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3494,
+        5241,
+        8735,
+        10482,
+        17470
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 158,
+        "priceCell": "A158",
+        "frequencyCell": "B158",
+        "multiplesCell": "D158"
+      }
+    },
+    {
+      "id": "price-158",
+      "rub": 1753,
+      "fapix": 3506,
+      "frequency": 27,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3506,
+        5259,
+        10518,
+        17530
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 159,
+        "priceCell": "A159",
+        "frequencyCell": "B159",
+        "multiplesCell": "D159"
+      }
+    },
+    {
+      "id": "price-159",
+      "rub": 1759,
+      "fapix": 3518,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3518,
+        5277
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 160,
+        "priceCell": "A160",
+        "frequencyCell": "B160",
+        "multiplesCell": "D160"
+      }
+    },
+    {
+      "id": "price-160",
+      "rub": 1769,
+      "fapix": 3538,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 161,
+        "priceCell": "A161",
+        "frequencyCell": "B161",
+        "multiplesCell": "D161"
+      }
+    },
+    {
+      "id": "price-161",
+      "rub": 1907,
+      "fapix": 3814,
+      "frequency": 10,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3814,
+        5721
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 162,
+        "priceCell": "A162",
+        "frequencyCell": "B162",
+        "multiplesCell": "D162"
+      }
+    },
+    {
+      "id": "price-162",
+      "rub": 1949,
+      "fapix": 3898,
+      "frequency": 26,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5847
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 163,
+        "priceCell": "A163",
+        "frequencyCell": "B163",
+        "multiplesCell": "D163"
+      }
+    },
+    {
+      "id": "price-163",
+      "rub": 1997,
+      "fapix": 3994,
+      "frequency": 10,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3994
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 164,
+        "priceCell": "A164",
+        "frequencyCell": "B164",
+        "multiplesCell": "D164"
+      }
+    },
+    {
+      "id": "price-164",
+      "rub": 1999,
+      "fapix": 3998,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        3998,
+        5997,
+        7996,
+        9995
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 165,
+        "priceCell": "A165",
+        "frequencyCell": "B165",
+        "multiplesCell": "D165"
+      }
+    },
+    {
+      "id": "price-165",
+      "rub": 2033,
+      "fapix": 4066,
+      "frequency": 22,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 166,
+        "priceCell": "A166",
+        "frequencyCell": "B166",
+        "multiplesCell": "D166"
+      }
+    },
+    {
+      "id": "price-166",
+      "rub": 2039,
+      "fapix": 4078,
+      "frequency": 40,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4078,
+        10195,
+        28546
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 167,
+        "priceCell": "A167",
+        "frequencyCell": "B167",
+        "multiplesCell": "D167"
+      }
+    },
+    {
+      "id": "price-167",
+      "rub": 2041,
+      "fapix": 4082,
+      "frequency": 143,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10205
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 168,
+        "priceCell": "A168",
+        "frequencyCell": "B168",
+        "multiplesCell": "D168"
+      }
+    },
+    {
+      "id": "price-168",
+      "rub": 2047,
+      "fapix": 4094,
+      "frequency": 28,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4094,
+        6141
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 169,
+        "priceCell": "A169",
+        "frequencyCell": "B169",
+        "multiplesCell": "D169"
+      }
+    },
+    {
+      "id": "price-169",
+      "rub": 2051,
+      "fapix": 4102,
+      "frequency": 102,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 170,
+        "priceCell": "A170",
+        "frequencyCell": "B170",
+        "multiplesCell": "D170"
+      }
+    },
+    {
+      "id": "price-170",
+      "rub": 2053,
+      "fapix": 4106,
+      "frequency": 55,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10265
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 171,
+        "priceCell": "A171",
+        "frequencyCell": "B171",
+        "multiplesCell": "D171"
+      }
+    },
+    {
+      "id": "price-171",
+      "rub": 2057,
+      "fapix": 4114,
+      "frequency": 49,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 172,
+        "priceCell": "A172",
+        "frequencyCell": "B172",
+        "multiplesCell": "D172"
+      }
+    },
+    {
+      "id": "price-172",
+      "rub": 2063,
+      "fapix": 4126,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 173,
+        "priceCell": "A173",
+        "frequencyCell": "B173",
+        "multiplesCell": "D173"
+      }
+    },
+    {
+      "id": "price-173",
+      "rub": 2069,
+      "fapix": 4138,
+      "frequency": 18,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        6207
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 174,
+        "priceCell": "A174",
+        "frequencyCell": "B174",
+        "multiplesCell": "D174"
+      }
+    },
+    {
+      "id": "price-174",
+      "rub": 2071,
+      "fapix": 4142,
+      "frequency": 71,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 175,
+        "priceCell": "A175",
+        "frequencyCell": "B175",
+        "multiplesCell": "D175"
+      }
+    },
+    {
+      "id": "price-175",
+      "rub": 2077,
+      "fapix": 4154,
+      "frequency": 159,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        6231
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 176,
+        "priceCell": "A176",
+        "frequencyCell": "B176",
+        "multiplesCell": "D176"
+      }
+    },
+    {
+      "id": "price-176",
+      "rub": 2081,
+      "fapix": 4162,
+      "frequency": 147,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        6243,
+        10405
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 177,
+        "priceCell": "A177",
+        "frequencyCell": "B177",
+        "multiplesCell": "D177"
+      }
+    },
+    {
+      "id": "price-177",
+      "rub": 2083,
+      "fapix": 4166,
+      "frequency": 115,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10415,
+        14581
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 178,
+        "priceCell": "A178",
+        "frequencyCell": "B178",
+        "multiplesCell": "D178"
+      }
+    },
+    {
+      "id": "price-178",
+      "rub": 2087,
+      "fapix": 4174,
+      "frequency": 49,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10435
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 179,
+        "priceCell": "A179",
+        "frequencyCell": "B179",
+        "multiplesCell": "D179"
+      }
+    },
+    {
+      "id": "price-179",
+      "rub": 2089,
+      "fapix": 4178,
+      "frequency": 129,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10445
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 180,
+        "priceCell": "A180",
+        "frequencyCell": "B180",
+        "multiplesCell": "D180"
+      }
+    },
+    {
+      "id": "price-180",
+      "rub": 2093,
+      "fapix": 4186,
+      "frequency": 50,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 181,
+        "priceCell": "A181",
+        "frequencyCell": "B181",
+        "multiplesCell": "D181"
+      }
+    },
+    {
+      "id": "price-181",
+      "rub": 2099,
+      "fapix": 4198,
+      "frequency": 28,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        6297,
+        10495
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 182,
+        "priceCell": "A182",
+        "frequencyCell": "B182",
+        "multiplesCell": "D182"
+      }
+    },
+    {
+      "id": "price-182",
+      "rub": 2101,
+      "fapix": 4202,
+      "frequency": 89,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 183,
+        "priceCell": "A183",
+        "frequencyCell": "B183",
+        "multiplesCell": "D183"
+      }
+    },
+    {
+      "id": "price-183",
+      "rub": 2107,
+      "fapix": 4214,
+      "frequency": 40,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 184,
+        "priceCell": "A184",
+        "frequencyCell": "B184",
+        "multiplesCell": "D184"
+      }
+    },
+    {
+      "id": "price-184",
+      "rub": 2111,
+      "fapix": 4222,
+      "frequency": 20,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 185,
+        "priceCell": "A185",
+        "frequencyCell": "B185",
+        "multiplesCell": "D185"
+      }
+    },
+    {
+      "id": "price-185",
+      "rub": 2113,
+      "fapix": 4226,
+      "frequency": 27,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10565
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 186,
+        "priceCell": "A186",
+        "frequencyCell": "B186",
+        "multiplesCell": "D186"
+      }
+    },
+    {
+      "id": "price-186",
+      "rub": 2117,
+      "fapix": 4234,
+      "frequency": 10,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 187,
+        "priceCell": "A187",
+        "frequencyCell": "B187",
+        "multiplesCell": "D187"
+      }
+    },
+    {
+      "id": "price-187",
+      "rub": 2221,
+      "fapix": 4442,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4442
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 188,
+        "priceCell": "A188",
+        "frequencyCell": "B188",
+        "multiplesCell": "D188"
+      }
+    },
+    {
+      "id": "price-188",
+      "rub": 2227,
+      "fapix": 4454,
+      "frequency": 38,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4454
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 189,
+        "priceCell": "A189",
+        "frequencyCell": "B189",
+        "multiplesCell": "D189"
+      }
+    },
+    {
+      "id": "price-189",
+      "rub": 2231,
+      "fapix": 4462,
+      "frequency": 48,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4462
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 190,
+        "priceCell": "A190",
+        "frequencyCell": "B190",
+        "multiplesCell": "D190"
+      }
+    },
+    {
+      "id": "price-190",
+      "rub": 2237,
+      "fapix": 4474,
+      "frequency": 25,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4474
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 191,
+        "priceCell": "A191",
+        "frequencyCell": "B191",
+        "multiplesCell": "D191"
+      }
+    },
+    {
+      "id": "price-191",
+      "rub": 2239,
+      "fapix": 4478,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4478
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 192,
+        "priceCell": "A192",
+        "frequencyCell": "B192",
+        "multiplesCell": "D192"
+      }
+    },
+    {
+      "id": "price-192",
+      "rub": 2242,
+      "fapix": 4484,
+      "frequency": 26,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4484
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 193,
+        "priceCell": "A193",
+        "frequencyCell": "B193",
+        "multiplesCell": "D193"
+      }
+    },
+    {
+      "id": "price-193",
+      "rub": 2243,
+      "fapix": 4486,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4486,
+        6729
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 194,
+        "priceCell": "A194",
+        "frequencyCell": "B194",
+        "multiplesCell": "D194"
+      }
+    },
+    {
+      "id": "price-194",
+      "rub": 2263,
+      "fapix": 4526,
+      "frequency": 10,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 195,
+        "priceCell": "A195",
+        "frequencyCell": "B195",
+        "multiplesCell": "D195"
+      }
+    },
+    {
+      "id": "price-195",
+      "rub": 2307,
+      "fapix": 4614,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4614
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 196,
+        "priceCell": "A196",
+        "frequencyCell": "B196",
+        "multiplesCell": "D196"
+      }
+    },
+    {
+      "id": "price-196",
+      "rub": 2337,
+      "fapix": 4674,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 197,
+        "priceCell": "A197",
+        "frequencyCell": "B197",
+        "multiplesCell": "D197"
+      }
+    },
+    {
+      "id": "price-197",
+      "rub": 2339,
+      "fapix": 4678,
+      "frequency": 20,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4678,
+        11695
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 198,
+        "priceCell": "A198",
+        "frequencyCell": "B198",
+        "multiplesCell": "D198"
+      }
+    },
+    {
+      "id": "price-198",
+      "rub": 2341,
+      "fapix": 4682,
+      "frequency": 16,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4682,
+        11705
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 199,
+        "priceCell": "A199",
+        "frequencyCell": "B199",
+        "multiplesCell": "D199"
+      }
+    },
+    {
+      "id": "price-199",
+      "rub": 2351,
+      "fapix": 4702,
+      "frequency": 25,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4702
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 200,
+        "priceCell": "A200",
+        "frequencyCell": "B200",
+        "multiplesCell": "D200"
+      }
+    },
+    {
+      "id": "price-200",
+      "rub": 2363,
+      "fapix": 4726,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4726
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 201,
+        "priceCell": "A201",
+        "frequencyCell": "B201",
+        "multiplesCell": "D201"
+      }
+    },
+    {
+      "id": "price-201",
+      "rub": 2474,
+      "fapix": 4948,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4948
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 202,
+        "priceCell": "A202",
+        "frequencyCell": "B202",
+        "multiplesCell": "D202"
+      }
+    },
+    {
+      "id": "price-202",
+      "rub": 2491,
+      "fapix": 4982,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4982
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 203,
+        "priceCell": "A203",
+        "frequencyCell": "B203",
+        "multiplesCell": "D203"
+      }
+    },
+    {
+      "id": "price-203",
+      "rub": 2494,
+      "fapix": 4988,
+      "frequency": 48,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4988
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 204,
+        "priceCell": "A204",
+        "frequencyCell": "B204",
+        "multiplesCell": "D204"
+      }
+    },
+    {
+      "id": "price-204",
+      "rub": 2497,
+      "fapix": 4994,
+      "frequency": 18,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 205,
+        "priceCell": "A205",
+        "frequencyCell": "B205",
+        "multiplesCell": "D205"
+      }
+    },
+    {
+      "id": "price-205",
+      "rub": 2498,
+      "fapix": 4996,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        4996
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 206,
+        "priceCell": "A206",
+        "frequencyCell": "B206",
+        "multiplesCell": "D206"
+      }
+    },
+    {
+      "id": "price-206",
+      "rub": 2507,
+      "fapix": 5014,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 207,
+        "priceCell": "A207",
+        "frequencyCell": "B207",
+        "multiplesCell": "D207"
+      }
+    },
+    {
+      "id": "price-207",
+      "rub": 2543,
+      "fapix": 5086,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5086,
+        10172
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 208,
+        "priceCell": "A208",
+        "frequencyCell": "B208",
+        "multiplesCell": "D208"
+      }
+    },
+    {
+      "id": "price-208",
+      "rub": 2549,
+      "fapix": 5098,
+      "frequency": 10,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5098,
+        10196
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 209,
+        "priceCell": "A209",
+        "frequencyCell": "B209",
+        "multiplesCell": "D209"
+      }
+    },
+    {
+      "id": "price-209",
+      "rub": 2581,
+      "fapix": 5162,
+      "frequency": 30,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5162
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 210,
+        "priceCell": "A210",
+        "frequencyCell": "B210",
+        "multiplesCell": "D210"
+      }
+    },
+    {
+      "id": "price-210",
+      "rub": 2843,
+      "fapix": 5686,
+      "frequency": 27,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5686,
+        17058
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 211,
+        "priceCell": "A211",
+        "frequencyCell": "B211",
+        "multiplesCell": "D211"
+      }
+    },
+    {
+      "id": "price-211",
+      "rub": 2846,
+      "fapix": 5692,
+      "frequency": 22,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5692,
+        11384
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 212,
+        "priceCell": "A212",
+        "frequencyCell": "B212",
+        "multiplesCell": "D212"
+      }
+    },
+    {
+      "id": "price-212",
+      "rub": 2851,
+      "fapix": 5702,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        17106,
+        19957
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 213,
+        "priceCell": "A213",
+        "frequencyCell": "B213",
+        "multiplesCell": "D213"
+      }
+    },
+    {
+      "id": "price-213",
+      "rub": 2857,
+      "fapix": 5714,
+      "frequency": 40,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5714
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 214,
+        "priceCell": "A214",
+        "frequencyCell": "B214",
+        "multiplesCell": "D214"
+      }
+    },
+    {
+      "id": "price-214",
+      "rub": 2861,
+      "fapix": 5722,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5722
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 215,
+        "priceCell": "A215",
+        "frequencyCell": "B215",
+        "multiplesCell": "D215"
+      }
+    },
+    {
+      "id": "price-215",
+      "rub": 2867,
+      "fapix": 5734,
+      "frequency": 77,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5734
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 216,
+        "priceCell": "A216",
+        "frequencyCell": "B216",
+        "multiplesCell": "D216"
+      }
+    },
+    {
+      "id": "price-216",
+      "rub": 2869,
+      "fapix": 5738,
+      "frequency": 37,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 217,
+        "priceCell": "A217",
+        "frequencyCell": "B217",
+        "multiplesCell": "D217"
+      }
+    },
+    {
+      "id": "price-217",
+      "rub": 2873,
+      "fapix": 5746,
+      "frequency": 26,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 218,
+        "priceCell": "A218",
+        "frequencyCell": "B218",
+        "multiplesCell": "D218"
+      }
+    },
+    {
+      "id": "price-218",
+      "rub": 2881,
+      "fapix": 5762,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5762
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 219,
+        "priceCell": "A219",
+        "frequencyCell": "B219",
+        "multiplesCell": "D219"
+      }
+    },
+    {
+      "id": "price-219",
+      "rub": 2894,
+      "fapix": 5788,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5788,
+        8682,
+        11576
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 220,
+        "priceCell": "A220",
+        "frequencyCell": "B220",
+        "multiplesCell": "D220"
+      }
+    },
+    {
+      "id": "price-220",
+      "rub": 2897,
+      "fapix": 5794,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        11588,
+        14485
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 221,
+        "priceCell": "A221",
+        "frequencyCell": "B221",
+        "multiplesCell": "D221"
+      }
+    },
+    {
+      "id": "price-221",
+      "rub": 2903,
+      "fapix": 5806,
+      "frequency": 80,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5806,
+        8709
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 222,
+        "priceCell": "A222",
+        "frequencyCell": "B222",
+        "multiplesCell": "D222"
+      }
+    },
+    {
+      "id": "price-222",
+      "rub": 2909,
+      "fapix": 5818,
+      "frequency": 63,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5818,
+        14545
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 223,
+        "priceCell": "A223",
+        "frequencyCell": "B223",
+        "multiplesCell": "D223"
+      }
+    },
+    {
+      "id": "price-223",
+      "rub": 2911,
+      "fapix": 5822,
+      "frequency": 52,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5822,
+        17466
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 224,
+        "priceCell": "A224",
+        "frequencyCell": "B224",
+        "multiplesCell": "D224"
+      }
+    },
+    {
+      "id": "price-224",
+      "rub": 2917,
+      "fapix": 5834,
+      "frequency": 24,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5834,
+        8751,
+        11668
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 225,
+        "priceCell": "A225",
+        "frequencyCell": "B225",
+        "multiplesCell": "D225"
+      }
+    },
+    {
+      "id": "price-225",
+      "rub": 2921,
+      "fapix": 5842,
+      "frequency": 56,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5842
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 226,
+        "priceCell": "A226",
+        "frequencyCell": "B226",
+        "multiplesCell": "D226"
+      }
+    },
+    {
+      "id": "price-226",
+      "rub": 2923,
+      "fapix": 5846,
+      "frequency": 37,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5846,
+        8769
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 227,
+        "priceCell": "A227",
+        "frequencyCell": "B227",
+        "multiplesCell": "D227"
+      }
+    },
+    {
+      "id": "price-227",
+      "rub": 2927,
+      "fapix": 5854,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5854
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 228,
+        "priceCell": "A228",
+        "frequencyCell": "B228",
+        "multiplesCell": "D228"
+      }
+    },
+    {
+      "id": "price-228",
+      "rub": 2929,
+      "fapix": 5858,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 229,
+        "priceCell": "A229",
+        "frequencyCell": "B229",
+        "multiplesCell": "D229"
+      }
+    },
+    {
+      "id": "price-229",
+      "rub": 2939,
+      "fapix": 5878,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 230,
+        "priceCell": "A230",
+        "frequencyCell": "B230",
+        "multiplesCell": "D230"
+      }
+    },
+    {
+      "id": "price-230",
+      "rub": 2951,
+      "fapix": 5902,
+      "frequency": 30,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 231,
+        "priceCell": "A231",
+        "frequencyCell": "B231",
+        "multiplesCell": "D231"
+      }
+    },
+    {
+      "id": "price-231",
+      "rub": 2953,
+      "fapix": 5906,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        5906
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 232,
+        "priceCell": "A232",
+        "frequencyCell": "B232",
+        "multiplesCell": "D232"
+      }
+    },
+    {
+      "id": "price-232",
+      "rub": 3463,
+      "fapix": 6926,
+      "frequency": 19,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10389
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 233,
+        "priceCell": "A233",
+        "frequencyCell": "B233",
+        "multiplesCell": "D233"
+      }
+    },
+    {
+      "id": "price-233",
+      "rub": 3491,
+      "fapix": 6982,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10473,
+        17455
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 234,
+        "priceCell": "A234",
+        "frequencyCell": "B234",
+        "multiplesCell": "D234"
+      }
+    },
+    {
+      "id": "price-234",
+      "rub": 3499,
+      "fapix": 6998,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10497
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 235,
+        "priceCell": "A235",
+        "frequencyCell": "B235",
+        "multiplesCell": "D235"
+      }
+    },
+    {
+      "id": "price-235",
+      "rub": 5087,
+      "fapix": 10174,
+      "frequency": 13,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10174
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 236,
+        "priceCell": "A236",
+        "frequencyCell": "B236",
+        "multiplesCell": "D236"
+      }
+    },
+    {
+      "id": "price-236",
+      "rub": 5102,
+      "fapix": 10204,
+      "frequency": 18,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10204
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 237,
+        "priceCell": "A237",
+        "frequencyCell": "B237",
+        "multiplesCell": "D237"
+      }
+    },
+    {
+      "id": "price-237",
+      "rub": 5111,
+      "fapix": 10222,
+      "frequency": 14,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 238,
+        "priceCell": "A238",
+        "frequencyCell": "B238",
+        "multiplesCell": "D238"
+      }
+    },
+    {
+      "id": "price-238",
+      "rub": 5129,
+      "fapix": 10258,
+      "frequency": 20,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 239,
+        "priceCell": "A239",
+        "frequencyCell": "B239",
+        "multiplesCell": "D239"
+      }
+    },
+    {
+      "id": "price-239",
+      "rub": 5133,
+      "fapix": 10266,
+      "frequency": 22,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 240,
+        "priceCell": "A240",
+        "frequencyCell": "B240",
+        "multiplesCell": "D240"
+      }
+    },
+    {
+      "id": "price-240",
+      "rub": 5141,
+      "fapix": 10282,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10282
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 241,
+        "priceCell": "A241",
+        "frequencyCell": "B241",
+        "multiplesCell": "D241"
+      }
+    },
+    {
+      "id": "price-241",
+      "rub": 5143,
+      "fapix": 10286,
+      "frequency": 29,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10286
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 242,
+        "priceCell": "A242",
+        "frequencyCell": "B242",
+        "multiplesCell": "D242"
+      }
+    },
+    {
+      "id": "price-242",
+      "rub": 5171,
+      "fapix": 10342,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10342
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 243,
+        "priceCell": "A243",
+        "frequencyCell": "B243",
+        "multiplesCell": "D243"
+      }
+    },
+    {
+      "id": "price-243",
+      "rub": 5179,
+      "fapix": 10358,
+      "frequency": 41,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10358
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 244,
+        "priceCell": "A244",
+        "frequencyCell": "B244",
+        "multiplesCell": "D244"
+      }
+    },
+    {
+      "id": "price-244",
+      "rub": 5197,
+      "fapix": 10394,
+      "frequency": 27,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10394
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 245,
+        "priceCell": "A245",
+        "frequencyCell": "B245",
+        "multiplesCell": "D245"
+      }
+    },
+    {
+      "id": "price-245",
+      "rub": 5206,
+      "fapix": 10412,
+      "frequency": 20,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10412
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 246,
+        "priceCell": "A246",
+        "frequencyCell": "B246",
+        "multiplesCell": "D246"
+      }
+    },
+    {
+      "id": "price-246",
+      "rub": 5207,
+      "fapix": 10414,
+      "frequency": 35,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10414
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 247,
+        "priceCell": "A247",
+        "frequencyCell": "B247",
+        "multiplesCell": "D247"
+      }
+    },
+    {
+      "id": "price-247",
+      "rub": 5209,
+      "fapix": 10418,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10418
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 248,
+        "priceCell": "A248",
+        "frequencyCell": "B248",
+        "multiplesCell": "D248"
+      }
+    },
+    {
+      "id": "price-248",
+      "rub": 5221,
+      "fapix": 10442,
+      "frequency": 17,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 249,
+        "priceCell": "A249",
+        "frequencyCell": "B249",
+        "multiplesCell": "D249"
+      }
+    },
+    {
+      "id": "price-249",
+      "rub": 5231,
+      "fapix": 10462,
+      "frequency": 34,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10462
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 250,
+        "priceCell": "A250",
+        "frequencyCell": "B250",
+        "multiplesCell": "D250"
+      }
+    },
+    {
+      "id": "price-250",
+      "rub": 5237,
+      "fapix": 10474,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        10474
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 251,
+        "priceCell": "A251",
+        "frequencyCell": "B251",
+        "multiplesCell": "D251"
+      }
+    },
+    {
+      "id": "price-251",
+      "rub": 5249,
+      "fapix": 10498,
+      "frequency": 12,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 252,
+        "priceCell": "A252",
+        "frequencyCell": "B252",
+        "multiplesCell": "D252"
+      }
+    },
+    {
+      "id": "price-252",
+      "rub": 5263,
+      "fapix": 10526,
+      "frequency": 11,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 253,
+        "priceCell": "A253",
+        "frequencyCell": "B253",
+        "multiplesCell": "D253"
+      }
+    },
+    {
+      "id": "price-253",
+      "rub": 5294,
+      "fapix": 10588,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [
+        47646
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 254,
+        "priceCell": "A254",
+        "frequencyCell": "B254",
+        "multiplesCell": "D254"
+      }
+    },
+    {
+      "id": "price-254",
+      "rub": 6691,
+      "fapix": 13382,
+      "frequency": 25,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 255,
+        "priceCell": "A255",
+        "frequencyCell": "B255",
+        "multiplesCell": "D255"
+      }
+    },
+    {
+      "id": "price-255",
+      "rub": 6701,
+      "fapix": 13402,
+      "frequency": 15,
+      "magnitude": "Тысячи (1000–9999)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 256,
+        "priceCell": "A256",
+        "frequencyCell": "B256",
+        "multiplesCell": "D256"
+      }
+    },
+    {
+      "id": "price-256",
+      "rub": 10161,
+      "fapix": 20322,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 257,
+        "priceCell": "A257",
+        "frequencyCell": "B257",
+        "multiplesCell": "D257"
+      }
+    },
+    {
+      "id": "price-257",
+      "rub": 10167,
+      "fapix": 20334,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 258,
+        "priceCell": "A258",
+        "frequencyCell": "B258",
+        "multiplesCell": "D258"
+      }
+    },
+    {
+      "id": "price-258",
+      "rub": 10187,
+      "fapix": 20374,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 259,
+        "priceCell": "A259",
+        "frequencyCell": "B259",
+        "multiplesCell": "D259"
+      }
+    },
+    {
+      "id": "price-259",
+      "rub": 10191,
+      "fapix": 20382,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 260,
+        "priceCell": "A260",
+        "frequencyCell": "B260",
+        "multiplesCell": "D260"
+      }
+    },
+    {
+      "id": "price-260",
+      "rub": 10207,
+      "fapix": 20414,
+      "frequency": 6,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 261,
+        "priceCell": "A261",
+        "frequencyCell": "B261",
+        "multiplesCell": "D261"
+      }
+    },
+    {
+      "id": "price-261",
+      "rub": 10221,
+      "fapix": 20442,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 262,
+        "priceCell": "A262",
+        "frequencyCell": "B262",
+        "multiplesCell": "D262"
+      }
+    },
+    {
+      "id": "price-262",
+      "rub": 10223,
+      "fapix": 20446,
+      "frequency": 4,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [
+        40892
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 263,
+        "priceCell": "A263",
+        "frequencyCell": "B263",
+        "multiplesCell": "D263"
+      }
+    },
+    {
+      "id": "price-263",
+      "rub": 10243,
+      "fapix": 20486,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 264,
+        "priceCell": "A264",
+        "frequencyCell": "B264",
+        "multiplesCell": "D264"
+      }
+    },
+    {
+      "id": "price-264",
+      "rub": 10253,
+      "fapix": 20506,
+      "frequency": 5,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 265,
+        "priceCell": "A265",
+        "frequencyCell": "B265",
+        "multiplesCell": "D265"
+      }
+    },
+    {
+      "id": "price-265",
+      "rub": 10259,
+      "fapix": 20518,
+      "frequency": 10,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 266,
+        "priceCell": "A266",
+        "frequencyCell": "B266",
+        "multiplesCell": "D266"
+      }
+    },
+    {
+      "id": "price-266",
+      "rub": 10267,
+      "fapix": 20534,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 267,
+        "priceCell": "A267",
+        "frequencyCell": "B267",
+        "multiplesCell": "D267"
+      }
+    },
+    {
+      "id": "price-267",
+      "rub": 10321,
+      "fapix": 20642,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 268,
+        "priceCell": "A268",
+        "frequencyCell": "B268",
+        "multiplesCell": "D268"
+      }
+    },
+    {
+      "id": "price-268",
+      "rub": 10357,
+      "fapix": 20714,
+      "frequency": 5,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 269,
+        "priceCell": "A269",
+        "frequencyCell": "B269",
+        "multiplesCell": "D269"
+      }
+    },
+    {
+      "id": "price-269",
+      "rub": 10383,
+      "fapix": 20766,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 270,
+        "priceCell": "A270",
+        "frequencyCell": "B270",
+        "multiplesCell": "D270"
+      }
+    },
+    {
+      "id": "price-270",
+      "rub": 10391,
+      "fapix": 20782,
+      "frequency": 7,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 271,
+        "priceCell": "A271",
+        "frequencyCell": "B271",
+        "multiplesCell": "D271"
+      }
+    },
+    {
+      "id": "price-271",
+      "rub": 10399,
+      "fapix": 20798,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 272,
+        "priceCell": "A272",
+        "frequencyCell": "B272",
+        "multiplesCell": "D272"
+      }
+    },
+    {
+      "id": "price-272",
+      "rub": 10401,
+      "fapix": 20802,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 273,
+        "priceCell": "A273",
+        "frequencyCell": "B273",
+        "multiplesCell": "D273"
+      }
+    },
+    {
+      "id": "price-273",
+      "rub": 10403,
+      "fapix": 20806,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 274,
+        "priceCell": "A274",
+        "frequencyCell": "B274",
+        "multiplesCell": "D274"
+      }
+    },
+    {
+      "id": "price-274",
+      "rub": 10427,
+      "fapix": 20854,
+      "frequency": 4,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 275,
+        "priceCell": "A275",
+        "frequencyCell": "B275",
+        "multiplesCell": "D275"
+      }
+    },
+    {
+      "id": "price-275",
+      "rub": 10429,
+      "fapix": 20858,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 276,
+        "priceCell": "A276",
+        "frequencyCell": "B276",
+        "multiplesCell": "D276"
+      }
+    },
+    {
+      "id": "price-276",
+      "rub": 10441,
+      "fapix": 20882,
+      "frequency": 7,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 277,
+        "priceCell": "A277",
+        "frequencyCell": "B277",
+        "multiplesCell": "D277"
+      }
+    },
+    {
+      "id": "price-277",
+      "rub": 10447,
+      "fapix": 20894,
+      "frequency": 8,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 278,
+        "priceCell": "A278",
+        "frequencyCell": "B278",
+        "multiplesCell": "D278"
+      }
+    },
+    {
+      "id": "price-278",
+      "rub": 10453,
+      "fapix": 20906,
+      "frequency": 5,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 279,
+        "priceCell": "A279",
+        "frequencyCell": "B279",
+        "multiplesCell": "D279"
+      }
+    },
+    {
+      "id": "price-279",
+      "rub": 10457,
+      "fapix": 20914,
+      "frequency": 5,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 280,
+        "priceCell": "A280",
+        "frequencyCell": "B280",
+        "multiplesCell": "D280"
+      }
+    },
+    {
+      "id": "price-280",
+      "rub": 10459,
+      "fapix": 20918,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 281,
+        "priceCell": "A281",
+        "frequencyCell": "B281",
+        "multiplesCell": "D281"
+      }
+    },
+    {
+      "id": "price-281",
+      "rub": 10463,
+      "fapix": 20926,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 282,
+        "priceCell": "A282",
+        "frequencyCell": "B282",
+        "multiplesCell": "D282"
+      }
+    },
+    {
+      "id": "price-282",
+      "rub": 10471,
+      "fapix": 20942,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 283,
+        "priceCell": "A283",
+        "frequencyCell": "B283",
+        "multiplesCell": "D283"
+      }
+    },
+    {
+      "id": "price-283",
+      "rub": 10481,
+      "fapix": 20962,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 284,
+        "priceCell": "A284",
+        "frequencyCell": "B284",
+        "multiplesCell": "D284"
+      }
+    },
+    {
+      "id": "price-284",
+      "rub": 10513,
+      "fapix": 21026,
+      "frequency": 4,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 285,
+        "priceCell": "A285",
+        "frequencyCell": "B285",
+        "multiplesCell": "D285"
+      }
+    },
+    {
+      "id": "price-285",
+      "rub": 10517,
+      "fapix": 21034,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 286,
+        "priceCell": "A286",
+        "frequencyCell": "B286",
+        "multiplesCell": "D286"
+      }
+    },
+    {
+      "id": "price-286",
+      "rub": 10537,
+      "fapix": 21074,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 287,
+        "priceCell": "A287",
+        "frequencyCell": "B287",
+        "multiplesCell": "D287"
+      }
+    },
+    {
+      "id": "price-287",
+      "rub": 10541,
+      "fapix": 21082,
+      "frequency": 9,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 288,
+        "priceCell": "A288",
+        "frequencyCell": "B288",
+        "multiplesCell": "D288"
+      }
+    },
+    {
+      "id": "price-288",
+      "rub": 10543,
+      "fapix": 21086,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 289,
+        "priceCell": "A289",
+        "frequencyCell": "B289",
+        "multiplesCell": "D289"
+      }
+    },
+    {
+      "id": "price-289",
+      "rub": 10589,
+      "fapix": 21178,
+      "frequency": 8,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 290,
+        "priceCell": "A290",
+        "frequencyCell": "B290",
+        "multiplesCell": "D290"
+      }
+    },
+    {
+      "id": "price-290",
+      "rub": 10639,
+      "fapix": 21278,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 291,
+        "priceCell": "A291",
+        "frequencyCell": "B291",
+        "multiplesCell": "D291"
+      }
+    },
+    {
+      "id": "price-291",
+      "rub": 10814,
+      "fapix": 21628,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [
+        21628
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 292,
+        "priceCell": "A292",
+        "frequencyCell": "B292",
+        "multiplesCell": "D292"
+      }
+    },
+    {
+      "id": "price-292",
+      "rub": 11405,
+      "fapix": 22810,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [
+        22810
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 293,
+        "priceCell": "A293",
+        "frequencyCell": "B293",
+        "multiplesCell": "D293"
+      }
+    },
+    {
+      "id": "price-293",
+      "rub": 11443,
+      "fapix": 22886,
+      "frequency": 2,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 294,
+        "priceCell": "A294",
+        "frequencyCell": "B294",
+        "multiplesCell": "D294"
+      }
+    },
+    {
+      "id": "price-294",
+      "rub": 11463,
+      "fapix": 22926,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 295,
+        "priceCell": "A295",
+        "frequencyCell": "B295",
+        "multiplesCell": "D295"
+      }
+    },
+    {
+      "id": "price-295",
+      "rub": 11617,
+      "fapix": 23234,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 296,
+        "priceCell": "A296",
+        "frequencyCell": "B296",
+        "multiplesCell": "D296"
+      }
+    },
+    {
+      "id": "price-296",
+      "rub": 11639,
+      "fapix": 23278,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 297,
+        "priceCell": "A297",
+        "frequencyCell": "B297",
+        "multiplesCell": "D297"
+      }
+    },
+    {
+      "id": "price-297",
+      "rub": 11701,
+      "fapix": 23402,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 298,
+        "priceCell": "A298",
+        "frequencyCell": "B298",
+        "multiplesCell": "D298"
+      }
+    },
+    {
+      "id": "price-298",
+      "rub": 14327,
+      "fapix": 28654,
+      "frequency": 5,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [
+        28654,
+        42981
+      ],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 299,
+        "priceCell": "A299",
+        "frequencyCell": "B299",
+        "multiplesCell": "D299"
+      }
+    },
+    {
+      "id": "price-299",
+      "rub": 15082,
+      "fapix": 30164,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 300,
+        "priceCell": "A300",
+        "frequencyCell": "B300",
+        "multiplesCell": "D300"
+      }
+    },
+    {
+      "id": "price-300",
+      "rub": 20059,
+      "fapix": 40118,
+      "frequency": 3,
+      "magnitude": "Десятки тысяч (10000+)",
+      "excludedMultiples": [],
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 301,
+        "priceCell": "A301",
+        "frequencyCell": "B301",
+        "multiplesCell": "D301"
+      }
+    }
+  ]
+}

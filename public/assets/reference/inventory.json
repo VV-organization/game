@@ -1,0 +1,122 @@
+[
+  {
+    "file": "fapix-hero.png",
+    "bytes": 2000426,
+    "sha256": "fce37a53341e2b03d252f9c0113de9e19f4ee3aaa3403da7e88eba9fadad6aba",
+    "source": "https://fapixracing.com/images/fapix-hero.png"
+  },
+  {
+    "file": "favicon.svg",
+    "bytes": 310,
+    "sha256": "56d4ad4a3e529e7d4a98f06714e4ceb76710093d275857a31112fda2771fa05a",
+    "source": "https://fapixracing.com/favicon.svg"
+  },
+  {
+    "file": "fonts.css",
+    "bytes": 3348,
+    "sha256": "2bef6a4d752f4ab562d43a26cc157609247a58bc59930e71294941561aa61bc2",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  },
+  {
+    "file": "golos-text-cyrillic-400-normal-C7us6pn1.woff2",
+    "bytes": 6960,
+    "sha256": "15a5cbadfc1aa7a541651600b757bf7b67bce4e145b3239de072db5427889605",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-400-normal-C7us6pn1.woff2"
+  },
+  {
+    "file": "golos-text-cyrillic-500-normal-BSLQUuP1.woff2",
+    "bytes": 7044,
+    "sha256": "22337b726df83521c7f6b2709e4717116eb53106c6140b45d751f36910191ecc",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-500-normal-BSLQUuP1.woff2"
+  },
+  {
+    "file": "golos-text-cyrillic-600-normal-lpQ9rVRR.woff2",
+    "bytes": 7140,
+    "sha256": "1df9c46f33069094b4769bd2f5f04c5c37e4ce74c77bf062f3bb476d93cc3c2b",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-600-normal-lpQ9rVRR.woff2"
+  },
+  {
+    "file": "golos-text-cyrillic-700-normal-BKmY45Ip.woff2",
+    "bytes": 7108,
+    "sha256": "42db867ddf4b8b025cb2681a796c8c34633e14f77077c5c5ad950383e357a6f5",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-700-normal-BKmY45Ip.woff2"
+  },
+  {
+    "file": "golos-text-cyrillic-800-normal-n8hjK-Mh.woff2",
+    "bytes": 7268,
+    "sha256": "ec1653a81fce6d8bfd7d131821ecb86cfbac0ce1b841e44f058ab8c0ccf5a939",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-800-normal-n8hjK-Mh.woff2"
+  },
+  {
+    "file": "golos-text-cyrillic-900-normal-RBudP1uV.woff2",
+    "bytes": 7080,
+    "sha256": "93826b7123936704ccc5e2474edcb4c0cded1db090bebf79db32f4bd29e49f6d",
+    "source": "https://fapixracing.com/assets/golos-text-cyrillic-900-normal-RBudP1uV.woff2"
+  },
+  {
+    "file": "golos-text-latin-400-normal-Coi1FYaD.woff2",
+    "bytes": 11992,
+    "sha256": "c8246f55dbddb17ceab94b8de2dbcf326dc189f3bc5a8c13d7b14ad05d7d1d81",
+    "source": "https://fapixracing.com/assets/golos-text-latin-400-normal-Coi1FYaD.woff2"
+  },
+  {
+    "file": "golos-text-latin-500-normal-BznAvurO.woff2",
+    "bytes": 12032,
+    "sha256": "779e46588bc6f5f18918dcdf87d609a8053e1c925abd9e94d2b46b0254f36b24",
+    "source": "https://fapixracing.com/assets/golos-text-latin-500-normal-BznAvurO.woff2"
+  },
+  {
+    "file": "golos-text-latin-600-normal-Bhk8uV1U.woff2",
+    "bytes": 12300,
+    "sha256": "ecd56e7dae8376b32caffd25e5c5e1b37cc400ee6d4d838383cff9454d4e9a48",
+    "source": "https://fapixracing.com/assets/golos-text-latin-600-normal-Bhk8uV1U.woff2"
+  },
+  {
+    "file": "golos-text-latin-700-normal-CxmN_Nfd.woff2",
+    "bytes": 12380,
+    "sha256": "1ac7742b82900b38b483fb65691e8fb786ba16f6c5cae677aa63a128286ce853",
+    "source": "https://fapixracing.com/assets/golos-text-latin-700-normal-CxmN_Nfd.woff2"
+  },
+  {
+    "file": "golos-text-latin-800-normal-Dj36HFM-.woff2",
+    "bytes": 12668,
+    "sha256": "ecc8f10066836ac5166d47b3e5bea6c1ef7e45317972ac6456ac2258f2e9b9ec",
+    "source": "https://fapixracing.com/assets/golos-text-latin-800-normal-Dj36HFM-.woff2"
+  },
+  {
+    "file": "golos-text-latin-900-normal-CmMSSdq2.woff2",
+    "bytes": 12140,
+    "sha256": "71caea9ed4c5065461fe8f9f0410ea1850fec28e89cbf707863caf6ea8f02a0b",
+    "source": "https://fapixracing.com/assets/golos-text-latin-900-normal-CmMSSdq2.woff2"
+  },
+  {
+    "file": "logo-mark.svg",
+    "bytes": 210,
+    "sha256": "7abba116672bebcbae18e8906c6c6bae975fd122cd9b449ed7294c092f9a4b1b",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  },
+  {
+    "file": "track-canyon.svg",
+    "bytes": 1265,
+    "sha256": "d4d9bb058a87bcfe4b343a5e29e0c3748b474b0994f89cf24f10e8a284ac72f2",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  },
+  {
+    "file": "track-city.svg",
+    "bytes": 1401,
+    "sha256": "686245a7d62431779b24d8bd5f24d0d46b27d10f36c0e18e9919f370afdd1fba",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  },
+  {
+    "file": "track-coast.svg",
+    "bytes": 1312,
+    "sha256": "2f8f9ce652d0e786210a5dbb39476fd2aafc34c0cca2ce19f859ecb091796327",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  },
+  {
+    "file": "track-skyway.svg",
+    "bytes": 1254,
+    "sha256": "285305a540e9607f61ba7276f769cd3a03763c64262a7b8d792b05a2bdcaac34",
+    "source": "Inline SVG / font-face extraction from https://fapixracing.com/assets/index-CABjT9W8.js and index-Byl8A8M-.css"
+  }
+]

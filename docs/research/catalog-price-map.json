@@ -1,0 +1,5106 @@
+{
+  "checkedAt": "2026-11-06",
+  "rate": "1 RUB = 2 Fapix",
+  "products": [
+    {
+      "productId": "car-01",
+      "name": "Apex GT-R",
+      "category": "car",
+      "fapix": 2078,
+      "rub": 1039,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 100,
+        "priceCell": "A100",
+        "frequencyCell": "B100",
+        "multiplesCell": "D100"
+      },
+      "sourcePriceId": "price-099"
+    },
+    {
+      "productId": "car-02",
+      "name": "Vortex S",
+      "category": "car",
+      "fapix": 2350,
+      "rub": 1175,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 122,
+        "priceCell": "A122",
+        "frequencyCell": "B122",
+        "multiplesCell": "D122"
+      },
+      "sourcePriceId": "price-121"
+    },
+    {
+      "productId": "car-03",
+      "name": "Falcon RS",
+      "category": "car",
+      "fapix": 2938,
+      "rub": 1469,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 145,
+        "priceCell": "A145",
+        "frequencyCell": "B145",
+        "multiplesCell": "D145"
+      },
+      "sourcePriceId": "price-144"
+    },
+    {
+      "productId": "car-04",
+      "name": "Spectre R",
+      "category": "car",
+      "fapix": 4078,
+      "rub": 2039,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 167,
+        "priceCell": "A167",
+        "frequencyCell": "B167",
+        "multiplesCell": "D167"
+      },
+      "sourcePriceId": "price-166"
+    },
+    {
+      "productId": "car-05",
+      "name": "Stellar GT",
+      "category": "car",
+      "fapix": 4454,
+      "rub": 2227,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 189,
+        "priceCell": "A189",
+        "frequencyCell": "B189",
+        "multiplesCell": "D189"
+      },
+      "sourcePriceId": "price-188"
+    },
+    {
+      "productId": "car-06",
+      "name": "Tempest V8",
+      "category": "car",
+      "fapix": 5692,
+      "rub": 2846,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 212,
+        "priceCell": "A212",
+        "frequencyCell": "B212",
+        "multiplesCell": "D212"
+      },
+      "sourcePriceId": "price-211"
+    },
+    {
+      "productId": "car-07",
+      "name": "Phantom X",
+      "category": "car",
+      "fapix": 6982,
+      "rub": 3491,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 234,
+        "priceCell": "A234",
+        "frequencyCell": "B234",
+        "multiplesCell": "D234"
+      },
+      "sourcePriceId": "price-233"
+    },
+    {
+      "productId": "car-08",
+      "name": "Zenith R",
+      "category": "car",
+      "fapix": 13402,
+      "rub": 6701,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 256,
+        "priceCell": "A256",
+        "frequencyCell": "B256",
+        "multiplesCell": "D256"
+      },
+      "sourcePriceId": "price-255"
+    },
+    {
+      "productId": "car-09",
+      "name": "Nova Hyper",
+      "category": "car",
+      "fapix": 20906,
+      "rub": 10453,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 279,
+        "priceCell": "A279",
+        "frequencyCell": "B279",
+        "multiplesCell": "D279"
+      },
+      "sourcePriceId": "price-278"
+    },
+    {
+      "productId": "car-10",
+      "name": "Eclipse One",
+      "category": "car",
+      "fapix": 40118,
+      "rub": 20059,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 301,
+        "priceCell": "A301",
+        "frequencyCell": "B301",
+        "multiplesCell": "D301"
+      },
+      "sourcePriceId": "price-300"
+    },
+    {
+      "productId": "color-01",
+      "name": "Ignition Metallic",
+      "category": "color",
+      "fapix": 622,
+      "rub": 311,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 12,
+        "priceCell": "A12",
+        "frequencyCell": "B12",
+        "multiplesCell": "D12"
+      },
+      "sourcePriceId": "price-011"
+    },
+    {
+      "productId": "color-02",
+      "name": "Sunset Metallic",
+      "category": "color",
+      "fapix": 610,
+      "rub": 305,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 6,
+        "priceCell": "A6",
+        "frequencyCell": "B6",
+        "multiplesCell": "D6"
+      },
+      "sourcePriceId": "price-005"
+    },
+    {
+      "productId": "color-03",
+      "name": "Arctic Metallic",
+      "category": "color",
+      "fapix": 618,
+      "rub": 309,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 10,
+        "priceCell": "A10",
+        "frequencyCell": "B10",
+        "multiplesCell": "D10"
+      },
+      "sourcePriceId": "price-009"
+    },
+    {
+      "productId": "color-04",
+      "name": "Violet Metallic",
+      "category": "color",
+      "fapix": 626,
+      "rub": 313,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 14,
+        "priceCell": "A14",
+        "frequencyCell": "B14",
+        "multiplesCell": "D14"
+      },
+      "sourcePriceId": "price-013"
+    },
+    {
+      "productId": "color-05",
+      "name": "Mint Metallic",
+      "category": "color",
+      "fapix": 634,
+      "rub": 317,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 18,
+        "priceCell": "A18",
+        "frequencyCell": "B18",
+        "multiplesCell": "D18"
+      },
+      "sourcePriceId": "price-017"
+    },
+    {
+      "productId": "color-06",
+      "name": "Sakura Metallic",
+      "category": "color",
+      "fapix": 646,
+      "rub": 323,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 23,
+        "priceCell": "A23",
+        "frequencyCell": "B23",
+        "multiplesCell": "D23"
+      },
+      "sourcePriceId": "price-022"
+    },
+    {
+      "productId": "color-07",
+      "name": "Pearl Metallic",
+      "category": "color",
+      "fapix": 678,
+      "rub": 339,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 27,
+        "priceCell": "A27",
+        "frequencyCell": "B27",
+        "multiplesCell": "D27"
+      },
+      "sourcePriceId": "price-026"
+    },
+    {
+      "productId": "color-08",
+      "name": "Obsidian Metallic",
+      "category": "color",
+      "fapix": 688,
+      "rub": 344,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 31,
+        "priceCell": "A31",
+        "frequencyCell": "B31",
+        "multiplesCell": "D31"
+      },
+      "sourcePriceId": "price-030"
+    },
+    {
+      "productId": "color-09",
+      "name": "Acid Metallic",
+      "category": "color",
+      "fapix": 696,
+      "rub": 348,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 35,
+        "priceCell": "A35",
+        "frequencyCell": "B35",
+        "multiplesCell": "D35"
+      },
+      "sourcePriceId": "price-034"
+    },
+    {
+      "productId": "color-10",
+      "name": "Nebula Metallic",
+      "category": "color",
+      "fapix": 706,
+      "rub": 353,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 39,
+        "priceCell": "A39",
+        "frequencyCell": "B39",
+        "multiplesCell": "D39"
+      },
+      "sourcePriceId": "price-038"
+    },
+    {
+      "productId": "color-11",
+      "name": "Copper Satin",
+      "category": "color",
+      "fapix": 726,
+      "rub": 363,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 43,
+        "priceCell": "A43",
+        "frequencyCell": "B43",
+        "multiplesCell": "D43"
+      },
+      "sourcePriceId": "price-042"
+    },
+    {
+      "productId": "color-12",
+      "name": "Azure Satin",
+      "category": "color",
+      "fapix": 818,
+      "rub": 409,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 47,
+        "priceCell": "A47",
+        "frequencyCell": "B47",
+        "multiplesCell": "D47"
+      },
+      "sourcePriceId": "price-046"
+    },
+    {
+      "productId": "color-13",
+      "name": "Crimson Satin",
+      "category": "color",
+      "fapix": 830,
+      "rub": 415,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 51,
+        "priceCell": "A51",
+        "frequencyCell": "B51",
+        "multiplesCell": "D51"
+      },
+      "sourcePriceId": "price-050"
+    },
+    {
+      "productId": "color-14",
+      "name": "Jade Satin",
+      "category": "color",
+      "fapix": 838,
+      "rub": 419,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 55,
+        "priceCell": "A55",
+        "frequencyCell": "B55",
+        "multiplesCell": "D55"
+      },
+      "sourcePriceId": "price-054"
+    },
+    {
+      "productId": "color-15",
+      "name": "Orchid Satin",
+      "category": "color",
+      "fapix": 1000,
+      "rub": 500,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 59,
+        "priceCell": "A59",
+        "frequencyCell": "B59",
+        "multiplesCell": "D59"
+      },
+      "sourcePriceId": "price-058"
+    },
+    {
+      "productId": "color-16",
+      "name": "Steel Satin",
+      "category": "color",
+      "fapix": 1034,
+      "rub": 517,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 64,
+        "priceCell": "A64",
+        "frequencyCell": "B64",
+        "multiplesCell": "D64"
+      },
+      "sourcePriceId": "price-063"
+    },
+    {
+      "productId": "color-17",
+      "name": "Sand Satin",
+      "category": "color",
+      "fapix": 1046,
+      "rub": 523,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 68,
+        "priceCell": "A68",
+        "frequencyCell": "B68",
+        "multiplesCell": "D68"
+      },
+      "sourcePriceId": "price-067"
+    },
+    {
+      "productId": "color-18",
+      "name": "Sage Satin",
+      "category": "color",
+      "fapix": 1064,
+      "rub": 532,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 72,
+        "priceCell": "A72",
+        "frequencyCell": "B72",
+        "multiplesCell": "D72"
+      },
+      "sourcePriceId": "price-071"
+    },
+    {
+      "productId": "color-19",
+      "name": "Titanium Satin",
+      "category": "color",
+      "fapix": 1150,
+      "rub": 575,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 76,
+        "priceCell": "A76",
+        "frequencyCell": "B76",
+        "multiplesCell": "D76"
+      },
+      "sourcePriceId": "price-075"
+    },
+    {
+      "productId": "color-20",
+      "name": "Midnight Satin",
+      "category": "color",
+      "fapix": 1166,
+      "rub": 583,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 80,
+        "priceCell": "A80",
+        "frequencyCell": "B80",
+        "multiplesCell": "D80"
+      },
+      "sourcePriceId": "price-079"
+    },
+    {
+      "productId": "body-01",
+      "name": "Аэрокит Ignition",
+      "category": "body",
+      "fapix": 2090,
+      "rub": 1045,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 102,
+        "priceCell": "A102",
+        "frequencyCell": "B102",
+        "multiplesCell": "D102"
+      },
+      "sourcePriceId": "price-101"
+    },
+    {
+      "productId": "body-02",
+      "name": "Аэрокит Sunset",
+      "category": "body",
+      "fapix": 2122,
+      "rub": 1061,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 107,
+        "priceCell": "A107",
+        "frequencyCell": "B107",
+        "multiplesCell": "D107"
+      },
+      "sourcePriceId": "price-106"
+    },
+    {
+      "productId": "body-03",
+      "name": "Аэрокит Arctic",
+      "category": "body",
+      "fapix": 2294,
+      "rub": 1147,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 113,
+        "priceCell": "A113",
+        "frequencyCell": "B113",
+        "multiplesCell": "D113"
+      },
+      "sourcePriceId": "price-112"
+    },
+    {
+      "productId": "body-04",
+      "name": "Аэрокит Violet",
+      "category": "body",
+      "fapix": 2326,
+      "rub": 1163,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 118,
+        "priceCell": "A118",
+        "frequencyCell": "B118",
+        "multiplesCell": "D118"
+      },
+      "sourcePriceId": "price-117"
+    },
+    {
+      "productId": "body-05",
+      "name": "Аэрокит Mint",
+      "category": "body",
+      "fapix": 2354,
+      "rub": 1177,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 123,
+        "priceCell": "A123",
+        "frequencyCell": "B123",
+        "multiplesCell": "D123"
+      },
+      "sourcePriceId": "price-122"
+    },
+    {
+      "productId": "body-06",
+      "name": "Аэрокит Sakura",
+      "category": "body",
+      "fapix": 2566,
+      "rub": 1283,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 128,
+        "priceCell": "A128",
+        "frequencyCell": "B128",
+        "multiplesCell": "D128"
+      },
+      "sourcePriceId": "price-127"
+    },
+    {
+      "productId": "body-07",
+      "name": "Аэрокит Pearl",
+      "category": "body",
+      "fapix": 2854,
+      "rub": 1427,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 134,
+        "priceCell": "A134",
+        "frequencyCell": "B134",
+        "multiplesCell": "D134"
+      },
+      "sourcePriceId": "price-133"
+    },
+    {
+      "productId": "body-08",
+      "name": "Аэрокит Obsidian",
+      "category": "body",
+      "fapix": 2902,
+      "rub": 1451,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 139,
+        "priceCell": "A139",
+        "frequencyCell": "B139",
+        "multiplesCell": "D139"
+      },
+      "sourcePriceId": "price-138"
+    },
+    {
+      "productId": "body-09",
+      "name": "Аэрокит Acid",
+      "category": "body",
+      "fapix": 2930,
+      "rub": 1465,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 144,
+        "priceCell": "A144",
+        "frequencyCell": "B144",
+        "multiplesCell": "D144"
+      },
+      "sourcePriceId": "price-143"
+    },
+    {
+      "productId": "body-10",
+      "name": "Аэрокит Nebula",
+      "category": "body",
+      "fapix": 2974,
+      "rub": 1487,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 149,
+        "priceCell": "A149",
+        "frequencyCell": "B149",
+        "multiplesCell": "D149"
+      },
+      "sourcePriceId": "price-148"
+    },
+    {
+      "productId": "body-11",
+      "name": "Аэрокит Copper",
+      "category": "body",
+      "fapix": 3454,
+      "rub": 1727,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 155,
+        "priceCell": "A155",
+        "frequencyCell": "B155",
+        "multiplesCell": "D155"
+      },
+      "sourcePriceId": "price-154"
+    },
+    {
+      "productId": "body-12",
+      "name": "Аэрокит Azure",
+      "category": "body",
+      "fapix": 3518,
+      "rub": 1759,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 160,
+        "priceCell": "A160",
+        "frequencyCell": "B160",
+        "multiplesCell": "D160"
+      },
+      "sourcePriceId": "price-159"
+    },
+    {
+      "productId": "body-13",
+      "name": "Аэрокит Crimson",
+      "category": "body",
+      "fapix": 3998,
+      "rub": 1999,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 165,
+        "priceCell": "A165",
+        "frequencyCell": "B165",
+        "multiplesCell": "D165"
+      },
+      "sourcePriceId": "price-164"
+    },
+    {
+      "productId": "body-14",
+      "name": "Аэрокит Jade",
+      "category": "body",
+      "fapix": 4102,
+      "rub": 2051,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 170,
+        "priceCell": "A170",
+        "frequencyCell": "B170",
+        "multiplesCell": "D170"
+      },
+      "sourcePriceId": "price-169"
+    },
+    {
+      "productId": "body-15",
+      "name": "Аэрокит Orchid",
+      "category": "body",
+      "fapix": 4154,
+      "rub": 2077,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 176,
+        "priceCell": "A176",
+        "frequencyCell": "B176",
+        "multiplesCell": "D176"
+      },
+      "sourcePriceId": "price-175"
+    },
+    {
+      "productId": "body-16",
+      "name": "Аэрокит Steel",
+      "category": "body",
+      "fapix": 4186,
+      "rub": 2093,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 181,
+        "priceCell": "A181",
+        "frequencyCell": "B181",
+        "multiplesCell": "D181"
+      },
+      "sourcePriceId": "price-180"
+    },
+    {
+      "productId": "body-17",
+      "name": "Аэрокит Sand",
+      "category": "body",
+      "fapix": 4226,
+      "rub": 2113,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 186,
+        "priceCell": "A186",
+        "frequencyCell": "B186",
+        "multiplesCell": "D186"
+      },
+      "sourcePriceId": "price-185"
+    },
+    {
+      "productId": "body-18",
+      "name": "Аэрокит Sage",
+      "category": "body",
+      "fapix": 4474,
+      "rub": 2237,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 191,
+        "priceCell": "A191",
+        "frequencyCell": "B191",
+        "multiplesCell": "D191"
+      },
+      "sourcePriceId": "price-190"
+    },
+    {
+      "productId": "body-19",
+      "name": "Аэрокит Titanium",
+      "category": "body",
+      "fapix": 4674,
+      "rub": 2337,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 197,
+        "priceCell": "A197",
+        "frequencyCell": "B197",
+        "multiplesCell": "D197"
+      },
+      "sourcePriceId": "price-196"
+    },
+    {
+      "productId": "body-20",
+      "name": "Аэрокит Midnight",
+      "category": "body",
+      "fapix": 4948,
+      "rub": 2474,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 202,
+        "priceCell": "A202",
+        "frequencyCell": "B202",
+        "multiplesCell": "D202"
+      },
+      "sourcePriceId": "price-201"
+    },
+    {
+      "productId": "wheels-01",
+      "name": "Диски Ignition",
+      "category": "wheels",
+      "fapix": 5806,
+      "rub": 2903,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 222,
+        "priceCell": "A222",
+        "frequencyCell": "B222",
+        "multiplesCell": "D222"
+      },
+      "sourcePriceId": "price-221"
+    },
+    {
+      "productId": "wheels-02",
+      "name": "Диски Sunset",
+      "category": "wheels",
+      "fapix": 2566,
+      "rub": 1283,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 128,
+        "priceCell": "A128",
+        "frequencyCell": "B128",
+        "multiplesCell": "D128"
+      },
+      "sourcePriceId": "price-127"
+    },
+    {
+      "productId": "wheels-03",
+      "name": "Диски Arctic",
+      "category": "wheels",
+      "fapix": 2854,
+      "rub": 1427,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 134,
+        "priceCell": "A134",
+        "frequencyCell": "B134",
+        "multiplesCell": "D134"
+      },
+      "sourcePriceId": "price-133"
+    },
+    {
+      "productId": "wheels-04",
+      "name": "Диски Violet",
+      "category": "wheels",
+      "fapix": 2906,
+      "rub": 1453,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 140,
+        "priceCell": "A140",
+        "frequencyCell": "B140",
+        "multiplesCell": "D140"
+      },
+      "sourcePriceId": "price-139"
+    },
+    {
+      "productId": "wheels-05",
+      "name": "Диски Mint",
+      "category": "wheels",
+      "fapix": 2942,
+      "rub": 1471,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 146,
+        "priceCell": "A146",
+        "frequencyCell": "B146",
+        "multiplesCell": "D146"
+      },
+      "sourcePriceId": "price-145"
+    },
+    {
+      "productId": "wheels-06",
+      "name": "Диски Sakura",
+      "category": "wheels",
+      "fapix": 3116,
+      "rub": 1558,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 152,
+        "priceCell": "A152",
+        "frequencyCell": "B152",
+        "multiplesCell": "D152"
+      },
+      "sourcePriceId": "price-151"
+    },
+    {
+      "productId": "wheels-07",
+      "name": "Диски Pearl",
+      "category": "wheels",
+      "fapix": 3494,
+      "rub": 1747,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 158,
+        "priceCell": "A158",
+        "frequencyCell": "B158",
+        "multiplesCell": "D158"
+      },
+      "sourcePriceId": "price-157"
+    },
+    {
+      "productId": "wheels-08",
+      "name": "Диски Obsidian",
+      "category": "wheels",
+      "fapix": 3994,
+      "rub": 1997,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 164,
+        "priceCell": "A164",
+        "frequencyCell": "B164",
+        "multiplesCell": "D164"
+      },
+      "sourcePriceId": "price-163"
+    },
+    {
+      "productId": "wheels-09",
+      "name": "Диски Acid",
+      "category": "wheels",
+      "fapix": 4102,
+      "rub": 2051,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 170,
+        "priceCell": "A170",
+        "frequencyCell": "B170",
+        "multiplesCell": "D170"
+      },
+      "sourcePriceId": "price-169"
+    },
+    {
+      "productId": "wheels-10",
+      "name": "Диски Nebula",
+      "category": "wheels",
+      "fapix": 4154,
+      "rub": 2077,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 176,
+        "priceCell": "A176",
+        "frequencyCell": "B176",
+        "multiplesCell": "D176"
+      },
+      "sourcePriceId": "price-175"
+    },
+    {
+      "productId": "wheels-11",
+      "name": "Диски Copper",
+      "category": "wheels",
+      "fapix": 4202,
+      "rub": 2101,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 183,
+        "priceCell": "A183",
+        "frequencyCell": "B183",
+        "multiplesCell": "D183"
+      },
+      "sourcePriceId": "price-182"
+    },
+    {
+      "productId": "wheels-12",
+      "name": "Диски Azure",
+      "category": "wheels",
+      "fapix": 4454,
+      "rub": 2227,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 189,
+        "priceCell": "A189",
+        "frequencyCell": "B189",
+        "multiplesCell": "D189"
+      },
+      "sourcePriceId": "price-188"
+    },
+    {
+      "productId": "wheels-13",
+      "name": "Диски Crimson",
+      "category": "wheels",
+      "fapix": 4526,
+      "rub": 2263,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 195,
+        "priceCell": "A195",
+        "frequencyCell": "B195",
+        "multiplesCell": "D195"
+      },
+      "sourcePriceId": "price-194"
+    },
+    {
+      "productId": "wheels-14",
+      "name": "Диски Jade",
+      "category": "wheels",
+      "fapix": 4726,
+      "rub": 2363,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 201,
+        "priceCell": "A201",
+        "frequencyCell": "B201",
+        "multiplesCell": "D201"
+      },
+      "sourcePriceId": "price-200"
+    },
+    {
+      "productId": "wheels-15",
+      "name": "Диски Orchid",
+      "category": "wheels",
+      "fapix": 5014,
+      "rub": 2507,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 207,
+        "priceCell": "A207",
+        "frequencyCell": "B207",
+        "multiplesCell": "D207"
+      },
+      "sourcePriceId": "price-206"
+    },
+    {
+      "productId": "wheels-16",
+      "name": "Диски Steel",
+      "category": "wheels",
+      "fapix": 5702,
+      "rub": 2851,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 213,
+        "priceCell": "A213",
+        "frequencyCell": "B213",
+        "multiplesCell": "D213"
+      },
+      "sourcePriceId": "price-212"
+    },
+    {
+      "productId": "wheels-17",
+      "name": "Диски Sand",
+      "category": "wheels",
+      "fapix": 5762,
+      "rub": 2881,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 219,
+        "priceCell": "A219",
+        "frequencyCell": "B219",
+        "multiplesCell": "D219"
+      },
+      "sourcePriceId": "price-218"
+    },
+    {
+      "productId": "wheels-18",
+      "name": "Диски Sage",
+      "category": "wheels",
+      "fapix": 5834,
+      "rub": 2917,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 225,
+        "priceCell": "A225",
+        "frequencyCell": "B225",
+        "multiplesCell": "D225"
+      },
+      "sourcePriceId": "price-224"
+    },
+    {
+      "productId": "wheels-19",
+      "name": "Диски Titanium",
+      "category": "wheels",
+      "fapix": 5902,
+      "rub": 2951,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 231,
+        "priceCell": "A231",
+        "frequencyCell": "B231",
+        "multiplesCell": "D231"
+      },
+      "sourcePriceId": "price-230"
+    },
+    {
+      "productId": "wheels-20",
+      "name": "Диски Midnight",
+      "category": "wheels",
+      "fapix": 10204,
+      "rub": 5102,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 237,
+        "priceCell": "A237",
+        "frequencyCell": "B237",
+        "multiplesCell": "D237"
+      },
+      "sourcePriceId": "price-236"
+    },
+    {
+      "productId": "garage-01",
+      "name": "Коралловый бокс",
+      "category": "garage",
+      "fapix": 4154,
+      "rub": 2077,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 176,
+        "priceCell": "A176",
+        "frequencyCell": "B176",
+        "multiplesCell": "D176"
+      },
+      "sourcePriceId": "price-175"
+    },
+    {
+      "productId": "garage-02",
+      "name": "Арктический бокс",
+      "category": "garage",
+      "fapix": 4442,
+      "rub": 2221,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 188,
+        "priceCell": "A188",
+        "frequencyCell": "B188",
+        "multiplesCell": "D188"
+      },
+      "sourcePriceId": "price-187"
+    },
+    {
+      "productId": "garage-03",
+      "name": "Бокс Индиго",
+      "category": "garage",
+      "fapix": 4702,
+      "rub": 2351,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 200,
+        "priceCell": "A200",
+        "frequencyCell": "B200",
+        "multiplesCell": "D200"
+      },
+      "sourcePriceId": "price-199"
+    },
+    {
+      "productId": "garage-04",
+      "name": "Песочный бокс",
+      "category": "garage",
+      "fapix": 5686,
+      "rub": 2843,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 211,
+        "priceCell": "A211",
+        "frequencyCell": "B211",
+        "multiplesCell": "D211"
+      },
+      "sourcePriceId": "price-210"
+    },
+    {
+      "productId": "garage-05",
+      "name": "Розовый бокс",
+      "category": "garage",
+      "fapix": 5818,
+      "rub": 2909,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 223,
+        "priceCell": "A223",
+        "frequencyCell": "B223",
+        "multiplesCell": "D223"
+      },
+      "sourcePriceId": "price-222"
+    },
+    {
+      "productId": "garage-06",
+      "name": "Коралловый бокс Pro",
+      "category": "garage",
+      "fapix": 6998,
+      "rub": 3499,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 235,
+        "priceCell": "A235",
+        "frequencyCell": "B235",
+        "multiplesCell": "D235"
+      },
+      "sourcePriceId": "price-234"
+    },
+    {
+      "productId": "garage-07",
+      "name": "Арктический бокс Pro",
+      "category": "garage",
+      "fapix": 10414,
+      "rub": 5207,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 247,
+        "priceCell": "A247",
+        "frequencyCell": "B247",
+        "multiplesCell": "D247"
+      },
+      "sourcePriceId": "price-246"
+    },
+    {
+      "productId": "garage-08",
+      "name": "Бокс Индиго Pro",
+      "category": "garage",
+      "fapix": 20334,
+      "rub": 10167,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 258,
+        "priceCell": "A258",
+        "frequencyCell": "B258",
+        "multiplesCell": "D258"
+      },
+      "sourcePriceId": "price-257"
+    },
+    {
+      "productId": "garage-09",
+      "name": "Песочный бокс Pro",
+      "category": "garage",
+      "fapix": 20766,
+      "rub": 10383,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 270,
+        "priceCell": "A270",
+        "frequencyCell": "B270",
+        "multiplesCell": "D270"
+      },
+      "sourcePriceId": "price-269"
+    },
+    {
+      "productId": "garage-10",
+      "name": "Розовый бокс Pro",
+      "category": "garage",
+      "fapix": 20926,
+      "rub": 10463,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 282,
+        "priceCell": "A282",
+        "frequencyCell": "B282",
+        "multiplesCell": "D282"
+      },
+      "sourcePriceId": "price-281"
+    },
+    {
+      "productId": "decor-01",
+      "name": "Кубок пилота — Классика",
+      "category": "decor",
+      "fapix": 300,
+      "rub": 150,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 2,
+        "priceCell": "A2",
+        "frequencyCell": "B2",
+        "multiplesCell": "D2"
+      },
+      "sourcePriceId": "price-001"
+    },
+    {
+      "productId": "decor-02",
+      "name": "Грузовые ящики — Классика",
+      "category": "decor",
+      "fapix": 618,
+      "rub": 309,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 10,
+        "priceCell": "A10",
+        "frequencyCell": "B10",
+        "multiplesCell": "D10"
+      },
+      "sourcePriceId": "price-009"
+    },
+    {
+      "productId": "decor-03",
+      "name": "Гоночный флаг — Классика",
+      "category": "decor",
+      "fapix": 634,
+      "rub": 317,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 18,
+        "priceCell": "A18",
+        "frequencyCell": "B18",
+        "multiplesCell": "D18"
+      },
+      "sourcePriceId": "price-017"
+    },
+    {
+      "productId": "decor-04",
+      "name": "Пальма в кадке — Классика",
+      "category": "decor",
+      "fapix": 652,
+      "rub": 326,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 26,
+        "priceCell": "A26",
+        "frequencyCell": "B26",
+        "multiplesCell": "D26"
+      },
+      "sourcePriceId": "price-025"
+    },
+    {
+      "productId": "decor-05",
+      "name": "Кубок пилота — Коралл",
+      "category": "decor",
+      "fapix": 694,
+      "rub": 347,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 34,
+        "priceCell": "A34",
+        "frequencyCell": "B34",
+        "multiplesCell": "D34"
+      },
+      "sourcePriceId": "price-033"
+    },
+    {
+      "productId": "decor-06",
+      "name": "Грузовые ящики — Коралл",
+      "category": "decor",
+      "fapix": 710,
+      "rub": 355,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 41,
+        "priceCell": "A41",
+        "frequencyCell": "B41",
+        "multiplesCell": "D41"
+      },
+      "sourcePriceId": "price-040"
+    },
+    {
+      "productId": "decor-07",
+      "name": "Гоночный флаг — Коралл",
+      "category": "decor",
+      "fapix": 822,
+      "rub": 411,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 49,
+        "priceCell": "A49",
+        "frequencyCell": "B49",
+        "multiplesCell": "D49"
+      },
+      "sourcePriceId": "price-048"
+    },
+    {
+      "productId": "decor-08",
+      "name": "Пальма в кадке — Коралл",
+      "category": "decor",
+      "fapix": 890,
+      "rub": 445,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 57,
+        "priceCell": "A57",
+        "frequencyCell": "B57",
+        "multiplesCell": "D57"
+      },
+      "sourcePriceId": "price-056"
+    },
+    {
+      "productId": "decor-09",
+      "name": "Кубок пилота — Индиго",
+      "category": "decor",
+      "fapix": 1036,
+      "rub": 518,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 65,
+        "priceCell": "A65",
+        "frequencyCell": "B65",
+        "multiplesCell": "D65"
+      },
+      "sourcePriceId": "price-064"
+    },
+    {
+      "productId": "decor-10",
+      "name": "Грузовые ящики — Индиго",
+      "category": "decor",
+      "fapix": 1142,
+      "rub": 571,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 73,
+        "priceCell": "A73",
+        "frequencyCell": "B73",
+        "multiplesCell": "D73"
+      },
+      "sourcePriceId": "price-072"
+    },
+    {
+      "productId": "decor-11",
+      "name": "Гоночный флаг — Индиго",
+      "category": "decor",
+      "fapix": 1168,
+      "rub": 584,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 81,
+        "priceCell": "A81",
+        "frequencyCell": "B81",
+        "multiplesCell": "D81"
+      },
+      "sourcePriceId": "price-080"
+    },
+    {
+      "productId": "decor-12",
+      "name": "Пальма в кадке — Индиго",
+      "category": "decor",
+      "fapix": 1394,
+      "rub": 697,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 89,
+        "priceCell": "A89",
+        "frequencyCell": "B89",
+        "multiplesCell": "D89"
+      },
+      "sourcePriceId": "price-088"
+    },
+    {
+      "productId": "decor-13",
+      "name": "Кубок пилота — Песок",
+      "category": "decor",
+      "fapix": 2062,
+      "rub": 1031,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 97,
+        "priceCell": "A97",
+        "frequencyCell": "B97",
+        "multiplesCell": "D97"
+      },
+      "sourcePriceId": "price-096"
+    },
+    {
+      "productId": "decor-14",
+      "name": "Грузовые ящики — Песок",
+      "category": "decor",
+      "fapix": 2110,
+      "rub": 1055,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 105,
+        "priceCell": "A105",
+        "frequencyCell": "B105",
+        "multiplesCell": "D105"
+      },
+      "sourcePriceId": "price-104"
+    },
+    {
+      "productId": "decor-15",
+      "name": "Гоночный флаг — Песок",
+      "category": "decor",
+      "fapix": 2294,
+      "rub": 1147,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 113,
+        "priceCell": "A113",
+        "frequencyCell": "B113",
+        "multiplesCell": "D113"
+      },
+      "sourcePriceId": "price-112"
+    },
+    {
+      "productId": "decor-16",
+      "name": "Пальма в кадке — Песок",
+      "category": "decor",
+      "fapix": 2338,
+      "rub": 1169,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 120,
+        "priceCell": "A120",
+        "frequencyCell": "B120",
+        "multiplesCell": "D120"
+      },
+      "sourcePriceId": "price-119"
+    },
+    {
+      "productId": "decor-17",
+      "name": "Кубок пилота — Неон",
+      "category": "decor",
+      "fapix": 2566,
+      "rub": 1283,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 128,
+        "priceCell": "A128",
+        "frequencyCell": "B128",
+        "multiplesCell": "D128"
+      },
+      "sourcePriceId": "price-127"
+    },
+    {
+      "productId": "decor-18",
+      "name": "Грузовые ящики — Неон",
+      "category": "decor",
+      "fapix": 2866,
+      "rub": 1433,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 136,
+        "priceCell": "A136",
+        "frequencyCell": "B136",
+        "multiplesCell": "D136"
+      },
+      "sourcePriceId": "price-135"
+    },
+    {
+      "productId": "decor-19",
+      "name": "Гоночный флаг — Неон",
+      "category": "decor",
+      "fapix": 2930,
+      "rub": 1465,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 144,
+        "priceCell": "A144",
+        "frequencyCell": "B144",
+        "multiplesCell": "D144"
+      },
+      "sourcePriceId": "price-143"
+    },
+    {
+      "productId": "decor-20",
+      "name": "Пальма в кадке — Неон",
+      "category": "decor",
+      "fapix": 3116,
+      "rub": 1558,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 152,
+        "priceCell": "A152",
+        "frequencyCell": "B152",
+        "multiplesCell": "D152"
+      },
+      "sourcePriceId": "price-151"
+    },
+    {
+      "productId": "helmet-01",
+      "name": "Шлем Ignition",
+      "category": "helmet",
+      "fapix": 818,
+      "rub": 409,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 47,
+        "priceCell": "A47",
+        "frequencyCell": "B47",
+        "multiplesCell": "D47"
+      },
+      "sourcePriceId": "price-046"
+    },
+    {
+      "productId": "helmet-02",
+      "name": "Шлем Sunset",
+      "category": "helmet",
+      "fapix": 838,
+      "rub": 419,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 55,
+        "priceCell": "A55",
+        "frequencyCell": "B55",
+        "multiplesCell": "D55"
+      },
+      "sourcePriceId": "price-054"
+    },
+    {
+      "productId": "helmet-03",
+      "name": "Шлем Arctic",
+      "category": "helmet",
+      "fapix": 1024,
+      "rub": 512,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 62,
+        "priceCell": "A62",
+        "frequencyCell": "B62",
+        "multiplesCell": "D62"
+      },
+      "sourcePriceId": "price-061"
+    },
+    {
+      "productId": "helmet-04",
+      "name": "Шлем Violet",
+      "category": "helmet",
+      "fapix": 1052,
+      "rub": 526,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 70,
+        "priceCell": "A70",
+        "frequencyCell": "B70",
+        "multiplesCell": "D70"
+      },
+      "sourcePriceId": "price-069"
+    },
+    {
+      "productId": "helmet-05",
+      "name": "Шлем Mint",
+      "category": "helmet",
+      "fapix": 1158,
+      "rub": 579,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 78,
+        "priceCell": "A78",
+        "frequencyCell": "B78",
+        "multiplesCell": "D78"
+      },
+      "sourcePriceId": "price-077"
+    },
+    {
+      "productId": "helmet-06",
+      "name": "Шлем Sakura",
+      "category": "helmet",
+      "fapix": 1176,
+      "rub": 588,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 85,
+        "priceCell": "A85",
+        "frequencyCell": "B85",
+        "multiplesCell": "D85"
+      },
+      "sourcePriceId": "price-084"
+    },
+    {
+      "productId": "helmet-07",
+      "name": "Шлем Pearl",
+      "category": "helmet",
+      "fapix": 2038,
+      "rub": 1019,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 93,
+        "priceCell": "A93",
+        "frequencyCell": "B93",
+        "multiplesCell": "D93"
+      },
+      "sourcePriceId": "price-092"
+    },
+    {
+      "productId": "helmet-08",
+      "name": "Шлем Obsidian",
+      "category": "helmet",
+      "fapix": 2078,
+      "rub": 1039,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 100,
+        "priceCell": "A100",
+        "frequencyCell": "B100",
+        "multiplesCell": "D100"
+      },
+      "sourcePriceId": "price-099"
+    },
+    {
+      "productId": "helmet-09",
+      "name": "Шлем Acid",
+      "category": "helmet",
+      "fapix": 2222,
+      "rub": 1111,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 108,
+        "priceCell": "A108",
+        "frequencyCell": "B108",
+        "multiplesCell": "D108"
+      },
+      "sourcePriceId": "price-107"
+    },
+    {
+      "productId": "helmet-10",
+      "name": "Шлем Nebula",
+      "category": "helmet",
+      "fapix": 2314,
+      "rub": 1157,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 116,
+        "priceCell": "A116",
+        "frequencyCell": "B116",
+        "multiplesCell": "D116"
+      },
+      "sourcePriceId": "price-115"
+    },
+    {
+      "productId": "helmet-11",
+      "name": "Шлем Copper",
+      "category": "helmet",
+      "fapix": 2354,
+      "rub": 1177,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 123,
+        "priceCell": "A123",
+        "frequencyCell": "B123",
+        "multiplesCell": "D123"
+      },
+      "sourcePriceId": "price-122"
+    },
+    {
+      "productId": "helmet-12",
+      "name": "Шлем Azure",
+      "category": "helmet",
+      "fapix": 2606,
+      "rub": 1303,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 131,
+        "priceCell": "A131",
+        "frequencyCell": "B131",
+        "multiplesCell": "D131"
+      },
+      "sourcePriceId": "price-130"
+    },
+    {
+      "productId": "helmet-13",
+      "name": "Шлем Crimson",
+      "category": "helmet",
+      "fapix": 2902,
+      "rub": 1451,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 139,
+        "priceCell": "A139",
+        "frequencyCell": "B139",
+        "multiplesCell": "D139"
+      },
+      "sourcePriceId": "price-138"
+    },
+    {
+      "productId": "helmet-14",
+      "name": "Шлем Jade",
+      "category": "helmet",
+      "fapix": 2942,
+      "rub": 1471,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 146,
+        "priceCell": "A146",
+        "frequencyCell": "B146",
+        "multiplesCell": "D146"
+      },
+      "sourcePriceId": "price-145"
+    },
+    {
+      "productId": "helmet-15",
+      "name": "Шлем Orchid",
+      "category": "helmet",
+      "fapix": 3418,
+      "rub": 1709,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 154,
+        "priceCell": "A154",
+        "frequencyCell": "B154",
+        "multiplesCell": "D154"
+      },
+      "sourcePriceId": "price-153"
+    },
+    {
+      "productId": "helmet-16",
+      "name": "Шлем Steel",
+      "category": "helmet",
+      "fapix": 3538,
+      "rub": 1769,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 161,
+        "priceCell": "A161",
+        "frequencyCell": "B161",
+        "multiplesCell": "D161"
+      },
+      "sourcePriceId": "price-160"
+    },
+    {
+      "productId": "helmet-17",
+      "name": "Шлем Sand",
+      "category": "helmet",
+      "fapix": 4094,
+      "rub": 2047,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 169,
+        "priceCell": "A169",
+        "frequencyCell": "B169",
+        "multiplesCell": "D169"
+      },
+      "sourcePriceId": "price-168"
+    },
+    {
+      "productId": "helmet-18",
+      "name": "Шлем Sage",
+      "category": "helmet",
+      "fapix": 4162,
+      "rub": 2081,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 177,
+        "priceCell": "A177",
+        "frequencyCell": "B177",
+        "multiplesCell": "D177"
+      },
+      "sourcePriceId": "price-176"
+    },
+    {
+      "productId": "helmet-19",
+      "name": "Шлем Titanium",
+      "category": "helmet",
+      "fapix": 4214,
+      "rub": 2107,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 184,
+        "priceCell": "A184",
+        "frequencyCell": "B184",
+        "multiplesCell": "D184"
+      },
+      "sourcePriceId": "price-183"
+    },
+    {
+      "productId": "helmet-20",
+      "name": "Шлем Midnight",
+      "category": "helmet",
+      "fapix": 4478,
+      "rub": 2239,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 192,
+        "priceCell": "A192",
+        "frequencyCell": "B192",
+        "multiplesCell": "D192"
+      },
+      "sourcePriceId": "price-191"
+    },
+    {
+      "productId": "suit-01",
+      "name": "Комбинезон Ignition",
+      "category": "suit",
+      "fapix": 1024,
+      "rub": 512,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 62,
+        "priceCell": "A62",
+        "frequencyCell": "B62",
+        "multiplesCell": "D62"
+      },
+      "sourcePriceId": "price-061"
+    },
+    {
+      "productId": "suit-02",
+      "name": "Комбинезон Sunset",
+      "category": "suit",
+      "fapix": 1052,
+      "rub": 526,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 70,
+        "priceCell": "A70",
+        "frequencyCell": "B70",
+        "multiplesCell": "D70"
+      },
+      "sourcePriceId": "price-069"
+    },
+    {
+      "productId": "suit-03",
+      "name": "Комбинезон Arctic",
+      "category": "suit",
+      "fapix": 1158,
+      "rub": 579,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 78,
+        "priceCell": "A78",
+        "frequencyCell": "B78",
+        "multiplesCell": "D78"
+      },
+      "sourcePriceId": "price-077"
+    },
+    {
+      "productId": "suit-04",
+      "name": "Комбинезон Violet",
+      "category": "suit",
+      "fapix": 1178,
+      "rub": 589,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 86,
+        "priceCell": "A86",
+        "frequencyCell": "B86",
+        "multiplesCell": "D86"
+      },
+      "sourcePriceId": "price-085"
+    },
+    {
+      "productId": "suit-05",
+      "name": "Комбинезон Mint",
+      "category": "suit",
+      "fapix": 2042,
+      "rub": 1021,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 94,
+        "priceCell": "A94",
+        "frequencyCell": "B94",
+        "multiplesCell": "D94"
+      },
+      "sourcePriceId": "price-093"
+    },
+    {
+      "productId": "suit-06",
+      "name": "Комбинезон Sakura",
+      "category": "suit",
+      "fapix": 2086,
+      "rub": 1043,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 101,
+        "priceCell": "A101",
+        "frequencyCell": "B101",
+        "multiplesCell": "D101"
+      },
+      "sourcePriceId": "price-100"
+    },
+    {
+      "productId": "suit-07",
+      "name": "Комбинезон Pearl",
+      "category": "suit",
+      "fapix": 2234,
+      "rub": 1117,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 109,
+        "priceCell": "A109",
+        "frequencyCell": "B109",
+        "multiplesCell": "D109"
+      },
+      "sourcePriceId": "price-108"
+    },
+    {
+      "productId": "suit-08",
+      "name": "Комбинезон Obsidian",
+      "category": "suit",
+      "fapix": 2318,
+      "rub": 1159,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 117,
+        "priceCell": "A117",
+        "frequencyCell": "B117",
+        "multiplesCell": "D117"
+      },
+      "sourcePriceId": "price-116"
+    },
+    {
+      "productId": "suit-09",
+      "name": "Комбинезон Acid",
+      "category": "suit",
+      "fapix": 2366,
+      "rub": 1183,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      },
+      "sourcePriceId": "price-124"
+    },
+    {
+      "productId": "suit-10",
+      "name": "Комбинезон Nebula",
+      "category": "suit",
+      "fapix": 2666,
+      "rub": 1333,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 133,
+        "priceCell": "A133",
+        "frequencyCell": "B133",
+        "multiplesCell": "D133"
+      },
+      "sourcePriceId": "price-132"
+    },
+    {
+      "productId": "suit-11",
+      "name": "Комбинезон Copper",
+      "category": "suit",
+      "fapix": 2908,
+      "rub": 1454,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 141,
+        "priceCell": "A141",
+        "frequencyCell": "B141",
+        "multiplesCell": "D141"
+      },
+      "sourcePriceId": "price-140"
+    },
+    {
+      "productId": "suit-12",
+      "name": "Комбинезон Azure",
+      "category": "suit",
+      "fapix": 2974,
+      "rub": 1487,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 149,
+        "priceCell": "A149",
+        "frequencyCell": "B149",
+        "multiplesCell": "D149"
+      },
+      "sourcePriceId": "price-148"
+    },
+    {
+      "productId": "suit-13",
+      "name": "Комбинезон Crimson",
+      "category": "suit",
+      "fapix": 3482,
+      "rub": 1741,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 157,
+        "priceCell": "A157",
+        "frequencyCell": "B157",
+        "multiplesCell": "D157"
+      },
+      "sourcePriceId": "price-156"
+    },
+    {
+      "productId": "suit-14",
+      "name": "Комбинезон Jade",
+      "category": "suit",
+      "fapix": 3998,
+      "rub": 1999,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 165,
+        "priceCell": "A165",
+        "frequencyCell": "B165",
+        "multiplesCell": "D165"
+      },
+      "sourcePriceId": "price-164"
+    },
+    {
+      "productId": "suit-15",
+      "name": "Комбинезон Orchid",
+      "category": "suit",
+      "fapix": 4126,
+      "rub": 2063,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 173,
+        "priceCell": "A173",
+        "frequencyCell": "B173",
+        "multiplesCell": "D173"
+      },
+      "sourcePriceId": "price-172"
+    },
+    {
+      "productId": "suit-16",
+      "name": "Комбинезон Steel",
+      "category": "suit",
+      "fapix": 4178,
+      "rub": 2089,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 180,
+        "priceCell": "A180",
+        "frequencyCell": "B180",
+        "multiplesCell": "D180"
+      },
+      "sourcePriceId": "price-179"
+    },
+    {
+      "productId": "suit-17",
+      "name": "Комбинезон Sand",
+      "category": "suit",
+      "fapix": 4442,
+      "rub": 2221,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 188,
+        "priceCell": "A188",
+        "frequencyCell": "B188",
+        "multiplesCell": "D188"
+      },
+      "sourcePriceId": "price-187"
+    },
+    {
+      "productId": "suit-18",
+      "name": "Комбинезон Sage",
+      "category": "suit",
+      "fapix": 4614,
+      "rub": 2307,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 196,
+        "priceCell": "A196",
+        "frequencyCell": "B196",
+        "multiplesCell": "D196"
+      },
+      "sourcePriceId": "price-195"
+    },
+    {
+      "productId": "suit-19",
+      "name": "Комбинезон Titanium",
+      "category": "suit",
+      "fapix": 4988,
+      "rub": 2494,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 204,
+        "priceCell": "A204",
+        "frequencyCell": "B204",
+        "multiplesCell": "D204"
+      },
+      "sourcePriceId": "price-203"
+    },
+    {
+      "productId": "suit-20",
+      "name": "Комбинезон Midnight",
+      "category": "suit",
+      "fapix": 5692,
+      "rub": 2846,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 212,
+        "priceCell": "A212",
+        "frequencyCell": "B212",
+        "multiplesCell": "D212"
+      },
+      "sourcePriceId": "price-211"
+    },
+    {
+      "productId": "plate-01",
+      "name": "Номер Ignition",
+      "category": "plate",
+      "fapix": 612,
+      "rub": 306,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 7,
+        "priceCell": "A7",
+        "frequencyCell": "B7",
+        "multiplesCell": "D7"
+      },
+      "sourcePriceId": "price-006"
+    },
+    {
+      "productId": "plate-02",
+      "name": "Номер Sunset",
+      "category": "plate",
+      "fapix": 626,
+      "rub": 313,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 14,
+        "priceCell": "A14",
+        "frequencyCell": "B14",
+        "multiplesCell": "D14"
+      },
+      "sourcePriceId": "price-013"
+    },
+    {
+      "productId": "plate-03",
+      "name": "Номер Arctic",
+      "category": "plate",
+      "fapix": 638,
+      "rub": 319,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 20,
+        "priceCell": "A20",
+        "frequencyCell": "B20",
+        "multiplesCell": "D20"
+      },
+      "sourcePriceId": "price-019"
+    },
+    {
+      "productId": "plate-04",
+      "name": "Номер Violet",
+      "category": "plate",
+      "fapix": 678,
+      "rub": 339,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 27,
+        "priceCell": "A27",
+        "frequencyCell": "B27",
+        "multiplesCell": "D27"
+      },
+      "sourcePriceId": "price-026"
+    },
+    {
+      "productId": "plate-05",
+      "name": "Номер Mint",
+      "category": "plate",
+      "fapix": 692,
+      "rub": 346,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 33,
+        "priceCell": "A33",
+        "frequencyCell": "B33",
+        "multiplesCell": "D33"
+      },
+      "sourcePriceId": "price-032"
+    },
+    {
+      "productId": "plate-06",
+      "name": "Номер Sakura",
+      "category": "plate",
+      "fapix": 708,
+      "rub": 354,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 40,
+        "priceCell": "A40",
+        "frequencyCell": "B40",
+        "multiplesCell": "D40"
+      },
+      "sourcePriceId": "price-039"
+    },
+    {
+      "productId": "plate-07",
+      "name": "Номер Pearl",
+      "category": "plate",
+      "fapix": 814,
+      "rub": 407,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 46,
+        "priceCell": "A46",
+        "frequencyCell": "B46",
+        "multiplesCell": "D46"
+      },
+      "sourcePriceId": "price-045"
+    },
+    {
+      "productId": "plate-08",
+      "name": "Номер Obsidian",
+      "category": "plate",
+      "fapix": 834,
+      "rub": 417,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 53,
+        "priceCell": "A53",
+        "frequencyCell": "B53",
+        "multiplesCell": "D53"
+      },
+      "sourcePriceId": "price-052"
+    },
+    {
+      "productId": "plate-09",
+      "name": "Номер Acid",
+      "category": "plate",
+      "fapix": 1018,
+      "rub": 509,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 60,
+        "priceCell": "A60",
+        "frequencyCell": "B60",
+        "multiplesCell": "D60"
+      },
+      "sourcePriceId": "price-059"
+    },
+    {
+      "productId": "plate-10",
+      "name": "Номер Nebula",
+      "category": "plate",
+      "fapix": 1040,
+      "rub": 520,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 66,
+        "priceCell": "A66",
+        "frequencyCell": "B66",
+        "multiplesCell": "D66"
+      },
+      "sourcePriceId": "price-065"
+    },
+    {
+      "productId": "plate-11",
+      "name": "Номер Copper",
+      "category": "plate",
+      "fapix": 1142,
+      "rub": 571,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 73,
+        "priceCell": "A73",
+        "frequencyCell": "B73",
+        "multiplesCell": "D73"
+      },
+      "sourcePriceId": "price-072"
+    },
+    {
+      "productId": "plate-12",
+      "name": "Номер Azure",
+      "category": "plate",
+      "fapix": 1162,
+      "rub": 581,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 79,
+        "priceCell": "A79",
+        "frequencyCell": "B79",
+        "multiplesCell": "D79"
+      },
+      "sourcePriceId": "price-078"
+    },
+    {
+      "productId": "plate-13",
+      "name": "Номер Crimson",
+      "category": "plate",
+      "fapix": 1178,
+      "rub": 589,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 86,
+        "priceCell": "A86",
+        "frequencyCell": "B86",
+        "multiplesCell": "D86"
+      },
+      "sourcePriceId": "price-085"
+    },
+    {
+      "productId": "plate-14",
+      "name": "Номер Jade",
+      "category": "plate",
+      "fapix": 2038,
+      "rub": 1019,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 93,
+        "priceCell": "A93",
+        "frequencyCell": "B93",
+        "multiplesCell": "D93"
+      },
+      "sourcePriceId": "price-092"
+    },
+    {
+      "productId": "plate-15",
+      "name": "Номер Orchid",
+      "category": "plate",
+      "fapix": 2074,
+      "rub": 1037,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 99,
+        "priceCell": "A99",
+        "frequencyCell": "B99",
+        "multiplesCell": "D99"
+      },
+      "sourcePriceId": "price-098"
+    },
+    {
+      "productId": "plate-16",
+      "name": "Номер Steel",
+      "category": "plate",
+      "fapix": 2114,
+      "rub": 1057,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 106,
+        "priceCell": "A106",
+        "frequencyCell": "B106",
+        "multiplesCell": "D106"
+      },
+      "sourcePriceId": "price-105"
+    },
+    {
+      "productId": "plate-17",
+      "name": "Номер Sand",
+      "category": "plate",
+      "fapix": 2290,
+      "rub": 1145,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 112,
+        "priceCell": "A112",
+        "frequencyCell": "B112",
+        "multiplesCell": "D112"
+      },
+      "sourcePriceId": "price-111"
+    },
+    {
+      "productId": "plate-18",
+      "name": "Номер Sage",
+      "category": "plate",
+      "fapix": 2330,
+      "rub": 1165,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 119,
+        "priceCell": "A119",
+        "frequencyCell": "B119",
+        "multiplesCell": "D119"
+      },
+      "sourcePriceId": "price-118"
+    },
+    {
+      "productId": "plate-19",
+      "name": "Номер Titanium",
+      "category": "plate",
+      "fapix": 2366,
+      "rub": 1183,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      },
+      "sourcePriceId": "price-124"
+    },
+    {
+      "productId": "plate-20",
+      "name": "Номер Midnight",
+      "category": "plate",
+      "fapix": 2614,
+      "rub": 1307,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 132,
+        "priceCell": "A132",
+        "frequencyCell": "B132",
+        "multiplesCell": "D132"
+      },
+      "sourcePriceId": "price-131"
+    },
+    {
+      "productId": "decal-01",
+      "name": "Ливрея «Город Sport»",
+      "category": "decal",
+      "fapix": 1168,
+      "rub": 584,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 81,
+        "priceCell": "A81",
+        "frequencyCell": "B81",
+        "multiplesCell": "D81"
+      },
+      "sourcePriceId": "price-080"
+    },
+    {
+      "productId": "decal-02",
+      "name": "Ливрея «Ночь Sport»",
+      "category": "decal",
+      "fapix": 838,
+      "rub": 419,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 55,
+        "priceCell": "A55",
+        "frequencyCell": "B55",
+        "multiplesCell": "D55"
+      },
+      "sourcePriceId": "price-054"
+    },
+    {
+      "productId": "decal-03",
+      "name": "Ливрея «Альпы Sport»",
+      "category": "decal",
+      "fapix": 1000,
+      "rub": 500,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 59,
+        "priceCell": "A59",
+        "frequencyCell": "B59",
+        "multiplesCell": "D59"
+      },
+      "sourcePriceId": "price-058"
+    },
+    {
+      "productId": "decal-04",
+      "name": "Ливрея «Сакура Sport»",
+      "category": "decal",
+      "fapix": 1024,
+      "rub": 512,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 62,
+        "priceCell": "A62",
+        "frequencyCell": "B62",
+        "multiplesCell": "D62"
+      },
+      "sourcePriceId": "price-061"
+    },
+    {
+      "productId": "decal-05",
+      "name": "Ливрея «Пустыня Sport»",
+      "category": "decal",
+      "fapix": 1036,
+      "rub": 518,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 65,
+        "priceCell": "A65",
+        "frequencyCell": "B65",
+        "multiplesCell": "D65"
+      },
+      "sourcePriceId": "price-064"
+    },
+    {
+      "productId": "decal-06",
+      "name": "Ливрея «Океан Sport»",
+      "category": "decal",
+      "fapix": 1048,
+      "rub": 524,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 69,
+        "priceCell": "A69",
+        "frequencyCell": "B69",
+        "multiplesCell": "D69"
+      },
+      "sourcePriceId": "price-068"
+    },
+    {
+      "productId": "decal-07",
+      "name": "Ливрея «Космос Sport»",
+      "category": "decal",
+      "fapix": 1064,
+      "rub": 532,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 72,
+        "priceCell": "A72",
+        "frequencyCell": "B72",
+        "multiplesCell": "D72"
+      },
+      "sourcePriceId": "price-071"
+    },
+    {
+      "productId": "decal-08",
+      "name": "Ливрея «Ретро Sport»",
+      "category": "decal",
+      "fapix": 1146,
+      "rub": 573,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 75,
+        "priceCell": "A75",
+        "frequencyCell": "B75",
+        "multiplesCell": "D75"
+      },
+      "sourcePriceId": "price-074"
+    },
+    {
+      "productId": "decal-09",
+      "name": "Ливрея «Карбон Sport»",
+      "category": "decal",
+      "fapix": 1162,
+      "rub": 581,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 79,
+        "priceCell": "A79",
+        "frequencyCell": "B79",
+        "multiplesCell": "D79"
+      },
+      "sourcePriceId": "price-078"
+    },
+    {
+      "productId": "decal-10",
+      "name": "Ливрея «Пламя Sport»",
+      "category": "decal",
+      "fapix": 1170,
+      "rub": 585,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 82,
+        "priceCell": "A82",
+        "frequencyCell": "B82",
+        "multiplesCell": "D82"
+      },
+      "sourcePriceId": "price-081"
+    },
+    {
+      "productId": "decal-11",
+      "name": "Ливрея «Шторм Sport»",
+      "category": "decal",
+      "fapix": 1176,
+      "rub": 588,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 85,
+        "priceCell": "A85",
+        "frequencyCell": "B85",
+        "multiplesCell": "D85"
+      },
+      "sourcePriceId": "price-084"
+    },
+    {
+      "productId": "decal-12",
+      "name": "Ливрея «Скорость Sport»",
+      "category": "decal",
+      "fapix": 1394,
+      "rub": 697,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 89,
+        "priceCell": "A89",
+        "frequencyCell": "B89",
+        "multiplesCell": "D89"
+      },
+      "sourcePriceId": "price-088"
+    },
+    {
+      "productId": "decal-13",
+      "name": "Ливрея «Зигзаг Sport»",
+      "category": "decal",
+      "fapix": 2030,
+      "rub": 1015,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 92,
+        "priceCell": "A92",
+        "frequencyCell": "B92",
+        "multiplesCell": "D92"
+      },
+      "sourcePriceId": "price-091"
+    },
+    {
+      "productId": "decal-14",
+      "name": "Ливрея «Волна Sport»",
+      "category": "decal",
+      "fapix": 2050,
+      "rub": 1025,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 95,
+        "priceCell": "A95",
+        "frequencyCell": "B95",
+        "multiplesCell": "D95"
+      },
+      "sourcePriceId": "price-094"
+    },
+    {
+      "productId": "decal-15",
+      "name": "Ливрея «Двойная полоса Sport»",
+      "category": "decal",
+      "fapix": 2074,
+      "rub": 1037,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 99,
+        "priceCell": "A99",
+        "frequencyCell": "B99",
+        "multiplesCell": "D99"
+      },
+      "sourcePriceId": "price-098"
+    },
+    {
+      "productId": "decal-16",
+      "name": "Ливрея «Контур Sport»",
+      "category": "decal",
+      "fapix": 2090,
+      "rub": 1045,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 102,
+        "priceCell": "A102",
+        "frequencyCell": "B102",
+        "multiplesCell": "D102"
+      },
+      "sourcePriceId": "price-101"
+    },
+    {
+      "productId": "decal-17",
+      "name": "Ливрея «Камуфляж Sport»",
+      "category": "decal",
+      "fapix": 2110,
+      "rub": 1055,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 105,
+        "priceCell": "A105",
+        "frequencyCell": "B105",
+        "multiplesCell": "D105"
+      },
+      "sourcePriceId": "price-104"
+    },
+    {
+      "productId": "decal-18",
+      "name": "Ливрея «Клетка Sport»",
+      "category": "decal",
+      "fapix": 2234,
+      "rub": 1117,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 109,
+        "priceCell": "A109",
+        "frequencyCell": "B109",
+        "multiplesCell": "D109"
+      },
+      "sourcePriceId": "price-108"
+    },
+    {
+      "productId": "decal-19",
+      "name": "Ливрея «Молния Sport»",
+      "category": "decal",
+      "fapix": 2290,
+      "rub": 1145,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 112,
+        "priceCell": "A112",
+        "frequencyCell": "B112",
+        "multiplesCell": "D112"
+      },
+      "sourcePriceId": "price-111"
+    },
+    {
+      "productId": "decal-20",
+      "name": "Ливрея «Пиксели Sport»",
+      "category": "decal",
+      "fapix": 2306,
+      "rub": 1153,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 115,
+        "priceCell": "A115",
+        "frequencyCell": "B115",
+        "multiplesCell": "D115"
+      },
+      "sourcePriceId": "price-114"
+    },
+    {
+      "productId": "decal-21",
+      "name": "Ливрея «Город Pro»",
+      "category": "decal",
+      "fapix": 2330,
+      "rub": 1165,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 119,
+        "priceCell": "A119",
+        "frequencyCell": "B119",
+        "multiplesCell": "D119"
+      },
+      "sourcePriceId": "price-118"
+    },
+    {
+      "productId": "decal-22",
+      "name": "Ливрея «Ночь Pro»",
+      "category": "decal",
+      "fapix": 2350,
+      "rub": 1175,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 122,
+        "priceCell": "A122",
+        "frequencyCell": "B122",
+        "multiplesCell": "D122"
+      },
+      "sourcePriceId": "price-121"
+    },
+    {
+      "productId": "decal-23",
+      "name": "Ливрея «Альпы Pro»",
+      "category": "decal",
+      "fapix": 2366,
+      "rub": 1183,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      },
+      "sourcePriceId": "price-124"
+    },
+    {
+      "productId": "decal-24",
+      "name": "Ливрея «Сакура Pro»",
+      "category": "decal",
+      "fapix": 2594,
+      "rub": 1297,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 129,
+        "priceCell": "A129",
+        "frequencyCell": "B129",
+        "multiplesCell": "D129"
+      },
+      "sourcePriceId": "price-128"
+    },
+    {
+      "productId": "decal-25",
+      "name": "Ливрея «Пустыня Pro»",
+      "category": "decal",
+      "fapix": 2614,
+      "rub": 1307,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 132,
+        "priceCell": "A132",
+        "frequencyCell": "B132",
+        "multiplesCell": "D132"
+      },
+      "sourcePriceId": "price-131"
+    },
+    {
+      "productId": "decal-26",
+      "name": "Ливрея «Океан Pro»",
+      "category": "decal",
+      "fapix": 2858,
+      "rub": 1429,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 135,
+        "priceCell": "A135",
+        "frequencyCell": "B135",
+        "multiplesCell": "D135"
+      },
+      "sourcePriceId": "price-134"
+    },
+    {
+      "productId": "decal-27",
+      "name": "Ливрея «Космос Pro»",
+      "category": "decal",
+      "fapix": 2902,
+      "rub": 1451,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 139,
+        "priceCell": "A139",
+        "frequencyCell": "B139",
+        "multiplesCell": "D139"
+      },
+      "sourcePriceId": "price-138"
+    },
+    {
+      "productId": "decal-28",
+      "name": "Ливрея «Ретро Pro»",
+      "category": "decal",
+      "fapix": 2914,
+      "rub": 1457,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 142,
+        "priceCell": "A142",
+        "frequencyCell": "B142",
+        "multiplesCell": "D142"
+      },
+      "sourcePriceId": "price-141"
+    },
+    {
+      "productId": "decal-29",
+      "name": "Ливрея «Карбон Pro»",
+      "category": "decal",
+      "fapix": 2938,
+      "rub": 1469,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 145,
+        "priceCell": "A145",
+        "frequencyCell": "B145",
+        "multiplesCell": "D145"
+      },
+      "sourcePriceId": "price-144"
+    },
+    {
+      "productId": "decal-30",
+      "name": "Ливрея «Пламя Pro»",
+      "category": "decal",
+      "fapix": 2974,
+      "rub": 1487,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 149,
+        "priceCell": "A149",
+        "frequencyCell": "B149",
+        "multiplesCell": "D149"
+      },
+      "sourcePriceId": "price-148"
+    },
+    {
+      "productId": "decal-31",
+      "name": "Ливрея «Шторм Pro»",
+      "category": "decal",
+      "fapix": 3116,
+      "rub": 1558,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 152,
+        "priceCell": "A152",
+        "frequencyCell": "B152",
+        "multiplesCell": "D152"
+      },
+      "sourcePriceId": "price-151"
+    },
+    {
+      "productId": "decal-32",
+      "name": "Ливрея «Скорость Pro»",
+      "category": "decal",
+      "fapix": 3454,
+      "rub": 1727,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 155,
+        "priceCell": "A155",
+        "frequencyCell": "B155",
+        "multiplesCell": "D155"
+      },
+      "sourcePriceId": "price-154"
+    },
+    {
+      "productId": "decal-33",
+      "name": "Ливрея «Зигзаг Pro»",
+      "category": "decal",
+      "fapix": 3506,
+      "rub": 1753,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 159,
+        "priceCell": "A159",
+        "frequencyCell": "B159",
+        "multiplesCell": "D159"
+      },
+      "sourcePriceId": "price-158"
+    },
+    {
+      "productId": "decal-34",
+      "name": "Ливрея «Волна Pro»",
+      "category": "decal",
+      "fapix": 3814,
+      "rub": 1907,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 162,
+        "priceCell": "A162",
+        "frequencyCell": "B162",
+        "multiplesCell": "D162"
+      },
+      "sourcePriceId": "price-161"
+    },
+    {
+      "productId": "decal-35",
+      "name": "Ливрея «Двойная полоса Pro»",
+      "category": "decal",
+      "fapix": 3998,
+      "rub": 1999,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 165,
+        "priceCell": "A165",
+        "frequencyCell": "B165",
+        "multiplesCell": "D165"
+      },
+      "sourcePriceId": "price-164"
+    },
+    {
+      "productId": "decal-36",
+      "name": "Ливрея «Контур Pro»",
+      "category": "decal",
+      "fapix": 4094,
+      "rub": 2047,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 169,
+        "priceCell": "A169",
+        "frequencyCell": "B169",
+        "multiplesCell": "D169"
+      },
+      "sourcePriceId": "price-168"
+    },
+    {
+      "productId": "decal-37",
+      "name": "Ливрея «Камуфляж Pro»",
+      "category": "decal",
+      "fapix": 4114,
+      "rub": 2057,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 172,
+        "priceCell": "A172",
+        "frequencyCell": "B172",
+        "multiplesCell": "D172"
+      },
+      "sourcePriceId": "price-171"
+    },
+    {
+      "productId": "decal-38",
+      "name": "Ливрея «Клетка Pro»",
+      "category": "decal",
+      "fapix": 4142,
+      "rub": 2071,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 175,
+        "priceCell": "A175",
+        "frequencyCell": "B175",
+        "multiplesCell": "D175"
+      },
+      "sourcePriceId": "price-174"
+    },
+    {
+      "productId": "decal-39",
+      "name": "Ливрея «Молния Pro»",
+      "category": "decal",
+      "fapix": 4174,
+      "rub": 2087,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 179,
+        "priceCell": "A179",
+        "frequencyCell": "B179",
+        "multiplesCell": "D179"
+      },
+      "sourcePriceId": "price-178"
+    },
+    {
+      "productId": "decal-40",
+      "name": "Ливрея «Пиксели Pro»",
+      "category": "decal",
+      "fapix": 4198,
+      "rub": 2099,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 182,
+        "priceCell": "A182",
+        "frequencyCell": "B182",
+        "multiplesCell": "D182"
+      },
+      "sourcePriceId": "price-181"
+    },
+    {
+      "productId": "underglow-01",
+      "name": "Подсветка Ignition",
+      "category": "underglow",
+      "fapix": 832,
+      "rub": 416,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 52,
+        "priceCell": "A52",
+        "frequencyCell": "B52",
+        "multiplesCell": "D52"
+      },
+      "sourcePriceId": "price-051"
+    },
+    {
+      "productId": "underglow-02",
+      "name": "Подсветка Sunset",
+      "category": "underglow",
+      "fapix": 1000,
+      "rub": 500,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 59,
+        "priceCell": "A59",
+        "frequencyCell": "B59",
+        "multiplesCell": "D59"
+      },
+      "sourcePriceId": "price-058"
+    },
+    {
+      "productId": "underglow-03",
+      "name": "Подсветка Arctic",
+      "category": "underglow",
+      "fapix": 1040,
+      "rub": 520,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 66,
+        "priceCell": "A66",
+        "frequencyCell": "B66",
+        "multiplesCell": "D66"
+      },
+      "sourcePriceId": "price-065"
+    },
+    {
+      "productId": "underglow-04",
+      "name": "Подсветка Violet",
+      "category": "underglow",
+      "fapix": 1142,
+      "rub": 571,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 73,
+        "priceCell": "A73",
+        "frequencyCell": "B73",
+        "multiplesCell": "D73"
+      },
+      "sourcePriceId": "price-072"
+    },
+    {
+      "productId": "underglow-05",
+      "name": "Подсветка Mint",
+      "category": "underglow",
+      "fapix": 1162,
+      "rub": 581,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 79,
+        "priceCell": "A79",
+        "frequencyCell": "B79",
+        "multiplesCell": "D79"
+      },
+      "sourcePriceId": "price-078"
+    },
+    {
+      "productId": "underglow-06",
+      "name": "Подсветка Sakura",
+      "category": "underglow",
+      "fapix": 1178,
+      "rub": 589,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 86,
+        "priceCell": "A86",
+        "frequencyCell": "B86",
+        "multiplesCell": "D86"
+      },
+      "sourcePriceId": "price-085"
+    },
+    {
+      "productId": "underglow-07",
+      "name": "Подсветка Pearl",
+      "category": "underglow",
+      "fapix": 2038,
+      "rub": 1019,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 93,
+        "priceCell": "A93",
+        "frequencyCell": "B93",
+        "multiplesCell": "D93"
+      },
+      "sourcePriceId": "price-092"
+    },
+    {
+      "productId": "underglow-08",
+      "name": "Подсветка Obsidian",
+      "category": "underglow",
+      "fapix": 2078,
+      "rub": 1039,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 100,
+        "priceCell": "A100",
+        "frequencyCell": "B100",
+        "multiplesCell": "D100"
+      },
+      "sourcePriceId": "price-099"
+    },
+    {
+      "productId": "underglow-09",
+      "name": "Подсветка Acid",
+      "category": "underglow",
+      "fapix": 2122,
+      "rub": 1061,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 107,
+        "priceCell": "A107",
+        "frequencyCell": "B107",
+        "multiplesCell": "D107"
+      },
+      "sourcePriceId": "price-106"
+    },
+    {
+      "productId": "underglow-10",
+      "name": "Подсветка Nebula",
+      "category": "underglow",
+      "fapix": 2302,
+      "rub": 1151,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 114,
+        "priceCell": "A114",
+        "frequencyCell": "B114",
+        "multiplesCell": "D114"
+      },
+      "sourcePriceId": "price-113"
+    },
+    {
+      "productId": "underglow-11",
+      "name": "Подсветка Copper",
+      "category": "underglow",
+      "fapix": 2338,
+      "rub": 1169,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 120,
+        "priceCell": "A120",
+        "frequencyCell": "B120",
+        "multiplesCell": "D120"
+      },
+      "sourcePriceId": "price-119"
+    },
+    {
+      "productId": "underglow-12",
+      "name": "Подсветка Azure",
+      "category": "underglow",
+      "fapix": 2522,
+      "rub": 1261,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 127,
+        "priceCell": "A127",
+        "frequencyCell": "B127",
+        "multiplesCell": "D127"
+      },
+      "sourcePriceId": "price-126"
+    },
+    {
+      "productId": "underglow-13",
+      "name": "Подсветка Crimson",
+      "category": "underglow",
+      "fapix": 2854,
+      "rub": 1427,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 134,
+        "priceCell": "A134",
+        "frequencyCell": "B134",
+        "multiplesCell": "D134"
+      },
+      "sourcePriceId": "price-133"
+    },
+    {
+      "productId": "underglow-14",
+      "name": "Подсветка Jade",
+      "category": "underglow",
+      "fapix": 2908,
+      "rub": 1454,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 141,
+        "priceCell": "A141",
+        "frequencyCell": "B141",
+        "multiplesCell": "D141"
+      },
+      "sourcePriceId": "price-140"
+    },
+    {
+      "productId": "underglow-15",
+      "name": "Подсветка Orchid",
+      "category": "underglow",
+      "fapix": 2966,
+      "rub": 1483,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 148,
+        "priceCell": "A148",
+        "frequencyCell": "B148",
+        "multiplesCell": "D148"
+      },
+      "sourcePriceId": "price-147"
+    },
+    {
+      "productId": "underglow-16",
+      "name": "Подсветка Steel",
+      "category": "underglow",
+      "fapix": 3454,
+      "rub": 1727,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 155,
+        "priceCell": "A155",
+        "frequencyCell": "B155",
+        "multiplesCell": "D155"
+      },
+      "sourcePriceId": "price-154"
+    },
+    {
+      "productId": "underglow-17",
+      "name": "Подсветка Sand",
+      "category": "underglow",
+      "fapix": 3538,
+      "rub": 1769,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 161,
+        "priceCell": "A161",
+        "frequencyCell": "B161",
+        "multiplesCell": "D161"
+      },
+      "sourcePriceId": "price-160"
+    },
+    {
+      "productId": "underglow-18",
+      "name": "Подсветка Sage",
+      "category": "underglow",
+      "fapix": 4082,
+      "rub": 2041,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 168,
+        "priceCell": "A168",
+        "frequencyCell": "B168",
+        "multiplesCell": "D168"
+      },
+      "sourcePriceId": "price-167"
+    },
+    {
+      "productId": "underglow-19",
+      "name": "Подсветка Titanium",
+      "category": "underglow",
+      "fapix": 4142,
+      "rub": 2071,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 175,
+        "priceCell": "A175",
+        "frequencyCell": "B175",
+        "multiplesCell": "D175"
+      },
+      "sourcePriceId": "price-174"
+    },
+    {
+      "productId": "underglow-20",
+      "name": "Подсветка Midnight",
+      "category": "underglow",
+      "fapix": 4198,
+      "rub": 2099,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 182,
+        "priceCell": "A182",
+        "frequencyCell": "B182",
+        "multiplesCell": "D182"
+      },
+      "sourcePriceId": "price-181"
+    },
+    {
+      "productId": "trail-01",
+      "name": "Дым Ignition",
+      "category": "trail",
+      "fapix": 1170,
+      "rub": 585,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 82,
+        "priceCell": "A82",
+        "frequencyCell": "B82",
+        "multiplesCell": "D82"
+      },
+      "sourcePriceId": "price-081"
+    },
+    {
+      "productId": "trail-02",
+      "name": "Дым Sunset",
+      "category": "trail",
+      "fapix": 1182,
+      "rub": 591,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 88,
+        "priceCell": "A88",
+        "frequencyCell": "B88",
+        "multiplesCell": "D88"
+      },
+      "sourcePriceId": "price-087"
+    },
+    {
+      "productId": "trail-03",
+      "name": "Дым Arctic",
+      "category": "trail",
+      "fapix": 2042,
+      "rub": 1021,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 94,
+        "priceCell": "A94",
+        "frequencyCell": "B94",
+        "multiplesCell": "D94"
+      },
+      "sourcePriceId": "price-093"
+    },
+    {
+      "productId": "trail-04",
+      "name": "Дым Violet",
+      "category": "trail",
+      "fapix": 2074,
+      "rub": 1037,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 99,
+        "priceCell": "A99",
+        "frequencyCell": "B99",
+        "multiplesCell": "D99"
+      },
+      "sourcePriceId": "price-098"
+    },
+    {
+      "productId": "trail-05",
+      "name": "Дым Mint",
+      "category": "trail",
+      "fapix": 2110,
+      "rub": 1055,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 105,
+        "priceCell": "A105",
+        "frequencyCell": "B105",
+        "multiplesCell": "D105"
+      },
+      "sourcePriceId": "price-104"
+    },
+    {
+      "productId": "trail-06",
+      "name": "Дым Sakura",
+      "category": "trail",
+      "fapix": 2282,
+      "rub": 1141,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 111,
+        "priceCell": "A111",
+        "frequencyCell": "B111",
+        "multiplesCell": "D111"
+      },
+      "sourcePriceId": "price-110"
+    },
+    {
+      "productId": "trail-07",
+      "name": "Дым Pearl",
+      "category": "trail",
+      "fapix": 2318,
+      "rub": 1159,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 117,
+        "priceCell": "A117",
+        "frequencyCell": "B117",
+        "multiplesCell": "D117"
+      },
+      "sourcePriceId": "price-116"
+    },
+    {
+      "productId": "trail-08",
+      "name": "Дым Obsidian",
+      "category": "trail",
+      "fapix": 2354,
+      "rub": 1177,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 123,
+        "priceCell": "A123",
+        "frequencyCell": "B123",
+        "multiplesCell": "D123"
+      },
+      "sourcePriceId": "price-122"
+    },
+    {
+      "productId": "trail-09",
+      "name": "Дым Acid",
+      "category": "trail",
+      "fapix": 2566,
+      "rub": 1283,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 128,
+        "priceCell": "A128",
+        "frequencyCell": "B128",
+        "multiplesCell": "D128"
+      },
+      "sourcePriceId": "price-127"
+    },
+    {
+      "productId": "trail-10",
+      "name": "Дым Nebula",
+      "category": "trail",
+      "fapix": 2854,
+      "rub": 1427,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 134,
+        "priceCell": "A134",
+        "frequencyCell": "B134",
+        "multiplesCell": "D134"
+      },
+      "sourcePriceId": "price-133"
+    },
+    {
+      "productId": "trail-11",
+      "name": "Дым Copper",
+      "category": "trail",
+      "fapix": 2906,
+      "rub": 1453,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 140,
+        "priceCell": "A140",
+        "frequencyCell": "B140",
+        "multiplesCell": "D140"
+      },
+      "sourcePriceId": "price-139"
+    },
+    {
+      "productId": "trail-12",
+      "name": "Дым Azure",
+      "category": "trail",
+      "fapix": 2942,
+      "rub": 1471,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 146,
+        "priceCell": "A146",
+        "frequencyCell": "B146",
+        "multiplesCell": "D146"
+      },
+      "sourcePriceId": "price-145"
+    },
+    {
+      "productId": "trail-13",
+      "name": "Дым Crimson",
+      "category": "trail",
+      "fapix": 2986,
+      "rub": 1493,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 151,
+        "priceCell": "A151",
+        "frequencyCell": "B151",
+        "multiplesCell": "D151"
+      },
+      "sourcePriceId": "price-150"
+    },
+    {
+      "productId": "trail-14",
+      "name": "Дым Jade",
+      "category": "trail",
+      "fapix": 3482,
+      "rub": 1741,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 157,
+        "priceCell": "A157",
+        "frequencyCell": "B157",
+        "multiplesCell": "D157"
+      },
+      "sourcePriceId": "price-156"
+    },
+    {
+      "productId": "trail-15",
+      "name": "Дым Orchid",
+      "category": "trail",
+      "fapix": 3898,
+      "rub": 1949,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 163,
+        "priceCell": "A163",
+        "frequencyCell": "B163",
+        "multiplesCell": "D163"
+      },
+      "sourcePriceId": "price-162"
+    },
+    {
+      "productId": "trail-16",
+      "name": "Дым Steel",
+      "category": "trail",
+      "fapix": 4094,
+      "rub": 2047,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 169,
+        "priceCell": "A169",
+        "frequencyCell": "B169",
+        "multiplesCell": "D169"
+      },
+      "sourcePriceId": "price-168"
+    },
+    {
+      "productId": "trail-17",
+      "name": "Дым Sand",
+      "category": "trail",
+      "fapix": 4142,
+      "rub": 2071,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 175,
+        "priceCell": "A175",
+        "frequencyCell": "B175",
+        "multiplesCell": "D175"
+      },
+      "sourcePriceId": "price-174"
+    },
+    {
+      "productId": "trail-18",
+      "name": "Дым Sage",
+      "category": "trail",
+      "fapix": 4178,
+      "rub": 2089,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 180,
+        "priceCell": "A180",
+        "frequencyCell": "B180",
+        "multiplesCell": "D180"
+      },
+      "sourcePriceId": "price-179"
+    },
+    {
+      "productId": "trail-19",
+      "name": "Дым Titanium",
+      "category": "trail",
+      "fapix": 4226,
+      "rub": 2113,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 186,
+        "priceCell": "A186",
+        "frequencyCell": "B186",
+        "multiplesCell": "D186"
+      },
+      "sourcePriceId": "price-185"
+    },
+    {
+      "productId": "trail-20",
+      "name": "Дым Midnight",
+      "category": "trail",
+      "fapix": 4478,
+      "rub": 2239,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 192,
+        "priceCell": "A192",
+        "frequencyCell": "B192",
+        "multiplesCell": "D192"
+      },
+      "sourcePriceId": "price-191"
+    },
+    {
+      "productId": "profile-01",
+      "name": "Аватар Ignition",
+      "category": "profile",
+      "fapix": 300,
+      "rub": 150,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 2,
+        "priceCell": "A2",
+        "frequencyCell": "B2",
+        "multiplesCell": "D2"
+      },
+      "sourcePriceId": "price-001"
+    },
+    {
+      "productId": "profile-02",
+      "name": "Аватар Sunset",
+      "category": "profile",
+      "fapix": 616,
+      "rub": 308,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 9,
+        "priceCell": "A9",
+        "frequencyCell": "B9",
+        "multiplesCell": "D9"
+      },
+      "sourcePriceId": "price-008"
+    },
+    {
+      "productId": "profile-03",
+      "name": "Аватар Arctic",
+      "category": "profile",
+      "fapix": 630,
+      "rub": 315,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 16,
+        "priceCell": "A16",
+        "frequencyCell": "B16",
+        "multiplesCell": "D16"
+      },
+      "sourcePriceId": "price-015"
+    },
+    {
+      "productId": "profile-04",
+      "name": "Аватар Violet",
+      "category": "profile",
+      "fapix": 646,
+      "rub": 323,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 23,
+        "priceCell": "A23",
+        "frequencyCell": "B23",
+        "multiplesCell": "D23"
+      },
+      "sourcePriceId": "price-022"
+    },
+    {
+      "productId": "profile-05",
+      "name": "Аватар Mint",
+      "category": "profile",
+      "fapix": 684,
+      "rub": 342,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 29,
+        "priceCell": "A29",
+        "frequencyCell": "B29",
+        "multiplesCell": "D29"
+      },
+      "sourcePriceId": "price-028"
+    },
+    {
+      "productId": "profile-06",
+      "name": "Аватар Sakura",
+      "category": "profile",
+      "fapix": 698,
+      "rub": 349,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 36,
+        "priceCell": "A36",
+        "frequencyCell": "B36",
+        "multiplesCell": "D36"
+      },
+      "sourcePriceId": "price-035"
+    },
+    {
+      "productId": "profile-07",
+      "name": "Аватар Pearl",
+      "category": "profile",
+      "fapix": 726,
+      "rub": 363,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 43,
+        "priceCell": "A43",
+        "frequencyCell": "B43",
+        "multiplesCell": "D43"
+      },
+      "sourcePriceId": "price-042"
+    },
+    {
+      "productId": "profile-08",
+      "name": "Аватар Obsidian",
+      "category": "profile",
+      "fapix": 826,
+      "rub": 413,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 50,
+        "priceCell": "A50",
+        "frequencyCell": "B50",
+        "multiplesCell": "D50"
+      },
+      "sourcePriceId": "price-049"
+    },
+    {
+      "productId": "profile-09",
+      "name": "Аватар Acid",
+      "category": "profile",
+      "fapix": 890,
+      "rub": 445,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 57,
+        "priceCell": "A57",
+        "frequencyCell": "B57",
+        "multiplesCell": "D57"
+      },
+      "sourcePriceId": "price-056"
+    },
+    {
+      "productId": "profile-10",
+      "name": "Аватар Nebula",
+      "category": "profile",
+      "fapix": 1034,
+      "rub": 517,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 64,
+        "priceCell": "A64",
+        "frequencyCell": "B64",
+        "multiplesCell": "D64"
+      },
+      "sourcePriceId": "price-063"
+    },
+    {
+      "productId": "profile-11",
+      "name": "Аватар Copper",
+      "category": "profile",
+      "fapix": 1052,
+      "rub": 526,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 70,
+        "priceCell": "A70",
+        "frequencyCell": "B70",
+        "multiplesCell": "D70"
+      },
+      "sourcePriceId": "price-069"
+    },
+    {
+      "productId": "profile-12",
+      "name": "Аватар Azure",
+      "category": "profile",
+      "fapix": 1154,
+      "rub": 577,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 77,
+        "priceCell": "A77",
+        "frequencyCell": "B77",
+        "multiplesCell": "D77"
+      },
+      "sourcePriceId": "price-076"
+    },
+    {
+      "productId": "profile-13",
+      "name": "Аватар Crimson",
+      "category": "profile",
+      "fapix": 1174,
+      "rub": 587,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 84,
+        "priceCell": "A84",
+        "frequencyCell": "B84",
+        "multiplesCell": "D84"
+      },
+      "sourcePriceId": "price-083"
+    },
+    {
+      "productId": "profile-14",
+      "name": "Аватар Jade",
+      "category": "profile",
+      "fapix": 2022,
+      "rub": 1011,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 91,
+        "priceCell": "A91",
+        "frequencyCell": "B91",
+        "multiplesCell": "D91"
+      },
+      "sourcePriceId": "price-090"
+    },
+    {
+      "productId": "profile-15",
+      "name": "Аватар Orchid",
+      "category": "profile",
+      "fapix": 2066,
+      "rub": 1033,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 98,
+        "priceCell": "A98",
+        "frequencyCell": "B98",
+        "multiplesCell": "D98"
+      },
+      "sourcePriceId": "price-097"
+    },
+    {
+      "productId": "profile-16",
+      "name": "Аватар Steel",
+      "category": "profile",
+      "fapix": 2110,
+      "rub": 1055,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 105,
+        "priceCell": "A105",
+        "frequencyCell": "B105",
+        "multiplesCell": "D105"
+      },
+      "sourcePriceId": "price-104"
+    },
+    {
+      "productId": "profile-17",
+      "name": "Аватар Sand",
+      "category": "profile",
+      "fapix": 2282,
+      "rub": 1141,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 111,
+        "priceCell": "A111",
+        "frequencyCell": "B111",
+        "multiplesCell": "D111"
+      },
+      "sourcePriceId": "price-110"
+    },
+    {
+      "productId": "profile-18",
+      "name": "Аватар Sage",
+      "category": "profile",
+      "fapix": 2326,
+      "rub": 1163,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 118,
+        "priceCell": "A118",
+        "frequencyCell": "B118",
+        "multiplesCell": "D118"
+      },
+      "sourcePriceId": "price-117"
+    },
+    {
+      "productId": "profile-19",
+      "name": "Аватар Titanium",
+      "category": "profile",
+      "fapix": 2366,
+      "rub": 1183,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      },
+      "sourcePriceId": "price-124"
+    },
+    {
+      "productId": "profile-20",
+      "name": "Аватар Midnight",
+      "category": "profile",
+      "fapix": 2614,
+      "rub": 1307,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 132,
+        "priceCell": "A132",
+        "frequencyCell": "B132",
+        "multiplesCell": "D132"
+      },
+      "sourcePriceId": "price-131"
+    },
+    {
+      "productId": "bundle-01",
+      "name": "Комплект Ignition",
+      "category": "bundle",
+      "fapix": 10410,
+      "rub": 5205,
+      "basis": "VV-136 explicit quick amount",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 34,
+        "priceCell": "D34",
+        "frequencyCell": "B34",
+        "multiplesCell": "D34"
+      },
+      "sourcePriceId": null
+    },
+    {
+      "productId": "bundle-02",
+      "name": "Комплект Sunset",
+      "category": "bundle",
+      "fapix": 5902,
+      "rub": 2951,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 231,
+        "priceCell": "A231",
+        "frequencyCell": "B231",
+        "multiplesCell": "D231"
+      },
+      "sourcePriceId": "price-230"
+    },
+    {
+      "productId": "bundle-03",
+      "name": "Комплект Arctic",
+      "category": "bundle",
+      "fapix": 6998,
+      "rub": 3499,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 235,
+        "priceCell": "A235",
+        "frequencyCell": "B235",
+        "multiplesCell": "D235"
+      },
+      "sourcePriceId": "price-234"
+    },
+    {
+      "productId": "bundle-04",
+      "name": "Комплект Violet",
+      "category": "bundle",
+      "fapix": 10258,
+      "rub": 5129,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 239,
+        "priceCell": "A239",
+        "frequencyCell": "B239",
+        "multiplesCell": "D239"
+      },
+      "sourcePriceId": "price-238"
+    },
+    {
+      "productId": "bundle-05",
+      "name": "Комплект Mint",
+      "category": "bundle",
+      "fapix": 10342,
+      "rub": 5171,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 243,
+        "priceCell": "A243",
+        "frequencyCell": "B243",
+        "multiplesCell": "D243"
+      },
+      "sourcePriceId": "price-242"
+    },
+    {
+      "productId": "bundle-06",
+      "name": "Комплект Sakura",
+      "category": "bundle",
+      "fapix": 10412,
+      "rub": 5206,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 246,
+        "priceCell": "A246",
+        "frequencyCell": "B246",
+        "multiplesCell": "D246"
+      },
+      "sourcePriceId": "price-245"
+    },
+    {
+      "productId": "bundle-07",
+      "name": "Комплект Pearl",
+      "category": "bundle",
+      "fapix": 10462,
+      "rub": 5231,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 250,
+        "priceCell": "A250",
+        "frequencyCell": "B250",
+        "multiplesCell": "D250"
+      },
+      "sourcePriceId": "price-249"
+    },
+    {
+      "productId": "bundle-08",
+      "name": "Комплект Obsidian",
+      "category": "bundle",
+      "fapix": 10588,
+      "rub": 5294,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 254,
+        "priceCell": "A254",
+        "frequencyCell": "B254",
+        "multiplesCell": "D254"
+      },
+      "sourcePriceId": "price-253"
+    },
+    {
+      "productId": "bundle-09",
+      "name": "Комплект Acid",
+      "category": "bundle",
+      "fapix": 20334,
+      "rub": 10167,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 258,
+        "priceCell": "A258",
+        "frequencyCell": "B258",
+        "multiplesCell": "D258"
+      },
+      "sourcePriceId": "price-257"
+    },
+    {
+      "productId": "bundle-10",
+      "name": "Комплект Nebula",
+      "category": "bundle",
+      "fapix": 20442,
+      "rub": 10221,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 262,
+        "priceCell": "A262",
+        "frequencyCell": "B262",
+        "multiplesCell": "D262"
+      },
+      "sourcePriceId": "price-261"
+    },
+    {
+      "productId": "bundle-11",
+      "name": "Комплект Copper",
+      "category": "bundle",
+      "fapix": 20518,
+      "rub": 10259,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 266,
+        "priceCell": "A266",
+        "frequencyCell": "B266",
+        "multiplesCell": "D266"
+      },
+      "sourcePriceId": "price-265"
+    },
+    {
+      "productId": "bundle-12",
+      "name": "Комплект Azure",
+      "category": "bundle",
+      "fapix": 20766,
+      "rub": 10383,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 270,
+        "priceCell": "A270",
+        "frequencyCell": "B270",
+        "multiplesCell": "D270"
+      },
+      "sourcePriceId": "price-269"
+    },
+    {
+      "productId": "bundle-13",
+      "name": "Комплект Crimson",
+      "category": "bundle",
+      "fapix": 20806,
+      "rub": 10403,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 274,
+        "priceCell": "A274",
+        "frequencyCell": "B274",
+        "multiplesCell": "D274"
+      },
+      "sourcePriceId": "price-273"
+    },
+    {
+      "productId": "bundle-14",
+      "name": "Комплект Jade",
+      "category": "bundle",
+      "fapix": 20894,
+      "rub": 10447,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 278,
+        "priceCell": "A278",
+        "frequencyCell": "B278",
+        "multiplesCell": "D278"
+      },
+      "sourcePriceId": "price-277"
+    },
+    {
+      "productId": "bundle-15",
+      "name": "Комплект Orchid",
+      "category": "bundle",
+      "fapix": 20926,
+      "rub": 10463,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 282,
+        "priceCell": "A282",
+        "frequencyCell": "B282",
+        "multiplesCell": "D282"
+      },
+      "sourcePriceId": "price-281"
+    },
+    {
+      "productId": "bundle-16",
+      "name": "Комплект Steel",
+      "category": "bundle",
+      "fapix": 21026,
+      "rub": 10513,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 285,
+        "priceCell": "A285",
+        "frequencyCell": "B285",
+        "multiplesCell": "D285"
+      },
+      "sourcePriceId": "price-284"
+    },
+    {
+      "productId": "bundle-17",
+      "name": "Комплект Sand",
+      "category": "bundle",
+      "fapix": 21086,
+      "rub": 10543,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 289,
+        "priceCell": "A289",
+        "frequencyCell": "B289",
+        "multiplesCell": "D289"
+      },
+      "sourcePriceId": "price-288"
+    },
+    {
+      "productId": "bundle-18",
+      "name": "Комплект Sage",
+      "category": "bundle",
+      "fapix": 22810,
+      "rub": 11405,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 293,
+        "priceCell": "A293",
+        "frequencyCell": "B293",
+        "multiplesCell": "D293"
+      },
+      "sourcePriceId": "price-292"
+    },
+    {
+      "productId": "bundle-19",
+      "name": "Комплект Titanium",
+      "category": "bundle",
+      "fapix": 23278,
+      "rub": 11639,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 297,
+        "priceCell": "A297",
+        "frequencyCell": "B297",
+        "multiplesCell": "D297"
+      },
+      "sourcePriceId": "price-296"
+    },
+    {
+      "productId": "bundle-20",
+      "name": "Комплект Midnight",
+      "category": "bundle",
+      "fapix": 40118,
+      "rub": 20059,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 301,
+        "priceCell": "A301",
+        "frequencyCell": "B301",
+        "multiplesCell": "D301"
+      },
+      "sourcePriceId": "price-300"
+    },
+    {
+      "productId": "windowTint-01",
+      "name": "Визор Ignition",
+      "category": "windowTint",
+      "fapix": 690,
+      "rub": 345,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 32,
+        "priceCell": "A32",
+        "frequencyCell": "B32",
+        "multiplesCell": "D32"
+      },
+      "sourcePriceId": "price-031"
+    },
+    {
+      "productId": "windowTint-02",
+      "name": "Визор Sunset",
+      "category": "windowTint",
+      "fapix": 704,
+      "rub": 352,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 38,
+        "priceCell": "A38",
+        "frequencyCell": "B38",
+        "multiplesCell": "D38"
+      },
+      "sourcePriceId": "price-037"
+    },
+    {
+      "productId": "windowTint-03",
+      "name": "Визор Arctic",
+      "category": "windowTint",
+      "fapix": 744,
+      "rub": 372,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 44,
+        "priceCell": "A44",
+        "frequencyCell": "B44",
+        "multiplesCell": "D44"
+      },
+      "sourcePriceId": "price-043"
+    },
+    {
+      "productId": "windowTint-04",
+      "name": "Визор Violet",
+      "category": "windowTint",
+      "fapix": 822,
+      "rub": 411,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 49,
+        "priceCell": "A49",
+        "frequencyCell": "B49",
+        "multiplesCell": "D49"
+      },
+      "sourcePriceId": "price-048"
+    },
+    {
+      "productId": "windowTint-05",
+      "name": "Визор Mint",
+      "category": "windowTint",
+      "fapix": 838,
+      "rub": 419,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 55,
+        "priceCell": "A55",
+        "frequencyCell": "B55",
+        "multiplesCell": "D55"
+      },
+      "sourcePriceId": "price-054"
+    },
+    {
+      "productId": "windowTint-06",
+      "name": "Визор Sakura",
+      "category": "windowTint",
+      "fapix": 1022,
+      "rub": 511,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 61,
+        "priceCell": "A61",
+        "frequencyCell": "B61",
+        "multiplesCell": "D61"
+      },
+      "sourcePriceId": "price-060"
+    },
+    {
+      "productId": "windowTint-07",
+      "name": "Визор Pearl",
+      "category": "windowTint",
+      "fapix": 1042,
+      "rub": 521,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 67,
+        "priceCell": "A67",
+        "frequencyCell": "B67",
+        "multiplesCell": "D67"
+      },
+      "sourcePriceId": "price-066"
+    },
+    {
+      "productId": "windowTint-08",
+      "name": "Визор Obsidian",
+      "category": "windowTint",
+      "fapix": 1142,
+      "rub": 571,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 73,
+        "priceCell": "A73",
+        "frequencyCell": "B73",
+        "multiplesCell": "D73"
+      },
+      "sourcePriceId": "price-072"
+    },
+    {
+      "productId": "windowTint-09",
+      "name": "Визор Acid",
+      "category": "windowTint",
+      "fapix": 1158,
+      "rub": 579,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 78,
+        "priceCell": "A78",
+        "frequencyCell": "B78",
+        "multiplesCell": "D78"
+      },
+      "sourcePriceId": "price-077"
+    },
+    {
+      "productId": "windowTint-10",
+      "name": "Визор Nebula",
+      "category": "windowTint",
+      "fapix": 1174,
+      "rub": 587,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 84,
+        "priceCell": "A84",
+        "frequencyCell": "B84",
+        "multiplesCell": "D84"
+      },
+      "sourcePriceId": "price-083"
+    },
+    {
+      "productId": "windowTint-11",
+      "name": "Визор Copper",
+      "category": "windowTint",
+      "fapix": 2002,
+      "rub": 1001,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 90,
+        "priceCell": "A90",
+        "frequencyCell": "B90",
+        "multiplesCell": "D90"
+      },
+      "sourcePriceId": "price-089"
+    },
+    {
+      "productId": "windowTint-12",
+      "name": "Визор Azure",
+      "category": "windowTint",
+      "fapix": 2054,
+      "rub": 1027,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 96,
+        "priceCell": "A96",
+        "frequencyCell": "B96",
+        "multiplesCell": "D96"
+      },
+      "sourcePriceId": "price-095"
+    },
+    {
+      "productId": "windowTint-13",
+      "name": "Визор Crimson",
+      "category": "windowTint",
+      "fapix": 2086,
+      "rub": 1043,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 101,
+        "priceCell": "A101",
+        "frequencyCell": "B101",
+        "multiplesCell": "D101"
+      },
+      "sourcePriceId": "price-100"
+    },
+    {
+      "productId": "windowTint-14",
+      "name": "Визор Jade",
+      "category": "windowTint",
+      "fapix": 2122,
+      "rub": 1061,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 107,
+        "priceCell": "A107",
+        "frequencyCell": "B107",
+        "multiplesCell": "D107"
+      },
+      "sourcePriceId": "price-106"
+    },
+    {
+      "productId": "windowTint-15",
+      "name": "Визор Orchid",
+      "category": "windowTint",
+      "fapix": 2294,
+      "rub": 1147,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 113,
+        "priceCell": "A113",
+        "frequencyCell": "B113",
+        "multiplesCell": "D113"
+      },
+      "sourcePriceId": "price-112"
+    },
+    {
+      "productId": "windowTint-16",
+      "name": "Визор Steel",
+      "category": "windowTint",
+      "fapix": 2330,
+      "rub": 1165,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 119,
+        "priceCell": "A119",
+        "frequencyCell": "B119",
+        "multiplesCell": "D119"
+      },
+      "sourcePriceId": "price-118"
+    },
+    {
+      "productId": "windowTint-17",
+      "name": "Визор Sand",
+      "category": "windowTint",
+      "fapix": 2366,
+      "rub": 1183,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 125,
+        "priceCell": "A125",
+        "frequencyCell": "B125",
+        "multiplesCell": "D125"
+      },
+      "sourcePriceId": "price-124"
+    },
+    {
+      "productId": "windowTint-18",
+      "name": "Визор Sage",
+      "category": "windowTint",
+      "fapix": 2602,
+      "rub": 1301,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 130,
+        "priceCell": "A130",
+        "frequencyCell": "B130",
+        "multiplesCell": "D130"
+      },
+      "sourcePriceId": "price-129"
+    },
+    {
+      "productId": "windowTint-19",
+      "name": "Визор Titanium",
+      "category": "windowTint",
+      "fapix": 2866,
+      "rub": 1433,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 136,
+        "priceCell": "A136",
+        "frequencyCell": "B136",
+        "multiplesCell": "D136"
+      },
+      "sourcePriceId": "price-135"
+    },
+    {
+      "productId": "windowTint-20",
+      "name": "Визор Midnight",
+      "category": "windowTint",
+      "fapix": 2914,
+      "rub": 1457,
+      "basis": "Workbook base price",
+      "sourceFile": "prices.json",
+      "source": {
+        "sheet": "Итог 300 чисел",
+        "row": 142,
+        "priceCell": "A142",
+        "frequencyCell": "B142",
+        "multiplesCell": "D142"
+      },
+      "sourcePriceId": "price-141"
+    }
+  ]
+}
