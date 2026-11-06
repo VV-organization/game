@@ -35,12 +35,19 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
     method: body ? 'POST' : 'GET',
     body: body ? JSON.stringify(body) : undefined,
   });
-  const data = await response.json().catch(() => ({ error: 'Сервер временно недоступен' }));
+  const data = await response.json().catch(() => {
+    throw Object.assign(new Error('Сервер вернул некорректный ответ. Повтори проверку.'), {
+      status: response.status,
+    });
+  });
   if (!response.ok)
-    throw new Error(
-      data.message ||
-        data.error?.message ||
-        (typeof data.error === 'string' ? data.error : 'Не удалось выполнить запрос'),
+    throw Object.assign(
+      new Error(
+        data?.message ||
+          data?.error?.message ||
+          (typeof data?.error === 'string' ? data.error : 'Не удалось выполнить запрос'),
+      ),
+      { status: response.status, code: typeof data?.error === 'string' ? data.error : undefined },
     );
   return data;
 }

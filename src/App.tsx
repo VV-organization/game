@@ -106,16 +106,23 @@ export default function App() {
     [records, setRecords] = useState<RecordItem[]>(loadRecords),
     [purchase, setPurchase] = useState<Product | null>(null);
   const purchaseKey = useRef<{ id: string; key: string } | null>(null);
+  const authContinuation = useRef<((account: User) => void) | null>(null);
   function openWallet(value: { rub: number; productName?: string }) {
     setWallet({ ...value, paymentId: savedPaymentId() });
   }
   function closeWallet() {
+    authContinuation.current = null;
     setWallet(null);
     if (location.search.includes('payment=')) history.replaceState({}, '', location.pathname);
   }
-  function openAuth(register = false, login = '') {
+  function openAuth(register = false, login = '', onAuthenticated?: (account: User) => void) {
+    authContinuation.current = onAuthenticated || null;
     setAuthRegister(register);
     setAuth(login);
+  }
+  function closeAuth() {
+    authContinuation.current = null;
+    setAuth(null);
   }
   function navigate(next: Page) {
     setPage(next);
@@ -312,8 +319,14 @@ export default function App() {
               <div className="header-actions">
                 <button className="balance" onClick={() => openWallet({ rub: 311 })}>
                   <span className="coin">F</span>
-                  {money(user?.balance || 0)}
-                  <small>Fapix</small>
+                  <span className="balance-amount">
+                    <span>
+                      {money(user?.balance || 0)} <small>Fapix</small>
+                    </span>
+                    <small className="balance-equivalent">
+                      {money((user?.balance || 0) / 2)} ₽
+                    </small>
+                  </span>
                   <Plus size={16} />
                 </button>
                 <button
@@ -638,8 +651,13 @@ export default function App() {
         <Auth
           initialRegister={authRegister}
           initialLogin={auth}
-          onClose={() => setAuth(null)}
-          onUser={setUser}
+          onClose={closeAuth}
+          onUser={(account) => {
+            setUser(account);
+            const resume = authContinuation.current;
+            authContinuation.current = null;
+            resume?.(account);
+          }}
         />
       )}
       {wallet && (
@@ -651,7 +669,7 @@ export default function App() {
           productName={wallet.productName}
           onClose={closeWallet}
           onUser={setUser}
-          onRegister={(login) => openAuth(true, login)}
+          onRegister={(login, onAuthenticated) => openAuth(true, login, onAuthenticated)}
           onComplete={(productName) => {
             closeWallet();
             navigate('shop');
@@ -666,10 +684,14 @@ export default function App() {
           <p>{purchase.description}</p>
           <div className="purchase-total">
             <span>К списанию</span>
-            <b>{money(purchase.price)} Fapix</b>
+            <b>
+              {money(purchase.price)} Fapix
+              <small>{money(purchase.price / 2)} ₽</small>
+            </b>
           </div>
           <p className="muted">
-            После покупки: {money((user?.balance || 0) - purchase.price)} Fapix
+            После покупки: {money((user?.balance || 0) - purchase.price)} Fapix (
+            {money(((user?.balance || 0) - purchase.price) / 2)} ₽)
           </p>
           <button className="primary full" disabled={busy === purchase.id} onClick={buy}>
             {busy ? 'Покупаем…' : 'Подтвердить покупку'}

@@ -29,7 +29,7 @@ interface Props {
   initialPaymentId?: string;
   onClose: () => void;
   onUser: (u: User) => void;
-  onRegister: (login: string) => void;
+  onRegister: (login: string, onAuthenticated: (user: User) => void) => void;
   onComplete: (productName?: string) => void;
 }
 const terminal = (status: string) => ['success', 'succeeded', 'paid', 'failed'].includes(status);
@@ -83,6 +83,11 @@ export function Wallet({
   const [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
     [restoring, setRestoring] = useState(!!initialPaymentId),
+    [restoreAttempt, setRestoreAttempt] = useState(0),
+    [restoreFailure, setRestoreFailure] = useState<{
+      unavailable: boolean;
+      message: string;
+    } | null>(null),
     [pollTick, setPollTick] = useState(0),
     [missing, setMissing] = useState(false);
   const [history, setHistory] = useState<History | null>(null),
@@ -129,6 +134,13 @@ export function Wallet({
     setResolvedProductName(name);
     productContext.current = name;
     setRestoring(true);
+    setRestoreFailure(null);
+    setError('');
+    try {
+      sessionStorage.setItem('fapix-pending-payment', initialPaymentId);
+    } catch {
+      /* Optional recovery storage. */
+    }
     api<Payment>(`/topups/${encodeURIComponent(initialPaymentId)}`)
       .then((p) => {
         if (epoch !== generation.current) return;
@@ -139,8 +151,15 @@ export function Wallet({
       })
       .catch((e) => {
         if (epoch === generation.current) {
-          setError(e.message);
-          forgetPending();
+          // Only a structured local payment error establishes that this payment
+          // is unavailable. A gateway/network failure leaves its outcome unknown.
+          const failure = e as Error & { status?: number; code?: string };
+          setRestoreFailure({
+            unavailable:
+              (failure.status === 404 && failure.code === 'PAYMENT_NOT_FOUND') ||
+              (failure.status === 403 && failure.code === 'PAYMENT_ACCESS_DENIED'),
+            message: failure.message,
+          });
         }
       })
       .finally(() => {
@@ -149,7 +168,7 @@ export function Wallet({
     return () => {
       generation.current++;
     };
-  }, [initialPaymentId]);
+  }, [initialPaymentId, restoreAttempt]);
   useEffect(
     () => () => {
       generation.current++;
@@ -190,9 +209,19 @@ export function Wallet({
     }
     return requestKey.current!.key;
   }
+  function registerRecipient() {
+    const epoch = generation.current;
+    onRegister(login, (account) => {
+      if (epoch !== generation.current) return;
+      setLogin(account.login);
+      setMissing(false);
+      setError('');
+      requestKey.current = null;
+    });
+  }
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (busy || restoring || !valid) return;
+    if (busy || restoring || restoreFailure || !valid) return;
     const epoch = generation.current;
     setError('');
     setMissing(false);
@@ -253,6 +282,8 @@ export function Wallet({
     sequence.current++;
     setPayment(null);
     setBusy(false);
+    setRestoring(false);
+    setRestoreFailure(null);
     setError('');
     requestKey.current = null;
     forgetPending();
@@ -294,6 +325,7 @@ export function Wallet({
           <strong>
             {money(user?.balance || 0)} <span>Fapix</span>
           </strong>
+          <small>{money((user?.balance || 0) / 2)} ₽ по курсу</small>
         </div>
         <span className="rate">1 ₽ = 2 Fapix</span>
       </div>
@@ -321,6 +353,38 @@ export function Wallet({
             <div className="empty" role="status">
               Восстанавливаем платёж…
             </div>
+          ) : restoreFailure ? (
+            <div className="payment-state">
+              <h3>
+                {restoreFailure.unavailable ? 'Платёж недоступен' : 'Не удалось проверить платёж'}
+              </h3>
+              <p role="alert" className="error">
+                {restoreFailure.message}
+              </p>
+              <p>
+                {restoreFailure.unavailable
+                  ? 'Проверь ссылку и аккаунт, с которого был создан платёж. При смене аккаунта повтори проверку.'
+                  : 'Платёж сохранён. Повтори проверку позже — новый платёж создавать не нужно.'}
+              </p>
+              <button
+                className="secondary full"
+                onClick={() => setRestoreAttempt((attempt) => attempt + 1)}
+              >
+                <RefreshCw size={17} />
+                Повторить проверку
+              </button>
+              {restoreFailure.unavailable && (
+                <button
+                  className="text-button"
+                  onClick={() => {
+                    clearPayment();
+                    onClose();
+                  }}
+                >
+                  Закрыть восстановление
+                </button>
+              )}
+            </div>
           ) : payment ? (
             <div className="payment-state">
               {success ? (
@@ -328,8 +392,8 @@ export function Wallet({
                   <CheckCircle2 size={52} />
                   <h3>Баланс пополнен</h3>
                   <p>
-                    {money((payment.rub || amount) * 2)} Fapix зачислено на аккаунт{' '}
-                    <b>{payment.login || login}</b>.
+                    {money((payment.rub || amount) * 2)} Fapix ({money(payment.rub || amount)} ₽){' '}
+                    зачислено на аккаунт <b>{payment.login || login}</b>.
                   </p>
                   {resolvedProductName && (
                     <p>Теперь можно купить «{resolvedProductName}» в магазине игры.</p>
@@ -356,7 +420,8 @@ export function Wallet({
                   </h3>
                   <p>
                     {money(payment.rub || amount)} ₽ ·{' '}
-                    {(payment.method || method) === 'card' ? 'Банковская карта' : 'СБП'}
+                    {(payment.method || method) === 'card' ? 'Банковская карта' : 'СБП'} ·{' '}
+                    {money((payment.rub || amount) * 2)} Fapix
                   </p>
                   {payment.requiresReview && (
                     <p className="notice">
@@ -422,7 +487,7 @@ export function Wallet({
               {missing && (
                 <p className="error" role="alert">
                   Аккаунт не найден.{' '}
-                  <button type="button" className="text-button" onClick={() => onRegister(login)}>
+                  <button type="button" className="text-button" onClick={registerRecipient}>
                     Создать аккаунт
                   </button>
                 </p>
@@ -513,7 +578,8 @@ export function Wallet({
                       <small>{new Date(row.date).toLocaleString('ru-RU')}</small>
                     </td>
                     <td>
-                      {money(row.fapix)} Fapix{'rub' in row && <small>{money(row.rub)} ₽</small>}
+                      {money(row.fapix)} Fapix
+                      <small>{money('rub' in row ? row.rub : row.fapix / 2)} ₽</small>
                     </td>
                     <td>
                       <span className={`status ${row.status}`}>

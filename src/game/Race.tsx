@@ -73,7 +73,8 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
   const host = useRef<HTMLDivElement>(null),
     minimap = useRef<HTMLCanvasElement>(null),
     raceRef = useRef<RaceState | null>(null),
-    controlsRef = useRef<Controls>({ ...emptyControls });
+    controlsRef = useRef<Controls>({ ...emptyControls }),
+    touchPointers = useRef(new Map<number, { control: keyof Controls; value: number | boolean }>());
   const callbacks = useRef({ onExit, onFinish });
   callbacks.current = { onExit, onFinish };
   const [restart, setRestart] = useState(0),
@@ -89,6 +90,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     if (race.phase === 'racing' || race.phase === 'countdown') {
       race.phase = 'paused';
       controlsRef.current = { ...emptyControls };
+      touchPointers.current.clear();
     } else if (race.phase === 'paused') {
       race.phase = race.countdown > 0 ? 'countdown' : 'racing';
     }
@@ -96,6 +98,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
   }, []);
   const restartRace = () => {
     controlsRef.current = { ...emptyControls };
+    touchPointers.current.clear();
     setRestart((n) => n + 1);
   };
   useEffect(() => {
@@ -229,6 +232,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     const blur = () => {
       keys.clear();
       controlsRef.current = { ...emptyControls };
+      touchPointers.current.clear();
       if (race.phase === 'racing' || race.phase === 'countdown') {
         race.phase = 'paused';
         setHud({ ...race });
@@ -241,11 +245,13 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     window.addEventListener('keyup', keyUp);
     window.addEventListener('blur', blur);
     document.addEventListener('visibilitychange', visibility);
-    element.addEventListener('pointerdown', startAudio);
+    const inputSurface = element.parentElement;
+    inputSurface?.addEventListener('pointerdown', startAudio);
     let frame = 0,
       last = performance.now(),
       hudTime = 0,
       notified = false,
+      disposed = false,
       visualTime = 0;
     const drawMap = () => {
       const canvas = minimap.current;
@@ -286,6 +292,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       });
     };
     const animate = (now: number) => {
+      if (disposed) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       const touch = controlsRef.current;
@@ -414,17 +421,20 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
           trackId: race.track.id,
         });
       }
-      frame = requestAnimationFrame(animate);
+      if (!disposed) frame = requestAnimationFrame(animate);
     };
     frame = requestAnimationFrame(animate);
     return () => {
+      disposed = true;
+      controlsRef.current = { ...emptyControls };
+      touchPointers.current.clear();
       cancelAnimationFrame(frame);
       observer.disconnect();
       window.removeEventListener('keydown', keyDown);
       window.removeEventListener('keyup', keyUp);
       window.removeEventListener('blur', blur);
       document.removeEventListener('visibilitychange', visibility);
-      element.removeEventListener('pointerdown', startAudio);
+      inputSurface?.removeEventListener('pointerdown', startAudio);
       if (audioContext) void audioContext.close();
       disposeScene(scene);
       renderer.dispose();
@@ -437,13 +447,18 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     (e: React.PointerEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.currentTarget.setPointerCapture(e.pointerId);
+      touchPointers.current.set(e.pointerId, { control, value });
       controlsRef.current = { ...controlsRef.current, [control]: value };
     };
   const releaseTouch =
     (control: keyof Controls, value: number | boolean) =>
     (e: React.PointerEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      controlsRef.current = { ...controlsRef.current, [control]: value };
+      touchPointers.current.delete(e.pointerId);
+      const held = [...touchPointers.current.values()]
+        .filter((pointer) => pointer.control === control)
+        .at(-1);
+      controlsRef.current = { ...controlsRef.current, [control]: held?.value ?? value };
     };
   const touchProps = (control: keyof Controls, on: number | boolean, off: number | boolean) => ({
     onPointerDown: setTouch(control, on),

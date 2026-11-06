@@ -2,7 +2,19 @@
 
 This plan is a checklist, not a declaration that the browser checks have passed. Browser ownership stays with the root agent. Capture a screenshot for each named state and record observed outcomes in a separate QA result report. The implementation was still changing during the static review on 2026-11-06.
 
-## Current handoff, 2026-11-06
+## Current handoff, 2026-11-06, checkpoint 14:11:20
+
+- Full gate: **102/102 tests in 10 files**, format:check, TypeScript/Vite build, git diff --check passed. Latest assets: `index-DN9A-QhY.js`, `Race-DK6bFtKz.js`; runtime sources unchanged after this build. Three.js size warning remains.
+- Registration continuation, malformed API responses and payment restore failures now have regressions. A transient GET failure retains pending payment/intent and offers GET retry; it cannot silently offer another CREATE.
+- Browser missing-account → registration under a different login → same 584 RUB/SBP → sandbox success credited the actual new account `qa_final_1106` with 1,168 FP. Screenshot 24.
+- Eight extra category purchases/equips were performed against the local sandbox HTTP API with exact debit/ownership assertions. Reloaded browser shows the persisted full garage preset (22) and equipped moving kart (23). Bundle re-equip after changing one component was verified manually. Screenshot 21 is historical geometry-overlap evidence before the fix.
+- 10 car speed caps, bonus behavior, multi-pointer release, mobile audio gesture and finish cleanup are covered by new tests. Physical-device multi-touch remains unrun; the React finish test seeds the last checkpoint and is distinct from full-lap simulation integration.
+- Footer SVG logos observed (25). At 320×844, 100% page zoom, the header shows both FP/RUB without clipping (26). Fresh latest-build Console contains 0 messages.
+- Live Arco settlement/deployment still require this project's merchant configuration and public server/domain. No real payment, external publication or remote CI run is claimed.
+
+The updated criterion matrix and exact API setup amounts are in [acceptance.md](acceptance.md). Older snapshots below are retained as history and do not override this handoff.
+
+## Previous handoff, 2026-11-06 (historical)
 
 The authoritative requirement-by-requirement status is [acceptance.md](acceptance.md). The entries below this handoff retain the order in which findings were recorded; a historical finding is not an assertion that the defect remains present.
 

@@ -175,3 +175,127 @@ describe('complete races using driving inputs', () => {
     },
   );
 });
+
+describe('advertised car speed limits', () => {
+  it.each(
+    [180, 198, 216, 234, 252, 270, 288, 306, 324, 342].map((speed, index) => [index + 1, speed]),
+  )(
+    'car %i reaches its listed %i km/h without exceeding it under normal acceleration',
+    (variant, listedSpeed) => {
+      const track = createTrack('coast');
+      // Stretch the real track so ten seconds of acceleration stay on one straight.
+      track.length *= 1000;
+      track.width *= 1000;
+      track.points = track.points.map((point) => ({
+        ...point,
+        x: point.x * 1000,
+        z: point.z * 1000,
+      }));
+      const race = createRace(track, variant);
+      race.phase = 'racing';
+      race.cars = race.cars.slice(0, 1);
+      let fastest = 0;
+      for (let i = 0; i < 600; i++) {
+        stepRace(race, { ...idle, throttle: 1 }, 1 / 60);
+        fastest = Math.max(fastest, race.cars[0].speed * 3.6);
+      }
+      expect(fastest).toBeGreaterThan(listedSpeed - 1);
+      expect(fastest).toBeLessThanOrEqual(listedSpeed + 0.01);
+    },
+  );
+});
+
+describe('nitro and power-up effects', () => {
+  function activeRace() {
+    const race = createRace(createTrack('coast'), 1);
+    race.phase = 'racing';
+    race.countdown = 0;
+    return race;
+  }
+
+  it('spends nitro during boost, stays within tank bounds, and replenishes after release', () => {
+    const race = activeRace();
+    race.cars = race.cars.slice(0, 1);
+    const player = race.cars[0];
+    for (let i = 0; i < 60; i++) stepRace(race, { ...idle, throttle: 1, boost: true }, 1 / 60);
+    expect(player.boost).toBeGreaterThan(70);
+    expect(player.boost).toBeLessThan(80);
+    expect(player.boosting).toBe(true);
+    const spent = player.boost;
+    for (let i = 0; i < 60; i++) stepRace(race, idle, 1 / 60);
+    expect(player.boost).toBeGreaterThan(spent);
+    expect(player.boosting).toBe(false);
+    for (let i = 0; i < 3000; i++) stepRace(race, idle, 1 / 60);
+    expect(player.boost).toBe(100);
+    player.boost = 0;
+    stepRace(race, { ...idle, throttle: 1, boost: true }, 1 / 60);
+    expect(player.boosting).toBe(false);
+    expect(player.boost).toBeGreaterThanOrEqual(0);
+  });
+
+  it('consumes a turbo pickup, increases actual acceleration and then expires', () => {
+    const normal = activeRace(),
+      boosted = activeRace();
+    normal.cars = normal.cars.slice(0, 1);
+    boosted.cars = boosted.cars.slice(0, 1);
+    boosted.cars[0].item = 'turbo';
+    for (let i = 0; i < 60; i++) {
+      stepRace(normal, { ...idle, throttle: 1 }, 1 / 60);
+      stepRace(boosted, { ...idle, throttle: 1, power: i === 0 }, 1 / 60);
+    }
+    expect(boosted.cars[0].item).toBeNull();
+    expect(boosted.cars[0].speed).toBeGreaterThan(normal.cars[0].speed * 1.4);
+    for (let i = 0; i < 180; i++) stepRace(boosted, idle, 1 / 60);
+    expect(boosted.cars[0].turbo).toBe(0);
+    expect(boosted.cars[0].boosting).toBe(false);
+  });
+
+  it('uses a shield to prevent an overlapping rival from pushing the player', () => {
+    const collisions = [false, true].map((shielded) => {
+      const race = activeRace();
+      race.cars = race.cars.slice(0, 2);
+      const point = sampleTrack(race.track, race.cars[0].progress.lastT);
+      const player = race.cars[0];
+      player.x = point.x - point.tz * 2.3;
+      player.z = point.z + point.tx * 2.3;
+      const start = { x: player.x, z: player.z };
+      if (shielded) player.item = 'shield';
+      stepRace(race, { ...idle, power: shielded }, 1 / 60);
+      return Math.hypot(player.x - start.x, player.z - start.z);
+    });
+    expect(collisions[0]).toBeGreaterThan(0.1);
+    expect(collisions[1]).toBeLessThan(0.001);
+  });
+
+  it('pulses nearby rivals but leaves distant and shielded rivals unaffected', () => {
+    const race = activeRace(),
+      player = race.cars[0];
+    player.item = 'pulse';
+    for (let i = 1; i < race.cars.length; i++) {
+      race.cars[i].x = player.x + 100;
+      race.cars[i].z = player.z;
+    }
+    race.cars[1].x = player.x + 5;
+    race.cars[2].x = player.x + 8;
+    race.cars[2].shield = 2;
+    stepRace(race, { ...idle, power: true }, 1 / 60);
+    expect(player.item).toBeNull();
+    expect(race.cars[1].stun).toBeGreaterThan(2);
+    expect(race.cars[2].stun).toBe(0);
+    expect(race.cars[3].stun).toBe(0);
+  });
+
+  it('requires a new press before consuming another collected power-up', () => {
+    const race = activeRace(),
+      player = race.cars[0];
+    player.item = 'turbo';
+    stepRace(race, { ...idle, power: true }, 1 / 60);
+    player.item = 'shield';
+    stepRace(race, { ...idle, power: true }, 1 / 60);
+    expect(player.item).toBe('shield');
+    stepRace(race, idle, 1 / 60);
+    stepRace(race, { ...idle, power: true }, 1 / 60);
+    expect(player.item).toBeNull();
+    expect(player.shield).toBeGreaterThan(5);
+  });
+});

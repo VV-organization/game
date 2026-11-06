@@ -1,8 +1,10 @@
 // @vitest-environment happy-dom
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Wallet } from './Wallet';
+import { Auth } from './Auth';
 import { api, type History, type User } from '../lib/api';
 
 vi.mock('../lib/api', async (importOriginal) => ({
@@ -55,6 +57,125 @@ afterEach(() => {
 });
 
 describe('wallet recovery and account context', () => {
+  it('continues the selected purchase for the actual login chosen in registration', async () => {
+    const registered: User = { ...alice, id: 'registered-id', login: 'pilot_final' };
+    mockedApi.mockImplementation(async (path) => {
+      if (path === '/accounts/pilot_draft') return { exists: false };
+      if (path === '/auth/register') return { user: registered };
+      if (path === '/accounts/pilot_final') return { exists: true };
+      return { ...pending, login: registered.login, rub: 2077, method: 'sbp' };
+    });
+    function RegistrationFlow() {
+      const [user, setUser] = useState<User | null>(null);
+      const [registration, setRegistration] = useState<{
+        login: string;
+        complete?: (user: User) => void;
+      } | null>(null);
+      return (
+        <>
+          {registration && (
+            <Auth
+              initialRegister
+              initialLogin={registration.login}
+              onClose={() => setRegistration(null)}
+              onUser={(created) => {
+                setUser(created);
+                registration.complete?.(created);
+              }}
+            />
+          )}
+          <Wallet
+            {...props()}
+            user={user}
+            initialRub={2077}
+            productName="Apex GT-R"
+            onRegister={(login, complete?: (user: User) => void) =>
+              setRegistration({ login, complete })
+            }
+          />
+        </>
+      );
+    }
+    const interaction = userEvent.setup();
+    render(<RegistrationFlow />);
+    await interaction.type(
+      screen.getByRole('textbox', { name: 'Логин игрового аккаунта' }),
+      'pilot_draft',
+    );
+    await interaction.click(screen.getByRole('button', { name: /СБП Через приложение банка/ }));
+    await interaction.click(screen.getByRole('button', { name: /Пополнить на/ }));
+    await interaction.click(await screen.findByRole('button', { name: 'Создать аккаунт' }));
+    const authDialog = screen
+      .getByRole('heading', { name: 'Твой путь к старту' })
+      .closest('dialog')!;
+    await interaction.clear(within(authDialog).getByRole('textbox', { name: 'Логин' }));
+    await interaction.type(
+      within(authDialog).getByRole('textbox', { name: 'Логин' }),
+      'pilot_final',
+    );
+    await interaction.type(within(authDialog).getByLabelText('Пароль'), 'secure-password-123');
+    await interaction.click(within(authDialog).getByRole('button', { name: 'Создать аккаунт' }));
+    await waitFor(() =>
+      expect(screen.queryByRole('heading', { name: 'Твой путь к старту' })).toBeNull(),
+    );
+    expect(
+      (screen.getByRole('textbox', { name: 'Логин игрового аккаунта' }) as HTMLInputElement).value,
+    ).toBe('pilot_final');
+    expect(screen.queryByText('Аккаунт не найден.', { exact: false })).toBeNull();
+    await interaction.click(screen.getByRole('button', { name: /Пополнить на/ }));
+    await screen.findByRole('heading', { name: 'Ожидаем оплату' });
+    expect(mockedApi).toHaveBeenLastCalledWith(
+      '/topups',
+      expect.objectContaining({ login: 'pilot_final', rub: 2077, method: 'sbp' }),
+    );
+    expect(JSON.parse(sessionStorage.getItem('fapix-payment-intent') || 'null').productName).toBe(
+      'Apex GT-R',
+    );
+  });
+
+  it('shows the RUB equivalent beside purchase history amounts', async () => {
+    mockedApi.mockResolvedValueOnce({
+      topups: [],
+      purchases: [
+        {
+          id: 'purchase-1',
+          date: '2026-11-06T10:00:00Z',
+          name: 'Apex GT-R',
+          fapix: 2078,
+          status: 'success',
+        },
+      ],
+    });
+    const interaction = userEvent.setup();
+    render(<Wallet {...props()} />);
+    await interaction.click(screen.getByRole('button', { name: 'Покупки' }));
+    const row = (await screen.findByText('Apex GT-R')).closest('tr')!;
+    expect(row.textContent).toMatch(/2\s078 Fapix/);
+    expect(row.textContent).toMatch(/1\s039 ₽/);
+  });
+
+  it('shows both currencies for the balance and pending or successful payment', async () => {
+    mockedApi
+      .mockResolvedValueOnce({ ...pending, rub: 584, method: 'sbp' })
+      .mockResolvedValueOnce({ ...pending, rub: 584, method: 'sbp', status: 'success' });
+    const interaction = userEvent.setup();
+    render(<Wallet {...props()} user={{ ...alice, balance: 2078 }} initialPaymentId="payment-1" />);
+    const balance = screen.getByText('Твой баланс').closest('.wallet-balance')!;
+    expect(balance.textContent).toMatch(/2\s078 Fapix/);
+    expect(balance.textContent).toMatch(/1\s039 ₽/);
+    const waiting = (await screen.findByRole('heading', { name: 'Ожидаем оплату' })).closest(
+      '.payment-state',
+    )!;
+    expect(waiting.textContent).toMatch(/584 ₽/);
+    expect(waiting.textContent).toMatch(/1\s168 Fapix/);
+    await interaction.click(screen.getByRole('button', { name: 'Проверить статус' }));
+    const success = (await screen.findByRole('heading', { name: 'Баланс пополнен' })).closest(
+      '.payment-state',
+    )!;
+    expect(success.textContent).toMatch(/1\s168 Fapix/);
+    expect(success.textContent).toMatch(/584 ₽/);
+  });
+
   it('preserves recipient, amount, SBP and product context while registering a missing account', async () => {
     const interaction = userEvent.setup();
     const callbacks = { ...props(), user: null, initialRub: 2077, productName: 'Apex GT-R' };
@@ -69,7 +190,7 @@ describe('wallet recovery and account context', () => {
     await interaction.click(screen.getByRole('button', { name: /Пополнить на/ }));
     await screen.findByText('Аккаунт не найден.', { exact: false });
     await interaction.click(screen.getByRole('button', { name: 'Создать аккаунт' }));
-    expect(callbacks.onRegister).toHaveBeenCalledWith('new_pilot');
+    expect(callbacks.onRegister).toHaveBeenCalledWith('new_pilot', expect.any(Function));
 
     // The parent opens Auth and supplies the new account without remounting Wallet.
     view.rerender(<Wallet {...callbacks} user={{ ...alice, login: 'new_pilot' }} />);
@@ -236,6 +357,70 @@ describe('wallet recovery and account context', () => {
     expect(mockedApi).toHaveBeenCalledTimes(1);
     expect(mockedApi).toHaveBeenCalledWith('/topups/return-payment');
   });
+
+  it('keeps the payment and purchase intent after a temporary restore error and retries only its status', async () => {
+    const savedRequest = JSON.stringify({
+      signature: 'original-request',
+      key: 'stable-payment-key',
+    });
+    const savedIntent = JSON.stringify({ paymentId: 'payment-1', productName: 'Apex GT-R' });
+    sessionStorage.setItem('fapix-pending-payment', 'payment-1');
+    sessionStorage.setItem('fapix-payment-request', savedRequest);
+    sessionStorage.setItem('fapix-payment-intent', savedIntent);
+    mockedApi
+      .mockRejectedValueOnce(
+        Object.assign(new Error('Провайдер временно недоступен'), {
+          status: 502,
+          code: 'PROVIDER_UNAVAILABLE',
+        }),
+      )
+      .mockResolvedValueOnce({ ...pending, status: 'success', user: { ...alice, balance: 622 } });
+    const interaction = userEvent.setup();
+    const callbacks = props();
+    render(<Wallet {...callbacks} initialPaymentId="payment-1" />);
+    await screen.findByRole('heading', { name: 'Не удалось проверить платёж' });
+    expect(sessionStorage.getItem('fapix-pending-payment')).toBe('payment-1');
+    expect(sessionStorage.getItem('fapix-payment-request')).toBe(savedRequest);
+    expect(sessionStorage.getItem('fapix-payment-intent')).toBe(savedIntent);
+    expect(screen.queryByRole('button', { name: /Пополнить на/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Закрыть восстановление' })).toBeNull();
+    await interaction.click(screen.getByRole('button', { name: 'Повторить проверку' }));
+    await screen.findByRole('heading', { name: 'Баланс пополнен' });
+    expect(mockedApi.mock.calls.map(([path]) => path)).toEqual([
+      '/topups/payment-1',
+      '/topups/payment-1',
+    ]);
+    expect(screen.getByText(/Теперь можно купить «Apex GT-R»/)).toBeTruthy();
+    expect(callbacks.onComplete).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { status: 404, code: 'PAYMENT_NOT_FOUND', authoritative: true },
+    { status: 403, code: 'PAYMENT_ACCESS_DENIED', authoritative: true },
+    { status: 404, code: 'NOT_FOUND', authoritative: false },
+  ])(
+    'distinguishes authoritative payment errors from an upstream $status/$code during restore',
+    async ({ status, code, authoritative }) => {
+      sessionStorage.setItem('fapix-pending-payment', 'payment-1');
+      mockedApi.mockRejectedValueOnce(
+        Object.assign(new Error('Операция недоступна'), { status, code }),
+      );
+      const interaction = userEvent.setup();
+      const callbacks = props();
+      render(<Wallet {...callbacks} initialPaymentId="payment-1" />);
+      await screen.findByRole('heading', {
+        name: authoritative ? 'Платёж недоступен' : 'Не удалось проверить платёж',
+      });
+      expect(sessionStorage.getItem('fapix-pending-payment')).toBe('payment-1');
+      expect(screen.queryByRole('button', { name: /Пополнить на/ })).toBeNull();
+      if (authoritative) {
+        await interaction.click(screen.getByRole('button', { name: 'Закрыть восстановление' }));
+        expect(callbacks.onClose).toHaveBeenCalledOnce();
+        expect(sessionStorage.getItem('fapix-pending-payment')).toBeNull();
+      } else expect(screen.queryByRole('button', { name: 'Закрыть восстановление' })).toBeNull();
+      expect(mockedApi.mock.calls.map(([path]) => path)).toEqual(['/topups/payment-1']);
+    },
+  );
 
   it('keeps the intended product across a hosted-payment remount without buying it automatically', async () => {
     const interaction = userEvent.setup();

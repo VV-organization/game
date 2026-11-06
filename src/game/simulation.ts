@@ -376,13 +376,19 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
               ? 0
               : controls.throttle *
                 (car.boosting ? car.tuning.acceleration * 1.6 : car.tuning.acceleration);
+      const speedBeforeAcceleration = car.speed;
       car.speed +=
         (engine -
           car.speed * 0.19 -
           Math.sign(car.speed) * (controls.throttle ? 1.3 : controls.brake ? 38 : 9)) *
         dt;
       if (!controls.throttle && Math.abs(car.speed) < 0.6) car.speed = 0;
-      if (car.speed > topSpeed) car.speed -= (car.speed - topSpeed) * Math.min(1, dt * 5);
+      if (car.speed > topSpeed) {
+        // Normal acceleration respects the listed maximum; leftover boost speed settles smoothly.
+        const remainingExcess =
+          Math.max(0, speedBeforeAcceleration - topSpeed) * (1 - Math.min(1, dt * 5));
+        car.speed = Math.min(car.speed, topSpeed + remainingExcess);
+      }
       car.speed = clamp(car.speed, -13, car.tuning.maxSpeed * 1.4);
       const steerPower = (1.1 + 24 / (Math.abs(car.speed) + 20)) * car.tuning.handling;
       car.heading +=

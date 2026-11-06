@@ -410,7 +410,7 @@ export function createKart(customization: Customization = {}, number = 1): KartM
     const finish = Math.min(4, Math.floor((customization.body - 1) / 4));
     const aero = mat(['#e9dec3', '#f48d73', '#9b9ae6', '#c7aa72', '#88d7bd'][finish], 0.3, 0.25);
     for (const side of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.18, 0.28 + style * 0.07, 2.1), aero, side * 1.18, 0.68, -0.1);
+      add(new THREE.BoxGeometry(0.18, 0.28 + style * 0.07, 2.1), aero, side * 1.15, 0.68, -0.1);
     }
     add(new THREE.BoxGeometry(2 + style * 0.15, 0.1, 0.5), aero, 0, 0.4, 1.9);
     if (style > 1) add(new THREE.BoxGeometry(2.3, 0.12, 0.65), aero, 0, 1.7, -1.4);

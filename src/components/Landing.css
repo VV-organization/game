@@ -730,9 +730,14 @@
   letter-spacing: -0.8px;
 }
 .landing-mir {
-  color: #267a58;
+  width: 62px;
+  height: 24px;
+  object-fit: contain;
 }
 .landing-sbp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #405071;
 }
 

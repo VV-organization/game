@@ -15,6 +15,8 @@ Read-only source evidence:
 
 These are current code contracts, not proof of provider availability or merchant readiness. This project's own active credentials and permitted payment methods have not been verified.
 
+The MIR and SBP footer SVG assets were reused from `/Users/anton/Finext/shardsmarket/frontend/public/payments/` and visually verified locally. Their presence does not establish merchant payment-method availability.
+
 ## Implemented requests
 
 All provider requests use POST, JSON, Bearer token, `x-api-key` and `x-req-id`. Redirect following is forbidden; timeout is 10 seconds; responses are bounded to 1 MiB. Client responses never expose provider messages or credentials.

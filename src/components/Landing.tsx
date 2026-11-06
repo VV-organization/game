@@ -693,8 +693,17 @@ export function Landing({
             'Способы оплаты: МИР и СБП',
           )}
         >
-          <span className="landing-mir">МИР</span>
-          <span className="landing-sbp">СБП</span>
+          <img
+            className="landing-mir"
+            src="/assets/payments/mir.svg"
+            alt="МИР"
+            width={62}
+            height={24}
+          />
+          <span className="landing-sbp">
+            <img src="/assets/payments/sbp.svg" alt="" width={23} height={28} />
+            СБП
+          </span>
         </div>
         <a className="landing-footer-play" href="#popular">
           {t('Explore the collection', 'Выбрать свой стиль')}
