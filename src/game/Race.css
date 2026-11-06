@@ -501,6 +501,9 @@
   box-shadow: 0 22px 70px #0a252a44;
   border: 1px solid #ffffff80;
 }
+.race-screen:has(.race-overlay) {
+  touch-action: pan-y;
+}
 .race-modal-icon {
   width: 59px;
   height: 59px;
@@ -1150,4 +1153,114 @@
 }
 .race-touch button {
   touch-action: none;
+}
+
+@media (max-height: 550px) {
+  .race-lap {
+    padding: 6px 9px;
+    gap: 0 8px;
+  }
+  .race-lap > strong {
+    font-size: 27px;
+  }
+  .race-lap > strong small {
+    font-size: 15px;
+  }
+  .race-lap > .race-eyebrow {
+    font-size: 8px;
+    padding-bottom: 7px;
+  }
+  .race-clock {
+    font-size: 11px;
+    padding-top: 5px;
+    margin-top: 4px;
+  }
+  .race-modal {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+}
+
+@media (pointer: coarse) and (max-height: 550px) {
+  .race-standings {
+    top: 15px;
+    left: 140px;
+    width: auto;
+  }
+  .race-standing {
+    display: none;
+  }
+  .race-position {
+    padding: 6px 9px;
+    min-width: 82px;
+    margin-bottom: 0;
+  }
+  .race-position > strong {
+    font-size: 31px;
+  }
+  .race-position > span {
+    font-size: 14px;
+    padding-top: 3px;
+  }
+  .race-position small {
+    font-size: 6px;
+  }
+  .race-minimap {
+    left: 18px;
+    top: 102px;
+    bottom: auto;
+    width: 112px;
+    height: 112px;
+  }
+  .race-minimap canvas {
+    width: 112px;
+    height: 112px;
+  }
+  .race-speed {
+    right: 24px;
+    bottom: 120px;
+  }
+  .race-speed > strong {
+    font-size: 38px;
+    letter-spacing: -2px;
+  }
+  .race-speed > span {
+    font-size: 8px;
+  }
+  .race-speed-ticks,
+  .race-speed > div:last-child {
+    display: none;
+  }
+  .race-power {
+    top: 84px;
+    right: 24px;
+  }
+  .race-power > button {
+    width: 48px;
+    height: 48px;
+  }
+  .race-reset-button {
+    top: 84px;
+    right: 84px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+  }
+  .race-reset-button span {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) and (max-height: 550px) and (max-width: 600px) {
+  .race-track-label {
+    display: none;
+  }
+  .race-standings {
+    left: 127px;
+  }
+  .race-boost {
+    bottom: 42px;
+    width: 90px;
+  }
 }

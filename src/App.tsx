@@ -24,7 +24,7 @@ import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
 import { Wallet, savedPaymentId } from './components/Wallet';
 import { Modal } from './components/Modal';
-import { Catalog, categoryNames } from './components/Catalog';
+import { Catalog, categoryNames, ProductArt } from './components/Catalog';
 import { customizationFor } from './lib/customization';
 const Race = lazy(() => import('./game/Race'));
 const KartPreview = lazy(() => import('./game/KartPreview'));
@@ -522,11 +522,21 @@ export default function App() {
                   </div>
                   {(preview || page === 'garage') && (
                     <div className="garage-preview">
-                      <Suspense fallback={loading}>
-                        <KartPreview customization={shownCustomization} />
-                      </Suspense>
+                      {preview && ['profile', 'trail'].includes(preview.category) ? (
+                        <ProductArt product={preview} products={products} />
+                      ) : (
+                        <Suspense fallback={loading}>
+                          <KartPreview customization={shownCustomization} />
+                        </Suspense>
+                      )}
                       <div>
-                        <span className="eyebrow">{preview ? 'ПРИМЕРКА' : 'ВЫБРАННЫЙ КАРТ'}</span>
+                        <span className="eyebrow">
+                          {preview
+                            ? ['profile', 'trail'].includes(preview.category)
+                              ? 'ПРЕДПРОСМОТР'
+                              : 'ПРИМЕРКА'
+                            : 'ВЫБРАННЫЙ КАРТ'}
+                        </span>
                         <h2>
                           {preview?.name ||
                             products.find((p) => p.id === user?.equipped.car)?.name ||

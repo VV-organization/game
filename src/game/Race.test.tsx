@@ -173,6 +173,25 @@ describe('touch control lifecycle', () => {
     expect(race.cars[0].speed).toBeLessThan(speedWhenHeld);
   });
 
+  it.each(['metaKey', 'ctrlKey', 'altKey'])(
+    'leaves browser shortcuts with %s available without driving the kart',
+    (modifier) => {
+      const race = runningRace();
+      const shortcut = new KeyboardEvent('keydown', {
+        code: 'KeyW',
+        [modifier]: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      fireEvent(window, shortcut);
+      advanceFrame();
+      expect(shortcut.defaultPrevented).toBe(false);
+      expect(race.cars[0].speed).toBe(0);
+      fireEvent.keyDown(window, { code: 'KeyP', [modifier]: true });
+      expect(race.phase).toBe('racing');
+    },
+  );
+
   it('keeps a held touch pedal active when a second pedal is released', () => {
     const race = runningRace();
     const gas = screen.getByRole('button', { name: 'Газ' });

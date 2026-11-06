@@ -2,14 +2,18 @@
 
 This plan is a checklist, not a declaration that the browser checks have passed. Browser ownership stays with the root agent. Capture a screenshot for each named state and record observed outcomes in a separate QA result report. The implementation was still changing during the static review on 2026-11-06.
 
-## Current handoff, 2026-11-06, checkpoint 14:11:20
+## Current handoff, 2026-11-06, checkpoint 14:32:59
 
-- Full gate: **102/102 tests in 10 files**, format:check, TypeScript/Vite build, git diff --check passed. Latest assets: `index-DN9A-QhY.js`, `Race-DK6bFtKz.js`; runtime sources unchanged after this build. Three.js size warning remains.
+- Full gate: **105/105 tests in 10 files**, format:check, TypeScript/Vite build, git diff --check passed. Latest assets: `index-CS1P-U7P.js`, `Race-CnoQw8w3.js`; runtime sources unchanged after this build. Three.js size warning remains.
 - Registration continuation, malformed API responses and payment restore failures now have regressions. A transient GET failure retains pending payment/intent and offers GET retry; it cannot silently offer another CREATE.
 - Browser missing-account → registration under a different login → same 584 RUB/SBP → sandbox success credited the actual new account `qa_final_1106` with 1,168 FP. Screenshot 24.
 - Eight extra category purchases/equips were performed against the local sandbox HTTP API with exact debit/ownership assertions. Reloaded browser shows the persisted full garage preset (22) and equipped moving kart (23). Bundle re-equip after changing one component was verified manually. Screenshot 21 is historical geometry-overlap evidence before the fix.
 - 10 car speed caps, bonus behavior, multi-pointer release, mobile audio gesture and finish cleanup are covered by new tests. Physical-device multi-touch remains unrun; the React finish test seeds the last checkpoint and is distinct from full-lap simulation integration.
-- Footer SVG logos observed (25). At 320×844, 100% page zoom, the header shows both FP/RUB without clipping (26). Fresh latest-build Console contains 0 messages.
+- Footer SVG logos observed (25). At 320×844, 100% page zoom, the header shows both FP/RUB without clipping (26). The preceding 14:11:20 build had 0 fresh-load Console messages.
+- Landscape HUD overlaps fixed and inspected in native Chrome device emulation at 844×390 and 568×320; sustained throttle/release and scrollable compact pause dialog verified. Screenshots 27–30 preserve before/after. Physical-device multi-touch remains unrun.
+- Cmd/Ctrl/Alt shortcuts no longer drive or pause the kart; three new regression cases passed after reproducing failures. Cmd+R manually reloaded the running race.
+- Profile/trail product previews now display actual product art, not an unchanged kart. Sunset avatar and Arctic trail inspected in screenshots 31–32. Trail art is static; no animated garage-trail claim.
+- Reproducible structural audit: `npx tsx docs/research/catalog-visual-audit.ts`; [report](catalog-visual-audit.json) gives 300 unique target render fingerprints and no duplicate groups. Uses actual geometry/materials/texture commands/profile markup, excludes SKU metadata. It is not WebGL rasterization, perceptual comparison or 300-item manual visual acceptance.
 - Live Arco settlement/deployment still require this project's merchant configuration and public server/domain. No real payment, external publication or remote CI run is claimed.
 
 The updated criterion matrix and exact API setup amounts are in [acceptance.md](acceptance.md). Older snapshots below are retained as history and do not override this handoff.
@@ -128,7 +132,7 @@ Recommended evidence names: `qa-12-catalog.png`, `qa-13-owned.png`, `qa-14-purch
 7. At 390×844 and landscape, inspect HUD overlap, player visibility, control targets and result/pause dialogs. All actions must be reachable without keyboard.
 8. Watch performance and the browser console during repeated enter/exit and preview changes. A successful build does not prove WebGL initialization, playable controls or resource cleanup.
 
-## Static findings to recheck after ongoing fixes
+## Initial static findings (historical; current resolutions above)
 
 - Engine owner is extending visible equipment and stats. The reviewed version ignored several customization categories and did not apply car stats to driving; verify the final version with the category matrix above.
 - Registration now leaves Wallet mounted; runtime continuation still needs a check.
@@ -144,7 +148,7 @@ Recommended evidence names: `qa-12-catalog.png`, `qa-13-owned.png`, `qa-14-purch
 
 After fixes settle, run `npm test`, `npm run typecheck`, and `npm run build` once. Record command output and counts. Complete source-vs-local screenshot comparison, primary gameplay and sandbox purchase/equip checks. Mark each unrun or blocked scenario explicitly. Payment adapter tests, sandbox credit and real provider settlement must be reported as separate results.
 
-## Independent review follow-up (2026-11-06)
+## Independent review follow-up (2026-11-06, historical)
 
 After integration changes, `npm test` passed **43 tests across 5 files**. All previously reported render-independent type errors were resolved. Landing now accepts `popularIds`, `catalogError`, and `onRetry`; stable merchandising and visible load recovery are wired by App. Wallet integer-amount validation and registration-context preservation were changed by root. Engine now routes `saved.car` to speed/acceleration/handling tuning, uses shared finish-time ordering, and includes a touch brake control. These are code/test confirmations; browser results still require separate evidence.
 

@@ -197,6 +197,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       if (audioContext?.state === 'suspended') void audioContext.resume();
     };
     const keyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (
         [
           'ArrowUp',
