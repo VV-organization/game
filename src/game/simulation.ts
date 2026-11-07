@@ -1,3 +1,5 @@
+import { getRaceFormat, type RaceFormatId, type RaceResult } from '../shared/race-formats';
+
 export type Controls = {
   throttle: number;
   steer: number;
@@ -33,11 +35,17 @@ export type Car = {
   offroad: boolean;
   steer: number;
   finishTime: number | null;
+  bestLap: number | null;
+  lapStartedAt: number;
+  eliminatedAt: number | null;
+  eliminationPlace: number | null;
   aiT: number;
   tuning: { maxSpeed: number; acceleration: number; handling: number };
 };
 export type RaceState = {
   track: Track;
+  formatId: RaceFormatId;
+  nextEliminationAt: number | null;
   cars: Car[];
   time: number;
   phase: 'countdown' | 'racing' | 'paused' | 'finished';
@@ -51,7 +59,12 @@ const wrap = (t: number) => ((t % 1) + 1) % 1;
 export const angleDifference = (a: number, b: number) =>
   Math.atan2(Math.sin(a - b), Math.cos(a - b));
 
-export function advanceProgress(p: Progress, t: number, onTrack: boolean): void {
+export function advanceProgress(
+  p: Progress,
+  t: number,
+  onTrack: boolean,
+  lapTarget: number | null = 3,
+): void {
   if (p.finished) return;
   t = wrap(t);
   let delta = t - p.lastT;
@@ -66,8 +79,8 @@ export function advanceProgress(p: Progress, t: number, onTrack: boolean): void 
   if (partial > 0.5) partial -= 1;
   p.value = p.checkpoints / 16 + clamp(partial, -0.0625, 0.06249);
   p.lastT = t;
-  p.finished = p.checkpoints >= 48;
-  if (p.finished) p.value = 3;
+  p.finished = lapTarget !== null && p.checkpoints >= lapTarget * 16;
+  if (p.finished) p.value = lapTarget!;
 }
 
 const layouts: Record<string, { name: string; width: number; control: number[][] }> = {
@@ -254,11 +267,16 @@ export function projectTrack(track: Track, x: number, z: number) {
     tz: point.tz,
   };
 }
-export function createRace(track: Track, carVariant = 0): RaceState {
+export function createRace(
+  track: Track,
+  carVariant = 0,
+  formatId: RaceFormatId = 'classic',
+): RaceState {
+  const rules = getRaceFormat(formatId);
   const upgrade = clamp(carVariant - 1, 0, 9);
   const colors = ['#ff794b', '#ff8368', '#a78bfa', '#54c7fc', '#ffcc52', '#e98fb9'];
   const names = ['ТЫ', 'NOVA', 'GHOST', 'BLUE', 'DASH', 'PEACH'];
-  const cars = Array.from({ length: 6 }, (_, i): Car => {
+  const cars = Array.from({ length: rules.opponents + 1 }, (_, i): Car => {
     const t = wrap(0.985 - Math.floor(i / 2) * 0.006),
       p = sampleTrack(track, t),
       lane = i % 2 ? -2.9 : 2.9;
@@ -285,6 +303,10 @@ export function createRace(track: Track, carVariant = 0): RaceState {
       offroad: false,
       steer: 0,
       finishTime: null,
+      bestLap: null,
+      lapStartedAt: 0,
+      eliminatedAt: null,
+      eliminationPlace: null,
       aiT: t,
       tuning:
         carVariant > 0
@@ -298,6 +320,8 @@ export function createRace(track: Track, carVariant = 0): RaceState {
   });
   return {
     track,
+    formatId,
+    nextEliminationAt: rules.eliminationInterval,
     cars,
     time: 0,
     phase: 'countdown',
@@ -319,13 +343,17 @@ export function resetPlayer(race: RaceState) {
 }
 export function usePower(race: RaceState) {
   const player = race.cars[0];
-  if (!player.item) return;
+  if (!player.item || player.eliminatedAt !== null) return;
   if (player.item === 'turbo') player.turbo = 3;
   else if (player.item === 'shield') player.shield = 6;
   else {
     race.pulse = 1;
     for (const car of race.cars.slice(1))
-      if (Math.hypot(car.x - player.x, car.z - player.z) < 38 && !car.shield) {
+      if (
+        car.eliminatedAt === null &&
+        Math.hypot(car.x - player.x, car.z - player.z) < 38 &&
+        !car.shield
+      ) {
         car.stun = 2.1;
         car.speed *= 0.35;
       }
@@ -340,11 +368,16 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
     if (race.countdown <= 0) race.phase = 'racing';
     return;
   }
+  const rules = getRaceFormat(race.formatId);
+  const boundary = rules.duration ?? race.nextEliminationAt;
+  if (boundary !== null) dt = Math.min(dt, Math.max(0, boundary - race.time));
   race.time += dt;
   race.pulse = Math.max(0, race.pulse - dt);
   if (controls.power && !race.lastPower) usePower(race);
   race.lastPower = controls.power;
   for (const car of race.cars) {
+    if (car.eliminatedAt !== null) continue;
+    const previousLaps = Math.floor(car.progress.checkpoints / 16);
     car.turbo = Math.max(0, car.turbo - dt);
     car.shield = Math.max(0, car.shield - dt);
     car.stun = Math.max(0, car.stun - dt);
@@ -414,7 +447,7 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
         car.vx *= 0.9;
         car.vz *= 0.9;
       }
-      advanceProgress(car.progress, after.t, after.distance < race.track.width / 2 + 4);
+      advanceProgress(car.progress, after.t, after.distance < race.track.width / 2 + 4, rules.laps);
     } else {
       const player = race.cars[0];
       const catchup = clamp((player.progress.value - car.progress.value) * 12, -2, 4);
@@ -430,9 +463,14 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
       car.z = point.z - point.tx * lane;
       car.heading = Math.atan2(point.tx, point.tz);
       car.steer = Math.sin(race.time + car.id) * 0.12;
-      advanceProgress(car.progress, car.aiT, true);
+      advanceProgress(car.progress, car.aiT, true, rules.laps);
     }
-    if (!car.item && car.pickupCooldown <= 0) {
+    if (Math.floor(car.progress.checkpoints / 16) > previousLaps) {
+      const lapTime = race.time - car.lapStartedAt;
+      car.bestLap = car.bestLap === null ? lapTime : Math.min(car.bestLap, lapTime);
+      car.lapStartedAt = race.time;
+    }
+    if (rules.pickups && !car.item && car.pickupCooldown <= 0) {
       const near = [0.13, 0.39, 0.65, 0.88].some((t) => Math.abs(car.progress.lastT - t) < 0.0045);
       if (near && !car.offroad) {
         car.item = (['turbo', 'shield', 'pulse'] as const)[(Math.floor(race.time) + car.id) % 3];
@@ -443,6 +481,7 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
   }
   const player = race.cars[0];
   for (const bot of race.cars.slice(1)) {
+    if (bot.eliminatedAt !== null) continue;
     const dx = player.x - bot.x,
       dz = player.z - bot.z,
       d = Math.hypot(dx, dz);
@@ -452,6 +491,19 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
       player.speed *= 0.995;
     }
   }
+  if (race.nextEliminationAt !== null && race.time >= race.nextEliminationAt) {
+    const active = rankCars(race.cars).filter((car) => car.eliminatedAt === null);
+    if (active.length > 1) {
+      const last = active[active.length - 1];
+      last.eliminatedAt = race.time;
+      last.eliminationPlace = active.length;
+      last.speed = last.vx = last.vz = 0;
+      last.boosting = last.drifting = false;
+      if (last.id === 0 || active.length === 2) race.phase = 'finished';
+    } else race.phase = 'finished';
+    race.nextEliminationAt += rules.eliminationInterval!;
+  }
+  if (rules.duration !== null && race.time >= rules.duration) race.phase = 'finished';
   const ordered = rankCars(race.cars);
   race.position = ordered.findIndex((c) => c.id === 0) + 1;
   if (player.progress.finished) race.phase = 'finished';
@@ -459,9 +511,29 @@ export function stepRace(race: RaceState, controls: Controls, dt: number): void 
 
 export function rankCars(cars: Car[]): Car[] {
   return [...cars].sort((a, b) => {
-    if (a.finishTime !== null && b.finishTime !== null) return a.finishTime - b.finishTime;
+    if (a.eliminatedAt !== null || b.eliminatedAt !== null) {
+      if (a.eliminatedAt === null) return -1;
+      if (b.eliminatedAt === null) return 1;
+      return b.eliminatedAt - a.eliminatedAt || a.id - b.id;
+    }
+    if (a.finishTime !== null && b.finishTime !== null)
+      return a.finishTime - b.finishTime || a.id - b.id;
     if (a.finishTime !== null) return -1;
     if (b.finishTime !== null) return 1;
-    return b.progress.value - a.progress.value;
+    return b.progress.value - a.progress.value || a.id - b.id;
   });
+}
+
+export function getRaceResult(race: RaceState): RaceResult {
+  const player = race.cars[0];
+  return {
+    position: rankCars(race.cars).findIndex((car) => car.id === 0) + 1,
+    time: player.finishTime ?? race.time,
+    trackId: race.track.id,
+    formatId: race.formatId,
+    bestLap: player.bestLap,
+    distance: Math.max(0, player.progress.value) * race.track.length,
+    completedLaps: Math.floor(player.progress.checkpoints / 16),
+    eliminated: player.eliminatedAt !== null,
+  };
 }

@@ -458,14 +458,47 @@ button:hover:not(:disabled) {
   font-size: 11px;
 }
 .format {
+  position: relative;
+  margin: 10px 0;
+}
+.race-format-picker {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+.format select {
+  appearance: none;
+  width: 100%;
+  font: inherit;
   font-size: 13px;
-  background: #ffffff02;
-  border: 1px solid #ffffff0c;
-  padding: 14px;
+  color: #f6f4ee;
+  background: #292c3a;
+  border: 1px solid #ffffff20;
+  padding: 14px 34px 14px 14px;
   border-radius: 10px;
-  margin: 10px 0 15px;
-  display: flex;
-  justify-content: space-between;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+.format select:hover {
+  border-color: #fa805680;
+}
+.format select:focus-visible,
+.records-filter select:focus-visible {
+  outline: 2px solid #fa8056;
+  outline-offset: 3px;
+}
+.format > svg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #fa8056;
+}
+.format-description {
+  color: #adb3c5;
+  font-size: 11px;
+  line-height: 1.6;
+  min-height: 3.2em;
 }
 .selected-track-art {
   border-radius: 11px;
@@ -1255,6 +1288,24 @@ td small {
 .records {
   padding: 20px;
   margin-top: 20px;
+  overflow-x: auto;
+}
+.records-filter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  color: #adb3c5;
+  font-size: 12px;
+}
+.records-filter select {
+  font: inherit;
+  background: #292c3a;
+  color: #f6f4ee;
+  padding: 11px 14px;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
 }
 @media (min-width: 1700px) {
   .kart-stage,
@@ -1351,7 +1402,7 @@ td small {
   .race-settings .mode-choice {
     font-size: 11px;
   }
-  .race-settings > label {
+  .race-settings > .race-format-picker {
     grid-column: 2;
     grid-row: 2;
   }

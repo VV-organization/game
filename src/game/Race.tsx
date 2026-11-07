@@ -26,6 +26,7 @@ import {
   angleDifference,
   createRace,
   createTrack,
+  getRaceResult,
   rankCars,
   resetPlayer,
   stepRace,
@@ -35,11 +36,13 @@ import {
 } from './simulation';
 import type { Customization } from './types';
 import { getCarDesign } from '../shared/car-designs';
+import { getRaceFormat, type RaceFormatId, type RaceResult } from '../shared/race-formats';
 import './Race.css';
 
-export type RaceResult = { position: number; time: number; trackId: string };
+export type { RaceResult } from '../shared/race-formats';
 export type RaceProps = {
   trackId: string;
+  formatId?: RaceFormatId;
   customization?: Customization;
   onExit: () => void;
   onFinish: (result: RaceResult) => void;
@@ -72,7 +75,14 @@ function PowerIcon({ power, size = 24 }: { power: Power | null; size?: number })
   );
 }
 
-export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProps) {
+export function Race({
+  trackId,
+  formatId = 'classic',
+  customization = {},
+  onExit,
+  onFinish,
+}: RaceProps) {
+  const format = getRaceFormat(formatId);
   const host = useRef<HTMLDivElement>(null),
     minimap = useRef<HTMLCanvasElement>(null),
     raceRef = useRef<RaceState | null>(null),
@@ -108,7 +118,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
     const element = host.current;
     if (!element) return;
     const saved = JSON.parse(signature) as Customization;
-    const race = createRace(createTrack(trackId), saved.car);
+    const race = createRace(createTrack(trackId), saved.car, formatId);
     raceRef.current = race;
     setHud({ ...race });
     race.cars[0].color = saved.color || getCarDesign(saved.car).color;
@@ -285,17 +295,20 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       const start = race.track.points[0];
       ctx.fillStyle = '#fff';
       ctx.fillRect(ox + start.x * scale - 3, oz + start.z * scale - 4, 6, 8);
-      [...race.cars].reverse().forEach((car) => {
-        ctx.beginPath();
-        ctx.arc(ox + car.x * scale, oz + car.z * scale, car.id ? 3.6 : 5, 0, Math.PI * 2);
-        ctx.fillStyle = car.color;
-        ctx.fill();
-        if (!car.id) {
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-      });
+      [...race.cars]
+        .reverse()
+        .filter((car) => car.eliminatedAt === null)
+        .forEach((car) => {
+          ctx.beginPath();
+          ctx.arc(ox + car.x * scale, oz + car.z * scale, car.id ? 3.6 : 5, 0, Math.PI * 2);
+          ctx.fillStyle = car.color;
+          ctx.fill();
+          if (!car.id) {
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+        });
     };
     const animate = (now: number) => {
       if (disposed) return;
@@ -325,6 +338,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       for (let i = 0; i < models.length; i++) {
         const car = race.cars[i],
           model = models[i];
+        model.visible = car.eliminatedAt === null;
         model.position.set(
           car.x,
           0.2 + Math.sin(visualTime * 22 + i) * Math.min(0.025, car.speed * 0.0006),
@@ -359,8 +373,9 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
         item.rotation.y = visualTime * 1.5 + i;
         item.position.y = 1.7 + Math.sin(visualTime * 2 + i) * 0.25;
         item.visible =
-          player.pickupCooldown < 5.5 ||
-          Math.hypot(item.position.x - player.x, item.position.z - player.z) > 18;
+          format.pickups &&
+          (player.pickupCooldown < 5.5 ||
+            Math.hypot(item.position.x - player.x, item.position.z - player.z) > 18);
       });
       world.pulse.visible = race.pulse > 0;
       if (race.pulse > 0) {
@@ -410,11 +425,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       }
       if (race.phase === 'finished' && !notified) {
         notified = true;
-        callbacks.current.onFinish({
-          position: race.position,
-          time: race.time,
-          trackId: race.track.id,
-        });
+        callbacks.current.onFinish(getRaceResult(race));
       }
       if (!disposed) frame = requestAnimationFrame(animate);
     };
@@ -436,7 +447,7 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       renderer.domElement.remove();
       raceRef.current = null;
     };
-  }, [trackId, restart, signature, togglePause]);
+  }, [trackId, formatId, restart, signature, togglePause]);
   const setTouch =
     (control: keyof Controls, value: number | boolean) =>
     (e: React.PointerEvent<HTMLButtonElement>) => {
@@ -463,9 +474,18 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
   });
   const player = hud?.cars[0],
     phase = hud?.phase || 'countdown';
+  const result = hud ? getRaceResult(hud) : null;
+  const solo = format.opponents === 0;
+  const activeCount =
+    hud?.cars.filter((car) => car.eliminatedAt === null).length ?? format.opponents + 1;
+  const remaining = Math.max(0, (format.duration ?? 0) - (hud?.time ?? 0));
+  const untilElimination = Math.max(
+    0,
+    (hud?.nextEliminationAt ?? format.eliminationInterval ?? 0) - (hud?.time ?? 0),
+  );
   return (
     <div
-      className={`race-screen race-${trackId}`}
+      className={`race-screen race-${trackId} ${format.laps === null ? 'race-timed' : ''}`}
       onContextMenu={(event) => event.preventDefault()}
     >
       <div
@@ -477,17 +497,33 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       <div className="race-vignette" />
       <header className="race-topbar">
         <div className="race-lap">
-          <span className="race-eyebrow">КРУГ</span>
+          <span className="race-eyebrow">
+            {format.laps ? 'КРУГ' : format.eliminationInterval ? 'ДО ВЫБЫВАНИЯ' : 'ОСТАЛОСЬ'}
+          </span>
           <strong>
-            {Math.min(3, Math.floor((player?.progress.checkpoints || 0) / 16) + 1)}
-            <small>/ 3</small>
+            {format.laps ? (
+              <>
+                {Math.min(format.laps, Math.floor((player?.progress.checkpoints || 0) / 16) + 1)}
+                <small>/ {format.laps}</small>
+              </>
+            ) : (
+              formatTime(format.eliminationInterval ? untilElimination : remaining)
+            )}
           </strong>
-          <div className="race-clock">{formatTime(hud?.time || 0)}</div>
+          <div className="race-clock">
+            {solo
+              ? `ЛУЧШИЙ КРУГ: ${player?.bestLap == null ? '—' : formatTime(player.bestLap)}`
+              : format.eliminationInterval
+                ? `В ГОНКЕ: ${activeCount}`
+                : format.id === 'endurance'
+                  ? `ДИСТАНЦИЯ: ${Math.round(result?.distance ?? 0)} м`
+                  : formatTime(hud?.time || 0)}
+          </div>
         </div>
         <div className="race-track-label">
           <span className="race-live-dot" /> {hud?.track.name || 'ЛАЗУРНЫЙ БЕРЕГ'}{' '}
           <span className="race-track-divider">/</span>
-          <span>БЫСТРЫЙ ЗАЕЗД</span>
+          <span>{format.name}</span>
         </div>
         <div className="race-tools">
           <button
@@ -505,23 +541,37 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
           </button>
         </div>
       </header>
-      <aside className="race-standings">
-        <div className="race-position">
-          <strong>{hud?.position || 1}</strong>
-          <span>
-            / 6<small>ПОЗИЦИЯ</small>
-          </span>
-        </div>
-        {hud &&
-          rankCars(hud.cars).map((car, i) => (
-            <div className={`race-standing ${car.id === 0 ? 'is-you' : ''}`} key={car.id}>
-              <span>{i + 1}</span>
-              <i style={{ background: car.color }} />
-              <b>{car.name}</b>
-              {car.id === 0 ? <small>ТЫ</small> : <small>{car.finishTime ? 'ФИН' : 'БОТ'}</small>}
-            </div>
-          ))}
-      </aside>
+      {!solo && (
+        <aside className="race-standings">
+          <div className="race-position">
+            <strong>{hud?.position || 1}</strong>
+            <span>
+              / {hud?.cars.length ?? format.opponents + 1}
+              <small>ПОЗИЦИЯ</small>
+            </span>
+          </div>
+          {hud &&
+            rankCars(hud.cars).map((car, i) => (
+              <div
+                className={`race-standing ${car.id === 0 ? 'is-you' : ''} ${car.eliminatedAt !== null ? 'is-eliminated' : ''}`}
+                key={car.id}
+              >
+                <span>{i + 1}</span>
+                <i style={{ background: car.color }} />
+                <b>{car.name}</b>
+                <small>
+                  {car.eliminatedAt !== null
+                    ? 'ВЫБЫЛ'
+                    : car.id === 0
+                      ? 'ТЫ'
+                      : car.finishTime
+                        ? 'ФИН'
+                        : 'БОТ'}
+                </small>
+              </div>
+            ))}
+        </aside>
+      )}
       <div className="race-minimap">
         <canvas
           ref={minimap}
@@ -530,30 +580,37 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
           aria-label="Карта трассы и позиции гонщиков"
         />
         <span>
-          <i /> ТЫ <span>●</span> СОПЕРНИКИ
+          <i /> ТЫ{' '}
+          {!solo && (
+            <>
+              <span>●</span> СОПЕРНИКИ
+            </>
+          )}
         </span>
       </div>
       {player && (
         <>
-          <div className={`race-power ${player.item ? 'has-power' : ''}`}>
-            <button
-              onClick={() => {
-                controlsRef.current.power = true;
-                setTimeout(() => {
-                  controlsRef.current.power = false;
-                }, 100);
-              }}
-              disabled={!player.item || phase !== 'racing'}
-              title="Использовать бонус (E)"
-            >
-              <PowerIcon power={player.item} />
-              {player.item && <kbd>E</kbd>}
-            </button>
-            <div>
-              <span>{player.item ? 'БОНУС ГОТОВ' : 'СОБИРАЙ БОНУСЫ'}</span>
-              <strong>{player.item ? powerNames[player.item] : 'СЕКРЕТНЫЙ БОКС'}</strong>
+          {format.pickups && (
+            <div className={`race-power ${player.item ? 'has-power' : ''}`}>
+              <button
+                onClick={() => {
+                  controlsRef.current.power = true;
+                  setTimeout(() => {
+                    controlsRef.current.power = false;
+                  }, 100);
+                }}
+                disabled={!player.item || phase !== 'racing'}
+                title="Использовать бонус (E)"
+              >
+                <PowerIcon power={player.item} />
+                {player.item && <kbd>E</kbd>}
+              </button>
+              <div>
+                <span>{player.item ? 'БОНУС ГОТОВ' : 'СОБИРАЙ БОНУСЫ'}</span>
+                <strong>{player.item ? powerNames[player.item] : 'СЕКРЕТНЫЙ БОКС'}</strong>
+              </div>
             </div>
-          </div>
+          )}
           <div className="race-boost">
             <div className="race-boost-label">
               <Zap size={13} />
@@ -691,22 +748,66 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       {phase === 'finished' && hud && (
         <div className="race-overlay">
           <div className="race-modal race-results">
-            <div className="race-modal-icon">
-              <Trophy />
-            </div>
+            <div className="race-modal-icon">{solo ? <Flag /> : <Trophy />}</div>
             <span className="race-eyebrow">
-              {hud.position === 1 ? 'ВОТ ЭТО ПОБЕДА' : 'ФИНИШНАЯ ЧЕРТА ПОЗАДИ'}
+              {solo
+                ? 'ТАЙМ-АТАКА ЗАВЕРШЕНА'
+                : result?.eliminated
+                  ? 'ТЫ ВЫБЫЛ ИЗ ГОНКИ'
+                  : hud.position === 1
+                    ? 'ВОТ ЭТО ПОБЕДА'
+                    : 'ФИНИШНАЯ ЧЕРТА ПОЗАДИ'}
             </span>
             <h1>
-              {ordinal(hud.position)}
-              <span> место.</span>
+              {solo ? (
+                result?.bestLap == null ? (
+                  'Нет полного круга.'
+                ) : (
+                  'Круг засчитан.'
+                )
+              ) : (
+                <>
+                  {ordinal(hud.position)}
+                  <span> место.</span>
+                </>
+              )}
             </h1>
             <p>
-              {hud.position === 1
-                ? 'Каждый поворот был твоим. Отличный заезд!'
-                : 'Ещё один заезд? Следующая победа может быть твоей.'}
+              {solo
+                ? result?.bestLap == null
+                  ? 'Заверши полный круг в следующей попытке, чтобы получить время.'
+                  : 'Твой лучший полный круг сохранён. Попробуем быстрее?'
+                : result?.eliminated
+                  ? 'Последняя позиция на отсечке. Попробуй удержаться в следующем заезде.'
+                  : hud.position === 1
+                    ? 'Каждый поворот был твоим. Отличный заезд!'
+                    : 'Ещё один заезд? Следующая победа может быть твоей.'}
             </p>
             <div className="race-results-stats">
+              <div>
+                <span>ФОРМАТ</span>
+                <strong>{format.name}</strong>
+              </div>
+              {solo && (
+                <div>
+                  <span>ЛУЧШИЙ КРУГ</span>
+                  <strong>
+                    {result?.bestLap == null ? 'Нет полного круга' : formatTime(result.bestLap)}
+                  </strong>
+                </div>
+              )}
+              {format.laps === null && (
+                <div>
+                  <span>ПОЛНЫЕ КРУГИ</span>
+                  <strong>{result?.completedLaps ?? 0}</strong>
+                </div>
+              )}
+              {format.id === 'endurance' && (
+                <div>
+                  <span>ДИСТАНЦИЯ</span>
+                  <strong>{Math.round(result?.distance ?? 0)} м</strong>
+                </div>
+              )}
               <div>
                 <span>ВРЕМЯ ГОНКИ</span>
                 <strong>{formatTime(hud.time)}</strong>

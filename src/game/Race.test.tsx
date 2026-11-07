@@ -272,3 +272,78 @@ describe('race controls', () => {
     expect(sessions).toBe(1);
   });
 });
+
+describe('race format presentation', () => {
+  it('shows sprint laps and preserves its format on restart', () => {
+    render(<Race trackId="coast" formatId="sprint" onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByText('/ 1')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Пауза' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Начать заново' }));
+    expect(vi.mocked(createRace).mock.calls.at(-1)?.[2]).toBe('sprint');
+  });
+
+  it('shows solo timed goals without opponents, position or random bonus controls', () => {
+    render(<Race trackId="coast" formatId="time-attack" onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByText('ОСТАЛОСЬ')).toBeTruthy();
+    expect(screen.getByText('ЛУЧШИЙ КРУГ: —')).toBeTruthy();
+    expect(screen.queryByText('ПОЗИЦИЯ')).toBeNull();
+    expect(screen.queryByText('СОПЕРНИКИ')).toBeNull();
+    expect(screen.queryByTitle('Использовать бонус (E)')).toBeNull();
+    expect(screen.getByText('НИТРО')).toBeTruthy();
+    expect(screen.getAllByText('ДРИФТ').length).toBeGreaterThan(0);
+  });
+
+  it('reports no complete time-attack lap without inventing a podium and delivers exact fields once', () => {
+    const race = simulation.createRace(simulation.createTrack('coast'), 0, 'time-attack');
+    race.phase = 'racing';
+    race.time = 119.99;
+    race.countdown = 0;
+    vi.mocked(createRace).mockReturnValue(race);
+    const onFinish = vi.fn();
+    render(<Race trackId="coast" formatId="time-attack" onExit={() => {}} onFinish={onFinish} />);
+    for (let i = 0; i < 5; i++) advanceFrame();
+    expect(onFinish).toHaveBeenCalledTimes(1);
+    expect(onFinish.mock.calls[0][0]).toEqual(simulation.getRaceResult(race));
+    expect(onFinish.mock.calls[0][0]).toMatchObject({
+      formatId: 'time-attack',
+      bestLap: null,
+      completedLaps: 0,
+      eliminated: false,
+    });
+    expect(screen.getByRole('heading', { name: 'Нет полного круга.' })).toBeTruthy();
+    expect(screen.queryByText('ВОТ ЭТО ПОБЕДА')).toBeNull();
+    expect(screen.queryByRole('heading', { name: /место/ })).toBeNull();
+  });
+
+  it('shows a completed solo lap as a time result without a podium', () => {
+    const race = simulation.createRace(simulation.createTrack('coast'), 0, 'time-attack');
+    race.phase = 'finished';
+    race.time = 120;
+    race.cars[0].bestLap = 42.5;
+    race.cars[0].progress.checkpoints = 16;
+    vi.mocked(createRace).mockReturnValue(race);
+    render(<Race trackId="coast" formatId="time-attack" onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByRole('heading', { name: 'Круг засчитан.' })).toBeTruthy();
+    expect(screen.getByText('00:42.50')).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: /место/ })).toBeNull();
+  });
+
+  it('labels eliminated competitors and counts only active drivers', () => {
+    const race = simulation.createRace(simulation.createTrack('coast'), 0, 'elimination');
+    race.cars[5].eliminatedAt = 30;
+    race.cars[5].eliminationPlace = 6;
+    vi.mocked(createRace).mockReturnValue(race);
+    render(<Race trackId="coast" formatId="elimination" onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByText('В ГОНКЕ: 5')).toBeTruthy();
+    expect(screen.getByText('ВЫБЫЛ')).toBeTruthy();
+  });
+
+  it.each([
+    ['elimination', 'ДО ВЫБЫВАНИЯ', 'В ГОНКЕ: 6'],
+    ['endurance', 'ОСТАЛОСЬ', 'ДИСТАНЦИЯ: 0 м'],
+  ] as const)('shows %s objectives', (formatId, title, detail) => {
+    render(<Race trackId="coast" formatId={formatId} onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByText(title)).toBeTruthy();
+    expect(screen.getByText(detail)).toBeTruthy();
+  });
+});

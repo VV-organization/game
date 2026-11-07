@@ -4,6 +4,7 @@ import {
   angleDifference,
   createRace,
   createTrack,
+  getRaceResult,
   rankCars,
   projectTrack,
   sampleTrack,
@@ -298,4 +299,180 @@ describe('nitro and power-up effects', () => {
     expect(player.item).toBeNull();
     expect(player.shield).toBeGreaterThan(5);
   });
+});
+
+describe('race formats', () => {
+  it('allows unlimited validated laps and a one-lap target', () => {
+    const endless = progress(),
+      sprint = progress();
+    for (let i = 1; i <= 320 * 4; i++) {
+      advanceProgress(endless, (i / 320) % 1, true, null);
+      advanceProgress(sprint, (i / 320) % 1, true, 1);
+    }
+    expect(endless.checkpoints).toBe(64);
+    expect(endless.finished).toBe(false);
+    expect(sprint.value).toBe(1);
+    expect(sprint.finished).toBe(true);
+  });
+  it('creates solo time attack, clamps time exactly and rejects an incomplete lap', () => {
+    const race = createRace(createTrack('coast'), 1, 'time-attack');
+    expect(race.cars).toHaveLength(1);
+    race.phase = 'racing';
+    race.time = 119.99;
+    stepRace(race, idle, 0.05);
+    expect(race.time).toBe(120);
+    expect(race.phase).toBe('finished');
+    expect(getRaceResult(race)).toMatchObject({
+      bestLap: null,
+      completedLaps: 0,
+      formatId: 'time-attack',
+    });
+    const restarted = createRace(race.track, 1, race.formatId);
+    expect(restarted.time).toBe(0);
+    expect(restarted.cars[0].bestLap).toBeNull();
+  });
+  it('eliminates the deterministic last car at the boundary and immediately ends on player loss', () => {
+    const race = createRace(createTrack('coast'), 1, 'elimination');
+    race.phase = 'racing';
+    race.time = 29.99;
+    race.cars[0].progress.value = -10;
+    race.cars[0].progress.checkpoints = -160;
+    stepRace(race, idle, 0.05);
+    expect(race.time).toBe(30);
+    expect(race.phase).toBe('finished');
+    expect(race.cars[0].eliminationPlace).toBe(6);
+    expect(getRaceResult(race).eliminated).toBe(true);
+  });
+});
+
+const newFormats = ['sprint', 'time-attack', 'endurance', 'elimination'] as const;
+describe('complete new formats using real driving inputs', () => {
+  it.each(
+    ['coast', 'neon', 'canyon', 'sky'].flatMap((track) =>
+      newFormats.map((format) => ({ track, format })),
+    ),
+  )('completes $format on $track with validated progress', ({ track, format }) => {
+    const race = createRace(createTrack(track), 1, format);
+    for (let frame = 0; frame < 20 * 185 && race.phase !== 'finished'; frame++) {
+      const player = race.cars[0];
+      const road = projectTrack(race.track, player.x, player.z);
+      const target = sampleTrack(
+        race.track,
+        road.t + (10 + player.speed * 0.2) / race.track.length,
+      );
+      const heading = Math.atan2(target.x - player.x, target.z - player.z);
+      stepRace(
+        race,
+        {
+          ...idle,
+          throttle: 1,
+          steer: Math.max(-1, Math.min(1, angleDifference(heading, player.heading) * 2.4)),
+        },
+        0.05,
+      );
+      if (format === 'time-attack') expect(player.item).toBeNull();
+    }
+    expect(race.phase).toBe('finished');
+    expect(race.cars[0].bestLap).toBeGreaterThan(10);
+    if (format === 'sprint') expect(race.cars[0].progress.checkpoints).toBe(16);
+    if (format === 'time-attack' || format === 'endurance') {
+      expect(race.time).toBe(format === 'time-attack' ? 120 : 180);
+      expect(race.cars[0].progress.checkpoints).toBeGreaterThan(48);
+      expect(race.cars[0].finishTime).toBeNull();
+    }
+    if (format === 'elimination') {
+      expect(race.time % 30).toBe(0);
+      const active = race.cars.filter((car) => car.eliminatedAt === null);
+      expect(race.cars[0].eliminatedAt !== null || active.length === 1).toBe(true);
+    }
+  });
+});
+
+describe('format timing and retired participants', () => {
+  it('freezes elimination and duration clocks while paused, including a pending boundary', () => {
+    for (const format of ['elimination', 'time-attack', 'endurance'] as const) {
+      const race = createRace(createTrack('coast'), 1, format);
+      race.time = format === 'elimination' ? 29.99 : format === 'time-attack' ? 119.99 : 179.99;
+      race.phase = 'paused';
+      const before = JSON.stringify(race);
+      stepRace(race, { ...idle, throttle: 1 }, 100);
+      expect(JSON.stringify(race)).toBe(before);
+      race.phase = 'racing';
+      stepRace(race, idle, Number.NaN);
+      expect(race.time).toBe(JSON.parse(before).time);
+    }
+  });
+  it('excludes retired cars from movement, collisions, pickup collection and pulse targets', () => {
+    const race = createRace(createTrack('coast'), 1, 'elimination');
+    race.phase = 'racing';
+    const player = race.cars[0],
+      retired = race.cars[1];
+    race.cars = [player, retired];
+    retired.eliminatedAt = 10;
+    retired.eliminationPlace = 6;
+    retired.x = player.x + 1;
+    retired.z = player.z;
+    retired.speed = 10;
+    retired.progress.lastT = 0.13;
+    const before = JSON.stringify(retired);
+    const position = { x: player.x, z: player.z };
+    player.item = 'pulse';
+    stepRace(race, { ...idle, power: true }, 0.05);
+    expect(JSON.stringify(retired)).toBe(before);
+    expect(player.x).toBe(position.x);
+    expect(player.z).toBe(position.z);
+    expect(rankCars(race.cars)[0]).toBe(player);
+  });
+  it('ranks later eliminations above earlier ones and resolves exact ties by id', () => {
+    const race = createRace(createTrack('coast'), 1, 'elimination');
+    for (const car of race.cars) car.progress.value = 1;
+    expect(rankCars([...race.cars].reverse()).map((car) => car.id)).toEqual([0, 1, 2, 3, 4, 5]);
+    race.cars[0].eliminatedAt = 30;
+    race.cars[1].eliminatedAt = 60;
+    expect(rankCars(race.cars).map((car) => car.id)).toEqual([2, 3, 4, 5, 1, 0]);
+  });
+  it('retains boost and drift mechanics without random pickups in time attack', () => {
+    const race = createRace(createTrack('coast'), 1, 'time-attack');
+    race.phase = 'racing';
+    for (let i = 0; i < 30; i++)
+      stepRace(race, { ...idle, throttle: 1, boost: true, steer: 0.4, drift: true }, 0.05);
+    expect(race.cars[0].boost).toBeLessThan(100);
+    expect(race.cars[0].driftCharge).toBeGreaterThan(0);
+    expect(race.cars[0].item).toBeNull();
+  });
+});
+
+it('records only a full checkpoint lap and keeps the best completed lap through the final partial lap', () => {
+  const race = createRace(createTrack('coast'), 1, 'time-attack');
+  race.phase = 'racing';
+  const player = race.cars[0];
+  const finish = sampleTrack(race.track, 0.001);
+  player.x = finish.x;
+  player.z = finish.z;
+  player.progress = { checkpoints: 15, lastT: 0.999, value: 0.999, finished: false };
+  race.time = 30;
+  stepRace(race, idle, 0);
+  expect(player.bestLap).toBe(30);
+  expect(player.lapStartedAt).toBe(30);
+  player.progress = { checkpoints: 31, lastT: 0.999, value: 1.999, finished: false };
+  race.time = 55;
+  stepRace(race, idle, 0);
+  expect(player.bestLap).toBe(25);
+  race.time = 119.99;
+  stepRace(race, idle, 0.05);
+  expect(getRaceResult(race)).toMatchObject({ bestLap: 25, completedLaps: 2, time: 120 });
+});
+
+it('removes exactly one participant per interval until the sole survivor wins', () => {
+  const race = createRace(createTrack('coast'), 1, 'elimination');
+  race.phase = 'racing';
+  for (const car of race.cars) car.progress.checkpoints = (6 - car.id) * 16;
+  for (let round = 1; round <= 5; round++) {
+    race.time = round * 30;
+    stepRace(race, idle, 0);
+    expect(race.cars.filter((car) => car.eliminatedAt === null)).toHaveLength(6 - round);
+    expect(race.cars[6 - round].eliminationPlace).toBe(7 - round);
+    expect(race.phase).toBe(round === 5 ? 'finished' : 'racing');
+  }
+  expect(getRaceResult(race)).toMatchObject({ position: 1, eliminated: false, time: 150 });
 });

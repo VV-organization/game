@@ -18,7 +18,15 @@ import {
   Smartphone,
   X,
 } from 'lucide-react';
-import { parseRecords, type RaceRecord } from './lib/records';
+import { parseRecords, recordOutcome, recordTime, type RaceRecord } from './lib/records';
+import {
+  getRaceFormat,
+  RACE_FORMATS,
+  type RaceFormatId,
+  type RaceResult,
+} from './shared/race-formats';
+import { getCarDesign } from './shared/car-designs';
+import { RaceFormatPicker } from './components/RaceFormatPicker';
 import { api, money, type Product, type User, type PaymentMode } from './lib/api';
 import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
@@ -100,6 +108,8 @@ export default function App() {
     }),
     [help, setHelp] = useState(false),
     [trackId, setTrackId] = useState('coast'),
+    [formatId, setFormatId] = useState<RaceFormatId>('classic'),
+    [recordsFormat, setRecordsFormat] = useState<RaceFormatId | 'all'>('all'),
     [racing, setRacing] = useState(false),
     [busy, setBusy] = useState(''),
     [toast, setToast] = useState(''),
@@ -107,6 +117,10 @@ export default function App() {
     [records, setRecords] = useState<RecordItem[]>(loadRecords),
     [purchase, setPurchase] = useState<Product | null>(null);
   const purchaseKey = useRef<{ id: string; key: string } | null>(null);
+  const raceFormat = getRaceFormat(formatId);
+  const visibleRecords = records.filter(
+    (record) => recordsFormat === 'all' || (record.formatId || 'classic') === recordsFormat,
+  );
   const authContinuation = useRef<((account: User) => void) | null>(null);
   function openWallet(value: { rub: number; productName?: string }) {
     if (paymentMode !== 'arco') {
@@ -231,8 +245,11 @@ export default function App() {
       setBusy('');
     }
   }
-  function finish(result: { position: number; time: number; trackId: string }) {
-    const next = [{ ...result, date: new Date().toISOString() }, ...records].slice(0, 50);
+  function finish(result: RaceResult) {
+    const next = [
+      { ...result, carVariant: customization.car || 0, date: new Date().toISOString() },
+      ...records,
+    ].slice(0, 50);
     setRecords(next);
     try {
       localStorage.setItem('fapix-records', JSON.stringify(next));
@@ -251,6 +268,7 @@ export default function App() {
       <Suspense fallback={loading}>
         <Race
           trackId={trackId}
+          formatId={formatId}
           customization={customization}
           onExit={() => setRacing(false)}
           onFinish={finish}
@@ -421,7 +439,8 @@ export default function App() {
                       </div>
                       <div className="mode-choice">
                         <span>
-                          <Gamepad2 size={18} />С пятью ботами
+                          <Gamepad2 size={18} />
+                          {raceFormat.opponents ? 'С пятью ботами' : 'Одиночный заезд'}
                         </span>
                         <button
                           onClick={() =>
@@ -434,13 +453,7 @@ export default function App() {
                           Онлайн
                         </button>
                       </div>
-                      <label>
-                        Формат заезда
-                        <div className="format">
-                          Классика · 3 круга
-                          <Flag size={16} />
-                        </div>
-                      </label>
+                      <RaceFormatPicker value={formatId} onChange={setFormatId} />
                       <img
                         className="selected-track-art"
                         src={`/assets/reference/track-${track.art}.svg`}
@@ -454,9 +467,11 @@ export default function App() {
                       <div className="race-meta">
                         <span>
                           <Users size={16} />
-                          Ты и 5 ботов
+                          {raceFormat.opponents ? 'Ты и 5 ботов' : 'Только ты'}
                         </span>
-                        <span>✦ Бонусы включены</span>
+                        <span>
+                          {raceFormat.pickups ? '✦ Бонусы включены' : 'Без случайных бонусов'}
+                        </span>
                       </div>
                       <button className="primary full start-race" onClick={() => setRacing(true)}>
                         <Flag size={19} />
@@ -633,31 +648,71 @@ export default function App() {
                   <p className="muted">
                     История тренировок на этом устройстве. За тренировки Fapix не начисляются.
                   </p>
+                  <label className="records-filter">
+                    Формат в истории
+                    <select
+                      value={recordsFormat}
+                      onChange={(event) =>
+                        setRecordsFormat(
+                          event.target.value === 'all'
+                            ? 'all'
+                            : getRaceFormat(event.target.value).id,
+                        )
+                      }
+                    >
+                      <option value="all">Все форматы</option>
+                      {RACE_FORMATS.map((format) => (
+                        <option key={format.id} value={format.id}>
+                          {format.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   {records.length ? (
                     <div className="panel records">
                       <table>
                         <thead>
                           <tr>
                             <th>Трасса</th>
-                            <th>Место</th>
-                            <th>Время</th>
+                            <th>Формат</th>
+                            <th>Результат</th>
+                            <th>Заезд</th>
                             <th>Дата</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {records.map((r, i) => (
+                          {visibleRecords.map((r, i) => (
                             <tr key={i}>
-                              <td>{tracks.find((t) => t.id === r.trackId)?.name || r.trackId}</td>
                               <td>
-                                <b>{r.position}</b> / 6
+                                {tracks.find((t) => t.id === r.trackId)?.name || r.trackId}
+                                {r.carVariant !== undefined && (
+                                  <small>{getCarDesign(r.carVariant).name}</small>
+                                )}
                               </td>
+                              <td>{getRaceFormat(r.formatId).name}</td>
                               <td>
-                                {Math.floor(r.time / 60)}:
-                                {(r.time % 60).toFixed(2).padStart(5, '0')}
+                                <b>{recordOutcome(r)}</b>
+                                {r.formatId === 'time-attack' && r.bestLap && (
+                                  <small>Лучший круг</small>
+                                )}
+                                {r.formatId === 'endurance' && r.distance !== undefined && (
+                                  <small>
+                                    {(r.distance / 1000).toLocaleString('ru-RU', {
+                                      maximumFractionDigits: 2,
+                                    })}{' '}
+                                    км · Круги: {r.completedLaps || 0}
+                                  </small>
+                                )}
                               </td>
+                              <td>{recordTime(r.time)}</td>
                               <td>{new Date(r.date).toLocaleDateString('ru-RU')}</td>
                             </tr>
                           ))}
+                          {!visibleRecords.length && (
+                            <tr>
+                              <td colSpan={5}>В этом формате пока нет заездов.</td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>

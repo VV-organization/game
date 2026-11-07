@@ -1264,3 +1264,47 @@
     width: 90px;
   }
 }
+
+.race-timed .race-lap {
+  grid-template-columns: auto;
+  gap: 4px;
+}
+.race-timed .race-lap > .race-eyebrow {
+  padding-bottom: 0;
+  font-size: 8px;
+}
+.race-timed .race-lap > strong {
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+.race-timed .race-clock {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+.race-standing.is-eliminated {
+  opacity: 0.5;
+}
+.race-standing.is-eliminated b {
+  text-decoration: line-through;
+}
+@media (max-width: 600px) {
+  .race-timed .race-lap > strong {
+    font-size: 25px;
+  }
+  .race-timed .race-clock {
+    font-size: 8px;
+  }
+  .race-timed .race-track-label {
+    top: 91px;
+  }
+}
+@media (max-height: 550px) {
+  .race-timed .race-lap > strong {
+    font-size: 23px;
+  }
+  .race-timed .race-clock {
+    font-size: 8px;
+    margin-top: 0;
+  }
+}
