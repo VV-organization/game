@@ -4,6 +4,8 @@ import { createGarageScene } from './garage';
 import { createKart, disposeScene } from './kart';
 import { createDecor } from './decor';
 import { frameObject } from './framing';
+import { createHelmet } from './helmets';
+import { createRacingSuit } from './racing-suits';
 import type { Customization } from './types';
 
 export type ThumbnailProduct = { category: string; color: string; variant: number; name: string };
@@ -108,11 +110,21 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
   if (!engine) return null;
   const config: Customization = customization || {
     [product.category]: colorCategories.has(product.category) ? product.color : product.variant,
+    ...(['helmet', 'suit'].includes(product.category)
+      ? { [`${product.category}Style`]: product.variant }
+      : {}),
   };
   const workshop = product.category === 'garage';
-  const decor = product.category === 'decor' ? createDecor(product.variant) : null;
-  if (product.category === 'decor' && !decor) return null;
-  const { scene, kart } = decor
+  const isolated =
+    product.category === 'decor'
+      ? createDecor(product.variant)
+      : product.category === 'helmet'
+        ? createHelmet(product.variant, product.color)
+        : product.category === 'suit'
+          ? createRacingSuit(product.variant, product.color, 'display')
+          : null;
+  if (product.category === 'decor' && !isolated) return null;
+  const { scene, kart } = isolated
     ? { scene: new THREE.Scene(), kart: null }
     : workshop
       ? createGarageScene(config)
@@ -120,8 +132,10 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
   const camera = new THREE.PerspectiveCamera(workshop ? 38 : 35, 4 / 3, 0.1, 80);
   camera.position.set(workshop ? 8.6 : 5.8, workshop ? 5.4 : 3.5, workshop ? 10 : 6.8);
   camera.lookAt(0, workshop ? 1.1 : 1.0, 0);
-  if (decor) {
-    scene.add(decor);
+  if (isolated) {
+    // Ground the product itself; the catalog uses the same model as the driver/garage.
+    isolated.position.y -= new THREE.Box3().setFromObject(isolated).min.y;
+    scene.add(isolated);
     scene.add(new THREE.HemisphereLight('#fff7ed', '#61738e', 2.1));
     const key = new THREE.DirectionalLight('#ffffff', 3.2);
     key.position.set(-3, 6, 5);
@@ -148,13 +162,13 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
     floor.position.y = -0.01;
     floor.receiveShadow = true;
     scene.add(floor);
-    frameObject(camera, decor);
+    frameObject(camera, isolated);
   }
   if (product.category === 'plate') {
     camera.position.set(-5.4, 2.9, -6.4);
     camera.lookAt(0, 0.95, 0);
   }
-  if (['helmet', 'suit', 'windowTint'].includes(product.category)) {
+  if (product.category === 'windowTint') {
     camera.position.set(3.5, 2.9, 4.8);
     camera.lookAt(0, 1.35, 0.05);
   }

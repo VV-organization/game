@@ -26,9 +26,12 @@ export function customizationFor(
   }
   if (preview) include(preview);
   const result: Record<string, string | number> = {};
-  for (const product of chosen.values())
+  for (const product of chosen.values()) {
     result[product.category] = colorCategories.has(product.category)
       ? product.color
       : product.variant;
+    if (product.category === 'helmet' || product.category === 'suit')
+      result[`${product.category}Style`] = product.variant;
+  }
   return result as Customization;
 }

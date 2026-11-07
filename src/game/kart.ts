@@ -7,6 +7,8 @@ import { buildModernVehicle } from './vehicles-modern';
 import { mesh, rounded } from './vehicle-parts';
 import { buildBodyKit } from './body-kits';
 import { surfacePatch } from './vehicle-decals';
+import { createHelmet } from './helmets';
+import { createRacingSuit } from './racing-suits';
 
 export type KartModel = THREE.Group & {
   userData: {
@@ -337,41 +339,14 @@ export function createKart(customization: Customization = {}, number = 1): KartM
   driver.position.set(0, layout.driverY, layout.driverZ);
   driver.scale.setScalar(0.88);
   kart.add(driver);
-  const suit = mat(customization.suit || '#f8f4e8');
-  add(new THREE.CapsuleGeometry(0.34, 0.4, 3, 8), suit, 0, 0.37, 0, driver);
-  const helmet = add(
-    new THREE.SphereGeometry(0.48, 16, 12),
-    mat(customization.helmet || color, 0.26),
-    0,
-    1.02,
-    0.04,
-    driver,
+  driver.add(createRacingSuit(customization.suitStyle, customization.suit));
+  const helmet = createHelmet(
+    customization.helmetStyle,
+    customization.helmet || (customization.helmetStyle ? undefined : color),
+    customization.windowTint,
   );
-  helmet.scale.set(1, 1.07, 1);
-  // Sphere phi = PI / 2 faces the kart's +Z front; keep the rear of the helmet clear.
-  const visor = add(
-    new THREE.SphereGeometry(0.495, 20, 8, Math.PI / 2 - 1.08, 2.16, 1.19, 0.74),
-    mat(customization.windowTint || '#163544', 0.16, 0.6),
-    0,
-    1.02,
-    0.04,
-    driver,
-  );
-  visor.scale.y = 1.07;
-  add(new THREE.BoxGeometry(0.16, 0.035, 0.7), accent, 0, 1.53, 0.03, driver);
-  for (const side of [-1, 1]) {
-    const arm = add(
-      new THREE.CapsuleGeometry(0.13, 0.44, 2, 6),
-      suit,
-      side * 0.36,
-      0.37,
-      0.33,
-      driver,
-    );
-    arm.rotation.x = -0.8;
-    arm.rotation.z = side * 0.3;
-    add(new THREE.SphereGeometry(0.16, 8, 6), dark, side * 0.35, 0.25, 0.59, driver);
-  }
+  helmet.position.set(0, 1.02, 0.04);
+  driver.add(helmet);
   const steering = add(
     new THREE.TorusGeometry(0.27, 0.045, 5, 12),
     dark,

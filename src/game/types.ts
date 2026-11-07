@@ -2,6 +2,8 @@ export type Customization = {
   color?: string;
   helmet?: string;
   suit?: string;
+  helmetStyle?: number;
+  suitStyle?: number;
   body?: number;
   wheels?: number;
   car?: number;

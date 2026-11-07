@@ -5,12 +5,13 @@ export function frameObject(
   camera: THREE.PerspectiveCamera,
   object: THREE.Object3D,
   padding = 1.18,
+  viewDirection: [number, number, number] = [1, 0.65, 1.5],
 ) {
   object.updateWorldMatrix(true, true);
   const bounds = new THREE.Box3().setFromObject(object);
   if (bounds.isEmpty()) return;
   const center = bounds.getCenter(new THREE.Vector3());
-  const direction = new THREE.Vector3(1, 0.65, 1.5).normalize();
+  const direction = new THREE.Vector3(...viewDirection).normalize();
   const right = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), direction).normalize();
   const up = new THREE.Vector3().crossVectors(direction, right);
   const tanY = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));

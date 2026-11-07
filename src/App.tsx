@@ -531,7 +531,13 @@ export default function App() {
                         <Suspense fallback={loading}>
                           <KartPreview
                             customization={shownCustomization}
-                            focus={preview?.category === 'decor' ? 'decor' : undefined}
+                            focus={
+                              preview?.category === 'decor' ||
+                              preview?.category === 'helmet' ||
+                              preview?.category === 'suit'
+                                ? preview.category
+                                : undefined
+                            }
                           />
                         </Suspense>
                       )}

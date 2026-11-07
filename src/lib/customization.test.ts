@@ -27,6 +27,31 @@ const equipped = Object.freeze({
 });
 
 describe('customizationFor', () => {
+  it('preserves equipment geometry as well as colors through equip and temporary preview', () => {
+    const gear = [
+      item('helmet-03', 'helmet', 3, '#3388bb'),
+      item('helmet-12', 'helmet', 12, '#1122aa'),
+      item('suit-08', 'suit', 8, '#443344'),
+      item('visor-02', 'windowTint', 2, '#66ccee'),
+    ];
+    const worn = Object.freeze({ helmet: 'helmet-03', suit: 'suit-08', windowTint: 'visor-02' });
+    expect(customizationFor(worn, gear, gear[1])).toEqual({
+      helmet: '#1122aa',
+      helmetStyle: 12,
+      suit: '#443344',
+      suitStyle: 8,
+      windowTint: '#66ccee',
+    });
+    expect(customizationFor(worn, gear)).toEqual({
+      helmet: '#3388bb',
+      helmetStyle: 3,
+      suit: '#443344',
+      suitStyle: 8,
+      windowTint: '#66ccee',
+    });
+    expect(customizationFor({ helmet: 'default', suit: 'missing' }, gear)).toEqual({});
+  });
+
   it('expands a preview bundle into its component categories while preserving other equipped items', () => {
     expect(customizationFor(equipped, products, products[7])).toEqual({
       car: 4,

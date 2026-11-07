@@ -3,6 +3,8 @@ import type { CategoryId, Product } from '../src/shared/types';
 import { carDesigns } from '../src/shared/car-designs';
 import { bodyDesigns } from '../src/shared/body-designs';
 import { decorDesigns } from '../src/shared/decor-designs';
+import { helmetDesigns } from '../src/shared/helmet-designs';
+import { suitDesigns } from '../src/shared/suit-designs';
 
 const definitions: {
   id: CategoryId;
@@ -148,11 +150,15 @@ export const products: Product[] = definitions.flatMap((def) =>
           ? bodyDesigns[i].description
           : def.id === 'decor'
             ? decorDesigns[i].description
-            : def.id === 'garage'
-              ? i < 5
-                ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'
-                : 'Мастерская Pro: два инструментальных шкафа, верхняя световая балка и клетчатая разметка пола.'
-              : description[def.id];
+            : def.id === 'helmet'
+              ? helmetDesigns[i].description
+              : def.id === 'suit'
+                ? suitDesigns[i].description
+                : def.id === 'garage'
+                  ? i < 5
+                    ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'
+                    : 'Мастерская Pro: два инструментальных шкафа, верхняя световая балка и клетчатая разметка пола.'
+                  : description[def.id];
     return {
       id: `${def.id}-${String(i + 1).padStart(2, '0')}`,
       name,

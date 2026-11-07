@@ -12,7 +12,7 @@ export function KartPreview({
 }: {
   customization?: Customization;
   className?: string;
-  focus?: 'decor';
+  focus?: 'decor' | 'helmet' | 'suit';
 }) {
   const host = useRef<HTMLDivElement>(null);
   const [unavailable, setUnavailable] = useState(false);
@@ -42,7 +42,17 @@ export function KartPreview({
       inset: '0',
     });
     element.appendChild(renderer.domElement);
-    const { scene, kart, decor } = createGarageScene(JSON.parse(signature) as Customization);
+    const config = JSON.parse(signature) as Customization;
+    const { scene, kart, decor } = createGarageScene(config);
+    const equipmentFocus = focus === 'helmet' || focus === 'suit';
+    const subject =
+      focus === 'decor'
+        ? decor
+        : focus === 'helmet'
+          ? kart.userData.driver.getObjectByName('driver-helmet')
+          : focus === 'suit'
+            ? kart.userData.driver
+            : null;
     const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 60);
     camera.position.set(6.6, 4.2, 7.5);
     camera.lookAt(0, 1.05, 0);
@@ -57,7 +67,16 @@ export function KartPreview({
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      if (focus === 'decor' && decor) frameObject(camera, decor, 1.35);
+      if (subject)
+        frameObject(
+          camera,
+          subject,
+          equipmentFocus ? 1.45 : 1.35,
+          // View the buggy's driver through the opening below its overhead crossbar.
+          equipmentFocus
+            ? [0.3, focus === 'helmet' && config.car === 3 ? -0.35 : 0.12, 1.5]
+            : undefined,
+        );
     };
     resize();
     const observer = new ResizeObserver(resize);
@@ -67,7 +86,7 @@ export function KartPreview({
     const animate = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      kart.rotation.y += dt * 0.19;
+      if (!equipmentFocus) kart.rotation.y += dt * 0.19;
       renderer.render(scene, camera);
       frame = requestAnimationFrame(animate);
     };
@@ -85,7 +104,11 @@ export function KartPreview({
       ref={host}
       className={className}
       aria-label={
-        focus === 'decor' ? 'Декор в твоей мастерской в 3D' : 'Твой карт и мастерская в 3D'
+        focus === 'decor'
+          ? 'Декор в твоей мастерской в 3D'
+          : focus === 'helmet' || focus === 'suit'
+            ? 'Экипировка твоего гонщика в 3D'
+            : 'Твой карт и мастерская в 3D'
       }
       style={{ width: '100%', height: '100%', minHeight: 200, position: 'relative' }}
     >
