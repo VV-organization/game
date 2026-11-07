@@ -59,4 +59,20 @@ describe('device race records', () => {
       '2 / 6',
     );
   });
+  it('preserves network provenance and never labels an unfinished race as a normal podium result', () => {
+    const result = {
+      position: 4,
+      time: 100,
+      trackId: 'coast',
+      date: '2026-11-07T10:00:00Z',
+      online: true,
+      didNotFinish: true,
+    };
+    expect(
+      parseRecords(
+        JSON.stringify([result, { ...result, online: 'true' }, { ...result, didNotFinish: 1 }]),
+      ),
+    ).toEqual([result]);
+    expect(recordOutcome(result)).toBe('DNF · 4 / 6');
+  });
 });

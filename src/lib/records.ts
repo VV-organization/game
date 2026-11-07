@@ -12,6 +12,7 @@ export function recordTime(time: number): string {
 }
 
 export function recordOutcome(record: RaceRecord): string {
+  if (record.didNotFinish) return `DNF · ${record.position} / 6`;
   if (record.formatId === 'time-attack')
     return record.bestLap ? recordTime(record.bestLap) : 'Нет полного круга';
   return `${record.position} / 6${record.eliminated ? ' · Выбыл' : ''}`;
@@ -41,6 +42,8 @@ export function parseRecords(raw: string | null): RaceRecord[] {
             (Number.isInteger(r.completedLaps) && r.completedLaps >= 0)) &&
           (r.distance === undefined || (Number.isFinite(r.distance) && r.distance >= 0)) &&
           (r.eliminated === undefined || typeof r.eliminated === 'boolean') &&
+          (r.online === undefined || typeof r.online === 'boolean') &&
+          (r.didNotFinish === undefined || typeof r.didNotFinish === 'boolean') &&
           (r.carVariant === undefined ||
             (Number.isInteger(r.carVariant) && r.carVariant >= 0 && r.carVariant <= 10)),
       )

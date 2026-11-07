@@ -88,4 +88,6 @@ export type RaceResult = {
   distance: number;
   completedLaps: number;
   eliminated: boolean;
+  didNotFinish?: boolean;
+  online?: boolean;
 };

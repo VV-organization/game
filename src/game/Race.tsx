@@ -27,6 +27,7 @@ import {
   createRace,
   createTrack,
   getRaceResult,
+  getCarPosition,
   rankCars,
   resetPlayer,
   stepRace,
@@ -37,6 +38,7 @@ import {
 import type { Customization } from './types';
 import { getCarDesign } from '../shared/car-designs';
 import { getRaceFormat, type RaceFormatId, type RaceResult } from '../shared/race-formats';
+import type { OnlineRaceRuntime } from '../shared/online-protocol';
 import './Race.css';
 
 export type { RaceResult } from '../shared/race-formats';
@@ -44,6 +46,8 @@ export type RaceProps = {
   trackId: string;
   formatId?: RaceFormatId;
   customization?: Customization;
+  online?: OnlineRaceRuntime;
+  onRematch?: () => void;
   onExit: () => void;
   onFinish: (result: RaceResult) => void;
 };
@@ -81,6 +85,8 @@ export function Race({
   customization = {},
   onExit,
   onFinish,
+  online,
+  onRematch,
 }: RaceProps) {
   const format = getRaceFormat(formatId);
   const host = useRef<HTMLDivElement>(null),
@@ -94,12 +100,25 @@ export function Race({
     [hud, setHud] = useState<RaceState | null>(null),
     [muted, setMuted] = useState(false),
     [error, setError] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(false);
+  const clearKeysRef = useRef(() => {});
+  const localCarId = online?.localCarId ?? 0;
   const mutedRef = useRef(false);
   mutedRef.current = muted;
   const signature = JSON.stringify(customization);
   const togglePause = useCallback(() => {
     const race = raceRef.current;
     if (!race) return;
+    if (online) {
+      menuRef.current = !menuRef.current;
+      setMenuOpen(menuRef.current);
+      controlsRef.current = { ...emptyControls };
+      touchPointers.current.clear();
+      clearKeysRef.current();
+      online.update({ ...emptyControls }, 0);
+      return;
+    }
     if (race.phase === 'racing' || race.phase === 'countdown') {
       race.phase = 'paused';
       controlsRef.current = { ...emptyControls };
@@ -108,20 +127,24 @@ export function Race({
       race.phase = race.countdown > 0 ? 'countdown' : 'racing';
     }
     setHud({ ...race, cars: race.cars.map((c) => ({ ...c, progress: { ...c.progress } })) });
-  }, []);
+  }, [online]);
   const restartRace = () => {
     controlsRef.current = { ...emptyControls };
     touchPointers.current.clear();
+    if (online) {
+      onRematch?.();
+      return;
+    }
     setRestart((n) => n + 1);
   };
   useEffect(() => {
     const element = host.current;
     if (!element) return;
     const saved = JSON.parse(signature) as Customization;
-    const race = createRace(createTrack(trackId), saved.car, formatId);
+    const race = online?.race ?? createRace(createTrack(trackId), saved.car, formatId);
     raceRef.current = race;
     setHud({ ...race });
-    race.cars[0].color = saved.color || getCarDesign(saved.car).color;
+    if (!online) race.cars[0].color = saved.color || getCarDesign(saved.car).color;
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -138,22 +161,40 @@ export function Race({
     element.appendChild(renderer.domElement);
     const world = createWorld(race.track),
       scene = world.scene;
+    const modelCarIds = race.cars.map((car) => car.id);
     const models = race.cars.map((car, i) => {
       const model = createKart(
-        i
-          ? {
-              car: [2, 3, 4, 6, 9][i - 1],
-              color: car.color,
-              helmet: car.color,
-              suit: i % 2 ? '#f6efdf' : '#3a4650',
-            }
-          : saved,
+        online
+          ? (online.roster.find((entry) => entry.id === car.id)?.customization ??
+              car.customization ??
+              {})
+          : i
+            ? {
+                car: [2, 3, 4, 6, 9][i - 1],
+                color: car.color,
+                helmet: car.color,
+                suit: i % 2 ? '#f6efdf' : '#3a4650',
+              }
+            : saved,
         i + 1,
       );
       scene.add(model);
+      model.position.set(car.x, 0.2, car.z);
+      model.rotation.y = car.heading;
       return model;
     });
-    const trail = createTrailEffect(saved.trailStyle, saved.trail);
+    const pulseModels = online
+      ? race.cars.map(() => {
+          const mesh = world.pulse.clone();
+          mesh.material = (world.pulse.material as THREE.MeshBasicMaterial).clone();
+          mesh.visible = false;
+          scene.add(mesh);
+          return mesh;
+        })
+      : [];
+    const localStyle =
+      online?.roster.find((entry) => entry.id === localCarId)?.customization ?? saved;
+    const trail = createTrailEffect(localStyle.trailStyle, localStyle.trail);
     scene.add(trail.object);
     const emitter = {
       x: 0,
@@ -168,7 +209,7 @@ export function Race({
     const camera = new THREE.PerspectiveCamera(59, 1, 0.1, 700),
       cameraPosition = new THREE.Vector3(),
       cameraLook = new THREE.Vector3();
-    const player = race.cars[0];
+    const player = race.cars.find((car) => car.id === localCarId)!;
     let cameraHeading = player.heading;
     cameraPosition.set(
       player.x - Math.sin(cameraHeading) * 10.5,
@@ -187,6 +228,7 @@ export function Race({
     const observer = new ResizeObserver(resize);
     observer.observe(element);
     const keys = new Set<string>();
+    clearKeysRef.current = () => keys.clear();
     let audioContext: AudioContext | null = null,
       oscillator: OscillatorNode | null = null,
       gain: GainNode | null = null;
@@ -239,7 +281,10 @@ export function Race({
         togglePause();
         return;
       }
-      if (e.code === 'KeyR' && !e.repeat && race.phase === 'racing') resetPlayer(race);
+      if (e.code === 'KeyR' && !e.repeat && race.phase === 'racing') {
+        if (online) online.reset();
+        else resetPlayer(race);
+      }
       keys.add(e.code);
     };
     const keyUp = (e: KeyboardEvent) => {
@@ -249,7 +294,11 @@ export function Race({
       keys.clear();
       controlsRef.current = { ...emptyControls };
       touchPointers.current.clear();
-      if (race.phase === 'racing' || race.phase === 'countdown') {
+      if (online) {
+        menuRef.current = true;
+        setMenuOpen(true);
+        online.update({ ...emptyControls }, 0);
+      } else if (race.phase === 'racing' || race.phase === 'countdown') {
         race.phase = 'paused';
         setHud({ ...race });
       }
@@ -297,13 +346,19 @@ export function Race({
       ctx.fillRect(ox + start.x * scale - 3, oz + start.z * scale - 4, 6, 8);
       [...race.cars]
         .reverse()
-        .filter((car) => car.eliminatedAt === null)
+        .filter((car) => car.eliminatedAt === null && !car.didNotFinish)
         .forEach((car) => {
           ctx.beginPath();
-          ctx.arc(ox + car.x * scale, oz + car.z * scale, car.id ? 3.6 : 5, 0, Math.PI * 2);
+          ctx.arc(
+            ox + car.x * scale,
+            oz + car.z * scale,
+            car.id === localCarId ? 5 : 3.6,
+            0,
+            Math.PI * 2,
+          );
           ctx.fillStyle = car.color;
           ctx.fill();
-          if (!car.id) {
+          if (car.id === localCarId) {
             ctx.strokeStyle = '#fff';
             ctx.lineWidth = 2;
             ctx.stroke();
@@ -332,19 +387,24 @@ export function Race({
         boost: keys.has('ShiftLeft') || keys.has('ShiftRight') || touch.boost,
         power: keys.has('KeyE') || touch.power,
       };
-      stepRace(race, controls, dt);
+      if (online) online.update(menuRef.current ? { ...emptyControls } : controls, dt);
+      else stepRace(race, controls, dt);
       const moving = race.phase === 'racing' || race.phase === 'countdown';
       if (moving) visualTime += dt;
       for (let i = 0; i < models.length; i++) {
-        const car = race.cars[i],
+        const car = race.cars.find((car) => car.id === modelCarIds[i])!,
           model = models[i];
-        model.visible = car.eliminatedAt === null;
+        model.visible = car.eliminatedAt === null && !car.didNotFinish;
+        const blend =
+          online && Math.hypot(model.position.x - car.x, model.position.z - car.z) <= 15
+            ? Math.min(1, dt * 14)
+            : 1;
         model.position.set(
-          car.x,
+          model.position.x + (car.x - model.position.x) * blend,
           0.2 + Math.sin(visualTime * 22 + i) * Math.min(0.025, car.speed * 0.0006),
-          car.z,
+          model.position.z + (car.z - model.position.z) * blend,
         );
-        model.rotation.y = car.heading;
+        model.rotation.y += angleDifference(car.heading, model.rotation.y) * blend;
         model.rotation.z = -car.steer * Math.min(0.06, Math.abs(car.speed) * 0.002);
         // Ground projection stays level while the chassis leans and bounces.
         model.userData.glow.rotation.z = -model.rotation.z;
@@ -365,7 +425,7 @@ export function Race({
       emitter.active =
         race.phase === 'racing' &&
         player.speed > 8 &&
-        Boolean(saved.trail || saved.trailStyle || player.drifting || player.boosting);
+        Boolean(localStyle.trail || localStyle.trailStyle || player.drifting || player.boosting);
       emitter.boosting = player.boosting;
       emitter.drifting = player.drifting;
       if (race.phase !== 'paused') trail.update(dt, emitter);
@@ -377,33 +437,46 @@ export function Race({
           (player.pickupCooldown < 5.5 ||
             Math.hypot(item.position.x - player.x, item.position.z - player.z) > 18);
       });
-      world.pulse.visible = race.pulse > 0;
-      if (race.pulse > 0) {
+      world.pulse.visible = !online && race.pulse > 0;
+      if (!online && race.pulse > 0) {
         world.pulse.position.set(player.x, 0.3, player.z);
         world.pulse.scale.setScalar((1 - race.pulse) * 42 + 2);
         (world.pulse.material as THREE.MeshBasicMaterial).opacity = race.pulse * 0.6;
       }
+      pulseModels.forEach((mesh, index) => {
+        const pulse = race.pulses?.[index];
+        mesh.visible = Boolean(pulse && pulse.remaining > 0);
+        if (!pulse) return;
+        mesh.position.set(pulse.x, 0.3, pulse.z);
+        mesh.scale.setScalar((1 - pulse.remaining) * 42 + 2);
+        (mesh.material as THREE.MeshBasicMaterial).opacity = pulse.remaining * 0.6;
+      });
+      const follow =
+        online && (player.eliminatedAt !== null || player.didNotFinish)
+          ? (rankCars(race.cars).find((car) => car.eliminatedAt === null && !car.didNotFinish) ??
+            player)
+          : player;
       cameraHeading +=
-        angleDifference(player.heading, cameraHeading) *
+        angleDifference(follow.heading, cameraHeading) *
         Math.min(1, dt * (player.drifting ? 3.8 : 6));
-      const distance = 10.6 + (player.boosting ? 1 : 0);
+      const distance = 10.6 + (follow.boosting ? 1 : 0);
       cameraPosition.set(
-        player.x - Math.sin(cameraHeading) * distance,
+        follow.x - Math.sin(cameraHeading) * distance,
         6.7,
-        player.z - Math.cos(cameraHeading) * distance,
+        follow.z - Math.cos(cameraHeading) * distance,
       );
       camera.position.lerp(cameraPosition, Math.min(1, dt * 9));
       cameraLook.set(
-        player.x + Math.sin(cameraHeading) * 11,
+        follow.x + Math.sin(cameraHeading) * 11,
         1.9,
-        player.z + Math.cos(cameraHeading) * 11,
+        follow.z + Math.cos(cameraHeading) * 11,
       );
       camera.lookAt(cameraLook);
-      const fov = 59 + (player.boosting ? 7 : 0);
+      const fov = 59 + (follow.boosting ? 7 : 0);
       camera.fov += (fov - camera.fov) * Math.min(1, dt * 3);
       camera.updateProjectionMatrix();
-      world.sun.position.set(player.x - 90, 150, player.z + 70);
-      world.sun.target.position.set(player.x, 0, player.z);
+      world.sun.position.set(follow.x - 90, 150, follow.z + 70);
+      world.sun.target.position.set(follow.x, 0, follow.z);
       if (oscillator && gain && audioContext) {
         oscillator.frequency.setTargetAtTime(
           40 + Math.abs(player.speed) * 3.7,
@@ -423,9 +496,14 @@ export function Race({
         drawMap();
         hudTime = 0;
       }
-      if (race.phase === 'finished' && !notified) {
+      const finalResult = online
+        ? online.getResult()
+        : race.phase === 'finished'
+          ? getRaceResult(race)
+          : null;
+      if (finalResult && !notified) {
         notified = true;
-        callbacks.current.onFinish(getRaceResult(race));
+        callbacks.current.onFinish(finalResult);
       }
       if (!disposed) frame = requestAnimationFrame(animate);
     };
@@ -447,7 +525,7 @@ export function Race({
       renderer.domElement.remove();
       raceRef.current = null;
     };
-  }, [trackId, formatId, restart, signature, togglePause]);
+  }, [trackId, formatId, restart, signature, togglePause, online, localCarId]);
   const setTouch =
     (control: keyof Controls, value: number | boolean) =>
     (e: React.PointerEvent<HTMLButtonElement>) => {
@@ -472,12 +550,14 @@ export function Race({
     onPointerCancel: releaseTouch(control, off),
     onLostPointerCapture: releaseTouch(control, off),
   });
-  const player = hud?.cars[0],
+  const player = hud?.cars.find((car) => car.id === localCarId),
     phase = hud?.phase || 'countdown';
-  const result = hud ? getRaceResult(hud) : null;
+  const result = online ? online.getResult() : hud ? getRaceResult(hud) : null;
+  const position = online && hud ? getCarPosition(hud, localCarId) : hud?.position || 1;
   const solo = format.opponents === 0;
   const activeCount =
-    hud?.cars.filter((car) => car.eliminatedAt === null).length ?? format.opponents + 1;
+    hud?.cars.filter((car) => car.eliminatedAt === null && !car.didNotFinish).length ??
+    format.opponents + 1;
   const remaining = Math.max(0, (format.duration ?? 0) - (hud?.time ?? 0));
   const untilElimination = Math.max(
     0,
@@ -495,6 +575,25 @@ export function Race({
         aria-label={`${hud?.track.name || 'Kart'} 3D-гонка. Управляй клавишами W A S D или стрелками.`}
       />
       <div className="race-vignette" />
+      {online && (
+        <div className="race-online-status" role="status">
+          {online.connectionState === 'connected'
+            ? 'ОНЛАЙН'
+            : online.connectionState === 'reconnecting' || online.connectionState === 'connecting'
+              ? 'ВОССТАНАВЛИВАЕМ СВЯЗЬ…'
+              : 'СВЯЗЬ ПОТЕРЯНА'}
+          {format.laps && online.finishDeadline !== null && !result && (
+            <span>
+              До конца: {Math.max(0, Math.ceil(online.finishDeadline - (hud?.time ?? 0)))} с
+            </span>
+          )}
+          {online &&
+            !result &&
+            (player?.eliminatedAt != null || player?.didNotFinish || player?.progress.finished) && (
+              <span>Ожидаем итогов гонки</span>
+            )}
+        </div>
+      )}
       <header className="race-topbar">
         <div className="race-lap">
           <span className="race-eyebrow">
@@ -533,7 +632,11 @@ export function Race({
           >
             {muted ? <VolumeX size={19} /> : <Volume2 size={19} />}
           </button>
-          <button title="Пауза (Esc)" aria-label="Пауза" onClick={togglePause}>
+          <button
+            title={online ? 'Меню (Esc)' : 'Пауза (Esc)'}
+            aria-label={online ? 'Меню' : 'Пауза'}
+            onClick={togglePause}
+          >
             <Pause size={19} />
           </button>
           <button title="Выйти из гонки" aria-label="Выйти из гонки" onClick={onExit}>
@@ -544,7 +647,7 @@ export function Race({
       {!solo && (
         <aside className="race-standings">
           <div className="race-position">
-            <strong>{hud?.position || 1}</strong>
+            <strong>{position}</strong>
             <span>
               / {hud?.cars.length ?? format.opponents + 1}
               <small>ПОЗИЦИЯ</small>
@@ -553,20 +656,27 @@ export function Race({
           {hud &&
             rankCars(hud.cars).map((car, i) => (
               <div
-                className={`race-standing ${car.id === 0 ? 'is-you' : ''} ${car.eliminatedAt !== null ? 'is-eliminated' : ''}`}
+                className={`race-standing ${car.id === localCarId ? 'is-you' : ''} ${car.eliminatedAt !== null ? 'is-eliminated' : ''}`}
                 key={car.id}
               >
                 <span>{i + 1}</span>
                 <i style={{ background: car.color }} />
                 <b>{car.name}</b>
                 <small>
+                  {online?.roster.find((entry) => entry.id === car.id)?.kind === 'bot' && (
+                    <em className="race-ai-badge">AI</em>
+                  )}
                   {car.eliminatedAt !== null
                     ? 'ВЫБЫЛ'
-                    : car.id === 0
-                      ? 'ТЫ'
-                      : car.finishTime
-                        ? 'ФИН'
-                        : 'БОТ'}
+                    : car.didNotFinish
+                      ? 'DNF'
+                      : car.id === localCarId
+                        ? 'ТЫ'
+                        : car.finishTime
+                          ? 'ФИН'
+                          : online
+                            ? ''
+                            : 'БОТ'}
                 </small>
               </div>
             ))}
@@ -661,7 +771,7 @@ export function Race({
           <kbd>R</kbd> На трассу
         </span>
         <span>
-          <kbd>ESC</kbd> Пауза
+          <kbd>ESC</kbd> {online ? 'Меню' : 'Пауза'}
         </span>
       </div>
       <button
@@ -669,7 +779,10 @@ export function Race({
         title="Вернуть карт на трассу (R)"
         aria-label="Вернуть карт на трассу"
         onClick={() => {
-          if (raceRef.current?.phase === 'racing') resetPlayer(raceRef.current);
+          if (raceRef.current?.phase === 'racing') {
+            if (online) online.reset();
+            else resetPlayer(raceRef.current);
+          }
         }}
       >
         <RotateCcw size={16} />
@@ -719,7 +832,7 @@ export function Race({
         </div>
       )}
       {phase === 'racing' && hud && hud.time < 1 && <div className="race-go">ГАЗ!</div>}
-      {phase === 'paused' && (
+      {(online ? menuOpen && !result : phase === 'paused') && (
         <div className="race-overlay">
           <div className="race-modal">
             <div className="race-modal-icon">
@@ -727,16 +840,17 @@ export function Race({
             </div>
             <span className="race-eyebrow">МОЖНО ВЫДОХНУТЬ</span>
             <h1>
-              Пауза<span>.</span>
+              {online ? 'Меню' : 'Пауза'}
+              <span>.</span>
             </h1>
-            <p>Трасса подождёт. Продолжим?</p>
+            <p>{online ? 'Гонка продолжается' : 'Трасса подождёт. Продолжим?'}</p>
             <button className="race-primary" onClick={togglePause}>
               <Play size={18} />
               ВЕРНУТЬСЯ В ГОНКУ
             </button>
             <button className="race-secondary" onClick={restartRace}>
               <RotateCcw size={17} />
-              Начать заново
+              {online ? 'Найти другую гонку' : 'Начать заново'}
             </button>
             <button className="race-text-button" onClick={onExit}>
               <Home size={16} />В паддок
@@ -745,18 +859,20 @@ export function Race({
           </div>
         </div>
       )}
-      {phase === 'finished' && hud && (
+      {(online ? Boolean(result) : phase === 'finished') && hud && (
         <div className="race-overlay">
           <div className="race-modal race-results">
             <div className="race-modal-icon">{solo ? <Flag /> : <Trophy />}</div>
             <span className="race-eyebrow">
               {solo
                 ? 'ТАЙМ-АТАКА ЗАВЕРШЕНА'
-                : result?.eliminated
-                  ? 'ТЫ ВЫБЫЛ ИЗ ГОНКИ'
-                  : hud.position === 1
-                    ? 'ВОТ ЭТО ПОБЕДА'
-                    : 'ФИНИШНАЯ ЧЕРТА ПОЗАДИ'}
+                : result?.didNotFinish
+                  ? 'ГОНКА НЕ ЗАВЕРШЕНА'
+                  : result?.eliminated
+                    ? 'ТЫ ВЫБЫЛ ИЗ ГОНКИ'
+                    : position === 1
+                      ? 'ВОТ ЭТО ПОБЕДА'
+                      : 'ФИНИШНАЯ ЧЕРТА ПОЗАДИ'}
             </span>
             <h1>
               {solo ? (
@@ -767,7 +883,7 @@ export function Race({
                 )
               ) : (
                 <>
-                  {ordinal(hud.position)}
+                  {ordinal(result?.position ?? position)}
                   <span> место.</span>
                 </>
               )}
@@ -777,11 +893,13 @@ export function Race({
                 ? result?.bestLap == null
                   ? 'Заверши полный круг в следующей попытке, чтобы получить время.'
                   : 'Твой лучший полный круг сохранён. Попробуем быстрее?'
-                : result?.eliminated
-                  ? 'Последняя позиция на отсечке. Попробуй удержаться в следующем заезде.'
-                  : hud.position === 1
-                    ? 'Каждый поворот был твоим. Отличный заезд!'
-                    : 'Ещё один заезд? Следующая победа может быть твоей.'}
+                : result?.didNotFinish
+                  ? 'Ты не завершил заезд до его окончания.'
+                  : result?.eliminated
+                    ? 'Последняя позиция на отсечке. Попробуй удержаться в следующем заезде.'
+                    : position === 1
+                      ? 'Каждый поворот был твоим. Отличный заезд!'
+                      : 'Ещё один заезд? Следующая победа может быть твоей.'}
             </p>
             <div className="race-results-stats">
               <div>
@@ -817,6 +935,31 @@ export function Race({
                 <strong>{hud.track.name}</strong>
               </div>
             </div>
+            {online && (
+              <ol className="race-online-results" aria-label="Итоги гонки">
+                {[...(online.getResults() ?? [])]
+                  .sort((a, b) => a.result.position - b.result.position)
+                  .map(({ carId, result: entry }) => {
+                    const driver = online.roster.find((driver) => driver.id === carId);
+                    return (
+                      <li key={carId}>
+                        <span>
+                          {entry.position}. {driver?.name ?? `Гонщик ${carId + 1}`}
+                        </span>
+                        {carId === localCarId && <small>ТЫ</small>}
+                        {driver?.kind === 'bot' && <small>AI</small>}
+                        <b>
+                          {entry.didNotFinish
+                            ? 'DNF'
+                            : entry.eliminated
+                              ? 'ВЫБЫЛ'
+                              : formatTime(entry.time)}
+                        </b>
+                      </li>
+                    );
+                  })}
+              </ol>
+            )}
             <button className="race-primary" onClick={restartRace}>
               <Flag size={18} />
               ЕЩЁ ОДИН ЗАЕЗД

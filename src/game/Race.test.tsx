@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as THREE from 'three';
 import { Race } from './Race';
 import { createRace } from './simulation';
+import { createKart } from './kart';
+import type { OnlineResult } from '../shared/online-protocol';
 
 // Only rendering is replaced: race state, progress, input listeners, React effects and
 // finish callbacks are the production implementations. A headless DOM cannot run WebGL.
@@ -29,7 +31,7 @@ vi.mock('./world', () => ({
 }));
 vi.mock('./kart', async (importOriginal) => ({
   ...(await importOriginal<typeof import('./kart')>()),
-  createKart: () => {
+  createKart: vi.fn(() => {
     const model = new THREE.Group();
     model.userData = {
       frontWheels: [],
@@ -39,7 +41,7 @@ vi.mock('./kart', async (importOriginal) => ({
       shield: new THREE.Mesh(),
     };
     return model;
-  },
+  }),
 }));
 vi.mock('./simulation', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./simulation')>();
@@ -91,6 +93,7 @@ beforeEach(() => {
   });
   vi.stubGlobal('cancelAnimationFrame', (id: number) => frames.delete(id));
   vi.mocked(createRace).mockImplementation(simulation.createRace);
+  vi.mocked(createKart).mockClear();
   HTMLElement.prototype.setPointerCapture = () => {};
   HTMLElement.prototype.hasPointerCapture = () => false;
 });
@@ -345,5 +348,123 @@ describe('race format presentation', () => {
     render(<Race trackId="coast" formatId={formatId} onExit={() => {}} onFinish={() => {}} />);
     expect(screen.getByText(title)).toBeTruthy();
     expect(screen.getByText(detail)).toBeTruthy();
+  });
+});
+
+describe('authoritative online race', () => {
+  function runtime() {
+    const race = simulation.createRace(simulation.createTrack('coast'), 1);
+    race.phase = 'racing';
+    race.countdown = 0;
+    race.cars[1].speed = 20;
+    const online = {
+      race,
+      localCarId: 1,
+      roster: race.cars.map((car) => ({
+        id: car.id,
+        name: car.name,
+        kind: car.id < 2 ? ('human' as const) : ('bot' as const),
+        customization: {},
+        connected: true,
+      })),
+      connectionState: 'connected' as const,
+      finishDeadline: null,
+      update: vi.fn(),
+      reset: vi.fn(),
+      getResult: vi.fn(() => null as ReturnType<typeof simulation.getRaceResult> | null),
+      getResults: vi.fn(() => null as OnlineResult[] | null),
+    };
+    return online;
+  }
+  it('uses slot one HUD and sends input without stepping the snapshot', () => {
+    const online = runtime();
+    const start = online.race.cars[0].x;
+    render(<Race trackId="coast" online={online} onExit={() => {}} onFinish={() => {}} />);
+    expect(screen.getByText('072')).toBeTruthy();
+    fireEvent.keyDown(window, { code: 'KeyW' });
+    advanceFrame();
+    expect(online.update).toHaveBeenLastCalledWith(expect.objectContaining({ throttle: 1 }), 0.05);
+    expect(online.race.cars[0].x).toBe(start);
+    expect(createRace).not.toHaveBeenCalled();
+  });
+  it('clears input and keeps remote state running through menu and blur', () => {
+    const online = runtime();
+    render(<Race trackId="coast" online={online} onExit={() => {}} onFinish={() => {}} />);
+    fireEvent.keyDown(window, { code: 'KeyW' });
+    fireEvent.blur(window);
+    expect(online.race.phase).toBe('racing');
+    expect(screen.getByText('Гонка продолжается')).toBeTruthy();
+    advanceFrame();
+    expect(online.update).toHaveBeenLastCalledWith(expect.objectContaining({ throttle: 0 }), 0.05);
+  });
+  it('creates every stable slot from server cosmetics, including both human drivers', () => {
+    const online = runtime();
+    online.roster[0].customization = { car: 2, color: '#ff1122' };
+    online.roster[1].customization = { car: 3, color: '#aabbcc' };
+    render(<Race trackId="coast" online={online} onExit={() => {}} onFinish={() => {}} />);
+    expect(createKart).toHaveBeenCalledTimes(6);
+    expect(createKart).toHaveBeenNthCalledWith(1, online.roster[0].customization, 1);
+    expect(createKart).toHaveBeenNthCalledWith(2, online.roster[1].customization, 2);
+    expect(screen.getAllByText('AI')).toHaveLength(4);
+  });
+  it('sends reset commands and never changes authoritative cars', () => {
+    const online = runtime();
+    const before = JSON.stringify(online.race);
+    render(<Race trackId="coast" online={online} onExit={() => {}} onFinish={() => {}} />);
+    fireEvent.keyDown(window, { code: 'KeyR' });
+    fireEvent.click(screen.getByRole('button', { name: 'Вернуть карт на трассу' }));
+    expect(online.reset).toHaveBeenCalledTimes(2);
+    expect(JSON.stringify(online.race)).toBe(before);
+    fireEvent.click(screen.getByRole('button', { name: 'Меню' }));
+    advanceFrame();
+    expect(online.race.phase).toBe('racing');
+    expect(online.update).toHaveBeenLastCalledWith(expect.objectContaining({ throttle: 0 }), 0.05);
+  });
+  it('orders final standings by place without mutating the server result array', () => {
+    const online = runtime();
+    online.race.phase = 'finished';
+    const result = simulation.getRaceResult(online.race);
+    const results: OnlineResult[] = [
+      { carId: 0, result: { ...result, position: 3 } },
+      { carId: 1, result: { ...result, position: 1 } },
+      { carId: 2, result: { ...result, position: 2, didNotFinish: true } },
+    ];
+    online.getResult.mockReturnValue(results[1].result);
+    online.getResults.mockReturnValue(results);
+    render(<Race trackId="coast" online={online} onExit={() => {}} onFinish={() => {}} />);
+    const rows = screen.getByRole('list', { name: 'Итоги гонки' }).querySelectorAll('li');
+    expect([...rows].map((row) => row.querySelector('span')?.textContent)).toEqual([
+      `1. ${online.roster[1].name}`,
+      `2. ${online.roster[2].name}`,
+      `3. ${online.roster[0].name}`,
+    ]);
+    expect(rows[0].textContent).toContain('ТЫ');
+    expect(rows[1].textContent).toContain('AI');
+    expect(rows[1].textContent).toContain('DNF');
+    expect(results.map((entry) => entry.carId)).toEqual([0, 1, 2]);
+  });
+  it('waits for server final result and rematches through the callback', () => {
+    const online = runtime(),
+      onFinish = vi.fn(),
+      onRematch = vi.fn();
+    render(
+      <Race
+        trackId="coast"
+        online={online}
+        onExit={() => {}}
+        onFinish={onFinish}
+        onRematch={onRematch}
+      />,
+    );
+    online.race.phase = 'finished';
+    advanceFrame();
+    expect(onFinish).not.toHaveBeenCalled();
+    const result = simulation.getRaceResult(online.race);
+    online.getResult.mockReturnValue(result);
+    for (let i = 0; i < 3; i++) advanceFrame();
+    expect(onFinish).toHaveBeenCalledExactlyOnceWith(result);
+    fireEvent.click(screen.getByRole('button', { name: 'ЕЩЁ ОДИН ЗАЕЗД' }));
+    expect(onRematch).toHaveBeenCalledOnce();
+    expect(createRace).not.toHaveBeenCalled();
   });
 });

@@ -3,6 +3,8 @@ import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { Store, ApiError, digest, type TopupRow } from './store';
 import { createPaymentGateway, ProviderError, type PaymentGateway } from './payments';
 import { categories, products, popularIds } from './catalog';
+import { customizationFor } from '../src/lib/customization';
+import type { OnlineIdentity } from '../src/shared/online-protocol';
 import type { User } from '../src/shared/types';
 
 const derive = (password: string, salt: string) =>
@@ -386,5 +388,34 @@ export function createApplication(options: ApplicationOptions = {}) {
       reconciling = false;
     }
   }
-  return { app, store, paymentMode: gateway.mode, reconcilePending, close: () => store.close() };
+  const resolveOnlineIdentity = (cookieHeader: string): OnlineIdentity | null => {
+    const jar = Object.fromEntries(
+      cookieHeader
+        .split(';')
+        .map((part) => part.trim().split('=').slice(0, 2))
+        .filter((pair) => pair.length === 2),
+    );
+    const user = store.session(jar.fapix_session);
+    if (user)
+      return {
+        actorId: digest(`account:${user.id}`),
+        name: user.login,
+        customization: customizationFor(user.equipped, products),
+      };
+    const token = jar.fapix_visitor;
+    if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
+    return {
+      actorId: digest(token),
+      name: `Гость ${digest(token).slice(0, 4)}`,
+      customization: {},
+    };
+  };
+  return {
+    app,
+    store,
+    resolveOnlineIdentity,
+    paymentMode: gateway.mode,
+    reconcilePending,
+    close: () => store.close(),
+  };
 }

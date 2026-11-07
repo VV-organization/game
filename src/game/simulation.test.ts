@@ -9,6 +9,10 @@ import {
   projectTrack,
   sampleTrack,
   stepRace,
+  stepRaceDrivers,
+  resetCar,
+  useCarPower,
+  getCarPosition,
   type Controls,
   type Progress,
 } from './simulation';
@@ -475,4 +479,129 @@ it('removes exactly one participant per interval until the sole survivor wins', 
     expect(race.phase).toBe(round === 5 ? 'finished' : 'racing');
   }
   expect(getRaceResult(race)).toMatchObject({ position: 1, eliminated: false, time: 150 });
+});
+
+describe('authoritative multiple drivers', () => {
+  function online(format: 'classic' | 'elimination' = 'classic') {
+    const race = createRace(createTrack('coast'), 0, format, {
+      completion: 'all',
+      drivers: Array.from({ length: 6 }, (_, id) => ({
+        id,
+        kind: id < 2 ? ('human' as const) : ('bot' as const),
+        name: `Driver ${id}`,
+        customization: { car: id === 1 ? 10 : 0 },
+      })),
+    });
+    race.phase = 'racing';
+    return race;
+  }
+  it('drives each human independently with their own tuning and stable slot identity', () => {
+    const race = online();
+    for (const car of race.cars.slice(2)) car.didNotFinish = true;
+    const start = { ...race.cars[0] };
+    for (let i = 0; i < 60; i++)
+      stepRaceDrivers(race, { 1: { ...idle, throttle: 1, steer: 0.2 } }, 1 / 60);
+    expect(race.cars[0].speed).toBe(0);
+    expect(race.cars[0].x).toBe(start.x);
+    expect(race.cars[1].speed).toBeGreaterThan(20);
+    expect(race.cars[1].tuning.maxSpeed).toBe(95);
+    expect(race.cars.map((c) => c.id)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+  it('finishes a whole room with two independent driving controllers', () => {
+    const race = online();
+    for (let frame = 0; frame < 60 * 180 && race.phase !== 'finished'; frame++) {
+      const inputs: Record<number, Controls> = {};
+      for (const car of race.cars.filter((c) => c.driverKind === 'human')) {
+        const road = projectTrack(race.track, car.x, car.z);
+        const target = sampleTrack(race.track, road.t + (10 + car.speed * 0.2) / race.track.length);
+        const heading = Math.atan2(target.x - car.x, target.z - car.z);
+        inputs[car.id] = {
+          ...idle,
+          throttle: 1,
+          steer: Math.max(-1, Math.min(1, angleDifference(heading, car.heading) * 2.4)),
+        };
+      }
+      stepRaceDrivers(race, inputs, 1 / 60);
+    }
+    expect(race.phase).toBe('finished');
+    expect(race.cars.every((c) => c.progress.finished)).toBe(true);
+    expect(race.cars.map((c) => c.id)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(getRaceResult(race, 1).time).toBeLessThan(getRaceResult(race, 0).time);
+  });
+  it('uses and resets the requested driver, keeping separate power edges and pulse origins', () => {
+    const race = online(),
+      a = race.cars[0],
+      b = race.cars[1];
+    a.item = 'shield';
+    b.item = 'pulse';
+    b.x = a.x + 5;
+    b.z = a.z;
+    stepRaceDrivers(race, { 0: { ...idle, power: true }, 1: { ...idle, power: true } }, 0);
+    expect(a.shield).toBe(6);
+    expect(b.item).toBeNull();
+    expect(race.pulses[0].sourceCarId).toBe(1);
+    b.item = 'turbo';
+    stepRaceDrivers(race, { 1: { ...idle, power: true } }, 0);
+    expect(b.item).toBe('turbo');
+    useCarPower(race, 1);
+    expect(b.turbo).toBe(3);
+    b.speed = 30;
+    resetCar(race, 1);
+    expect(b.speed).toBe(0);
+    expect(a.shield).toBe(6);
+  });
+  it('continues after slot zero finishes and freezes finished and DNF cars', () => {
+    const race = online();
+    const finish = sampleTrack(race.track, 0.001);
+    race.cars[0].x = finish.x;
+    race.cars[0].z = finish.z;
+    race.cars[0].progress = { checkpoints: 47, lastT: 0.999, value: 2.999, finished: false };
+    stepRaceDrivers(race, {}, 0);
+    expect(race.cars[0].finishTime).toBe(0);
+    expect(race.cars[0].progress.finished).toBe(true);
+    race.cars[2].didNotFinish = true;
+    const before = JSON.stringify(race.cars[2]);
+    stepRaceDrivers(race, { 1: { ...idle, throttle: 1 } }, 0.05);
+    expect(race.phase).toBe('racing');
+    expect(JSON.stringify(race.cars[2])).toBe(before);
+    for (const c of race.cars) if (c.id !== 0) c.didNotFinish = true;
+    stepRaceDrivers(race, {}, 0);
+    expect(race.phase).toBe('finished');
+    expect(getCarPosition(race, 0)).toBe(1);
+    expect(getRaceResult(race, 1).didNotFinish).toBe(true);
+  });
+  it('continues elimination after slot zero loses, and ranks DNF by distance', () => {
+    const race = online('elimination');
+    race.time = 30;
+    race.cars[0].progress.checkpoints = -160;
+    stepRaceDrivers(race, {}, 0);
+    expect(race.cars[0].eliminatedAt).toBe(30);
+    expect(race.phase).toBe('racing');
+    race.cars[1].didNotFinish = true;
+    race.cars[1].progress.value = 10;
+    race.cars[2].didNotFinish = true;
+    race.cars[2].progress.value = 20;
+    expect(
+      rankCars(race.cars)
+        .filter((c) => c.didNotFinish)
+        .map((c) => c.id),
+    ).toEqual([2, 1]);
+  });
+  it('separates overlapping humans symmetrically and ignores retired pulse targets', () => {
+    const race = online(),
+      a = race.cars[0],
+      b = race.cars[1];
+    b.x = a.x + 1;
+    b.z = a.z;
+    const x = a.x,
+      y = b.x;
+    stepRaceDrivers(race, {}, 0);
+    expect(a.x).toBeLessThan(x);
+    expect(b.x).toBeGreaterThan(y);
+    b.didNotFinish = true;
+    a.item = 'pulse';
+    const before = JSON.stringify(b);
+    useCarPower(race, 0);
+    expect(JSON.stringify(b)).toBe(before);
+  });
 });

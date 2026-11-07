@@ -27,6 +27,9 @@ import {
 } from './shared/race-formats';
 import { getCarDesign } from './shared/car-designs';
 import { RaceFormatPicker } from './components/RaceFormatPicker';
+import { OnlineSession } from './components/OnlineSession';
+import { OnlineClient, loadSavedOnlineSession } from './game/online-client';
+import { isOnlineFormat, type OnlineJoin, type OnlineTrackId } from './shared/online-protocol';
 import { api, money, type Product, type User, type PaymentMode } from './lib/api';
 import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
@@ -109,6 +112,9 @@ export default function App() {
     [help, setHelp] = useState(false),
     [trackId, setTrackId] = useState('coast'),
     [formatId, setFormatId] = useState<RaceFormatId>('classic'),
+    [raceMode, setRaceMode] = useState<'online' | 'practice'>('online'),
+    [roomCode, setRoomCode] = useState(''),
+    [onlineClient, setOnlineClient] = useState<OnlineClient | null>(null),
     [recordsFormat, setRecordsFormat] = useState<RaceFormatId | 'all'>('all'),
     [racing, setRacing] = useState(false),
     [busy, setBusy] = useState(''),
@@ -117,6 +123,7 @@ export default function App() {
     [records, setRecords] = useState<RecordItem[]>(loadRecords),
     [purchase, setPurchase] = useState<Product | null>(null);
   const purchaseKey = useRef<{ id: string; key: string } | null>(null);
+  const recoveredOnline = useRef(false);
   const raceFormat = getRaceFormat(formatId);
   const visibleRecords = records.filter(
     (record) => recordsFormat === 'all' || (record.formatId || 'classic') === recordsFormat,
@@ -170,10 +177,27 @@ export default function App() {
     const pop = () => {
       setPage(initialPage());
       setRacing(false);
+      setOnlineClient(null);
     };
     window.addEventListener('popstate', pop);
     return () => window.removeEventListener('popstate', pop);
   }, []);
+  useEffect(() => {
+    if (!loaded || recoveredOnline.current) return;
+    recoveredOnline.current = true;
+    const saved = loadSavedOnlineSession();
+    const invite = new URLSearchParams(location.search).get('room');
+    if (saved)
+      setOnlineClient(
+        new OnlineClient({ formatId: saved.formatId, trackId: saved.trackId }, { resume: saved }),
+      );
+    else if (invite && /^[A-Za-z0-9]{6}$/.test(invite)) {
+      setRoomCode(invite.toUpperCase());
+      setOnlineClient(
+        new OnlineClient({ formatId: 'classic', trackId: 'coast', roomId: invite.toUpperCase() }),
+      );
+    }
+  }, [loaded]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(''), 5000);
@@ -245,11 +269,11 @@ export default function App() {
       setBusy('');
     }
   }
-  function finish(result: RaceResult) {
-    const next = [
-      { ...result, carVariant: customization.car || 0, date: new Date().toISOString() },
-      ...records,
-    ].slice(0, 50);
+  function finish(result: RaceResult, carVariant = customization.car || 0) {
+    const next = [{ ...result, carVariant, date: new Date().toISOString() }, ...records].slice(
+      0,
+      50,
+    );
     setRecords(next);
     try {
       localStorage.setItem('fapix-records', JSON.stringify(next));
@@ -263,6 +287,31 @@ export default function App() {
       <h2>Готовим стартовую решётку…</h2>
     </div>
   );
+  function leaveOnline() {
+    onlineClient?.leave();
+    setOnlineClient(null);
+    setRoomCode('');
+    navigate('play');
+  }
+  function startOnline(settings?: OnlineJoin) {
+    if (!isOnlineFormat(formatId) && !settings) return;
+    onlineClient?.leave();
+    const next = settings || {
+      formatId: formatId as OnlineJoin['formatId'],
+      trackId: trackId as OnlineTrackId,
+      ...(roomCode.trim() ? { roomId: roomCode.trim().toUpperCase() } : {}),
+    };
+    setOnlineClient(new OnlineClient(next));
+  }
+  if (onlineClient)
+    return (
+      <OnlineSession
+        client={onlineClient}
+        onExit={leaveOnline}
+        onRematch={startOnline}
+        onFinish={finish}
+      />
+    );
   if (racing)
     return (
       <Suspense fallback={loading}>
@@ -369,7 +418,7 @@ export default function App() {
                 >
                   <span>
                     <b>{user?.login || 'Гость'}</b>
-                    <small>{user ? 'Гоночный аккаунт' : 'Свободная тренировка'}</small>
+                    <small>{user ? 'Гоночный аккаунт' : 'Готов к гонке'}</small>
                   </span>
                   <i
                     style={
@@ -407,7 +456,9 @@ export default function App() {
                     </div>
                     <span className="session-pill">
                       <span />
-                      Локальная тренировка
+                      {raceMode === 'online' && isOnlineFormat(formatId)
+                        ? 'Онлайн · до 6 гонщиков'
+                        : 'Локальная тренировка'}
                     </span>
                   </div>
                   <div className="play-layout">
@@ -438,22 +489,34 @@ export default function App() {
                         <Flag />
                       </div>
                       <div className="mode-choice">
-                        <span>
-                          <Gamepad2 size={18} />
-                          {raceFormat.opponents ? 'С пятью ботами' : 'Одиночный заезд'}
-                        </span>
                         <button
-                          onClick={() =>
-                            setToast(
-                              'Сейчас доступна тренировка с ботами. Сетевая гонка ещё не подключена.',
-                            )
+                          className={raceMode === 'practice' ? 'is-selected' : ''}
+                          onClick={() => setRaceMode('practice')}
+                          aria-pressed={raceMode === 'practice'}
+                        >
+                          <Gamepad2 size={18} />
+                          Тренировка
+                        </button>
+                        <button
+                          className={raceMode === 'online' ? 'is-selected' : ''}
+                          onClick={() => setRaceMode('online')}
+                          disabled={!isOnlineFormat(formatId)}
+                          title={
+                            !isOnlineFormat(formatId) ? 'Тайм-атака — одиночный формат' : undefined
                           }
+                          aria-pressed={raceMode === 'online'}
                         >
                           <Users size={18} />
                           Онлайн
                         </button>
                       </div>
-                      <RaceFormatPicker value={formatId} onChange={setFormatId} />
+                      <RaceFormatPicker
+                        value={formatId}
+                        onChange={(value) => {
+                          setFormatId(value);
+                          if (!isOnlineFormat(value)) setRaceMode('practice');
+                        }}
+                      />
                       <img
                         className="selected-track-art"
                         src={`/assets/reference/track-${track.art}.svg`}
@@ -467,18 +530,50 @@ export default function App() {
                       <div className="race-meta">
                         <span>
                           <Users size={16} />
-                          {raceFormat.opponents ? 'Ты и 5 ботов' : 'Только ты'}
+                          {raceMode === 'online'
+                            ? 'До 6 гонщиков'
+                            : raceFormat.opponents
+                              ? 'Ты и 5 ботов'
+                              : 'Только ты'}
                         </span>
                         <span>
                           {raceFormat.pickups ? '✦ Бонусы включены' : 'Без случайных бонусов'}
                         </span>
                       </div>
-                      <button className="primary full start-race" onClick={() => setRacing(true)}>
+                      {raceMode === 'online' && (
+                        <div className="online-join-field">
+                          <label htmlFor="room-code">Есть код комнаты?</label>
+                          <input
+                            id="room-code"
+                            placeholder="Например, A1B2C3"
+                            value={roomCode}
+                            maxLength={6}
+                            onChange={(event) =>
+                              setRoomCode(
+                                event.target.value.replace(/[^a-z0-9]/gi, '').toUpperCase(),
+                              )
+                            }
+                          />
+                          <small>Подбор до 30 с · свободные места займёт AI</small>
+                        </div>
+                      )}
+                      <button
+                        className="primary full start-race"
+                        disabled={
+                          raceMode === 'online' &&
+                          (!loaded || (!!roomCode && roomCode.length !== 6))
+                        }
+                        onClick={() => (raceMode === 'online' ? startOnline() : setRacing(true))}
+                      >
                         <Flag size={19} />
-                        Начать гонку
+                        {raceMode === 'online'
+                          ? roomCode
+                            ? 'Войти в комнату'
+                            : 'Найти гонку'
+                          : 'Начать гонку'}
                         <ArrowRight />
                       </button>
-                      <p className="fine-print">Без скачивания. Без ожидания. Просто газуй.</p>
+                      <p className="fine-print">Прямо в браузере. Просто газуй.</p>
                     </section>
                   </div>
                   <div className="section-heading">
@@ -689,7 +784,10 @@ export default function App() {
                                   <small>{getCarDesign(r.carVariant).name}</small>
                                 )}
                               </td>
-                              <td>{getRaceFormat(r.formatId).name}</td>
+                              <td>
+                                {getRaceFormat(r.formatId).name}
+                                <small>{r.online ? 'Онлайн' : 'Тренировка'}</small>
+                              </td>
                               <td>
                                 <b>{recordOutcome(r)}</b>
                                 {r.formatId === 'time-attack' && r.bestLap && (

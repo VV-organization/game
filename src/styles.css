@@ -450,6 +450,29 @@ button:hover:not(:disabled) {
   border-radius: 8px;
   flex: 1;
 }
+.mode-choice button.is-selected {
+  background: #373b50;
+  border-radius: 8px;
+  color: #f6f4ee;
+}
+.mode-choice button {
+  flex: 1;
+}
+.online-join-field {
+  margin: 0 0 18px;
+  grid-column: 1 / -1;
+}
+.online-join-field input {
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.online-join-field small {
+  display: block;
+  font-size: 10px;
+  color: #a9afc1;
+  line-height: 1.6;
+}
 .mode-choice button {
   background: none;
   color: #8f93aa;
@@ -1786,5 +1809,332 @@ td small {
   }
   .page-heading > .secondary {
     min-height: 40px;
+  }
+}
+
+/* Shared online lobby uses the paddock palette without another 3D scene. */
+.online-page {
+  min-height: 100dvh;
+  padding: 28px max(24px, calc((100vw - 1160px) / 2)) 40px;
+  background: radial-gradient(ellipse at 20% 30%, #fb805612, transparent 60%), #151721;
+}
+.online-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 60px;
+}
+.online-header > button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #c7cad6;
+  text-decoration: none;
+}
+.online-wordmark {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.online-wordmark > span {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #a4a9bb;
+}
+.online-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #a9d8c7;
+}
+.online-status.is-error {
+  color: #ffab8a;
+}
+.online-heading {
+  margin-bottom: 35px;
+}
+.online-heading h1 {
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -1.7px;
+  margin: 14px 0;
+  max-width: 850px;
+}
+.online-heading > p {
+  color: #a8aec0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.online-lobby-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  align-items: stretch;
+}
+.online-track {
+  overflow: hidden;
+}
+.online-track > img {
+  width: 100%;
+  height: 205px;
+  object-fit: cover;
+  display: block;
+}
+.online-track-content {
+  padding: 28px;
+}
+.online-track-content h2 {
+  font-size: 30px;
+  margin: 8px 0;
+  letter-spacing: -0.7px;
+}
+.online-track-content > p {
+  color: #b3b8c9;
+  font-size: 13px;
+}
+.online-search-timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fb8056;
+  margin: 25px 0 12px;
+}
+.online-search-timer small {
+  display: block;
+  color: #b3b8c9;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+.online-search-timer strong {
+  font-size: 44px;
+  letter-spacing: -1.5px;
+  font-variant-numeric: tabular-nums;
+}
+.online-search-progress {
+  height: 4px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #ffffff16;
+}
+.online-search-progress span {
+  display: block;
+  height: 100%;
+  background: #fb8056;
+  transition: width 0.2s;
+}
+.online-track-content > .online-rule {
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #a4aabb;
+}
+.online-roster {
+  padding: 26px;
+}
+.online-roster .section-title > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #a9afc0;
+  font-size: 12px;
+}
+.online-roster .section-title h2 {
+  font-size: 23px;
+}
+.online-seats {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 20px;
+}
+.online-seat {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  min-height: 61px;
+  border: 1px solid #ffffff08;
+  border-radius: 11px;
+  background: #1c1f2b;
+}
+.online-seat.is-filled {
+  background: #2c2f3e;
+  border-color: #ffffff13;
+}
+.online-seat.is-you {
+  border-color: #fb80566b;
+  background: #fb80560c;
+}
+.online-seat-number {
+  color: #727b91;
+  font-size: 10px;
+}
+.online-seat-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: #7c849b;
+}
+.online-seat.is-you .online-seat-avatar {
+  color: #fb8056;
+}
+.online-seat b {
+  display: block;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.online-seat:not(.is-filled) b {
+  color: #979fb2;
+  font-weight: 500;
+}
+.online-seat small {
+  display: block;
+  font-size: 9px;
+  color: #939db0;
+  margin-top: 5px;
+}
+.online-ready {
+  color: #9fcab9;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.online-invite {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 22px;
+  padding: 25px 28px;
+  margin-top: 25px;
+}
+.online-invite h3 {
+  margin: 7px 0;
+  font-size: 21px;
+}
+.online-invite p {
+  color: #a6adbf;
+  font-size: 12px;
+}
+.online-invite-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  max-width: 570px;
+}
+.online-invite-link input {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  margin: 0;
+}
+.online-invite-link button {
+  font-size: 11px;
+  flex-shrink: 0;
+  padding: 14px;
+}
+.online-invite .eyebrow {
+  font-size: 9px;
+}
+.online-error {
+  padding: 40px;
+  color: #ffad8e;
+}
+.online-error > p {
+  margin: 20px 0;
+  color: #e7e5df;
+  line-height: 1.7;
+}
+.online-error > div {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.online-spinner {
+  animation: online-spin 1.5s linear infinite;
+}
+@keyframes online-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .online-spinner {
+    animation: none;
+  }
+}
+@media (min-width: 561px) and (max-width: 850px) {
+  .race-settings:has(.online-join-field) .start-race {
+    grid-row: auto;
+  }
+  .race-settings:has(.online-join-field) > .fine-print {
+    grid-column: 1;
+  }
+}
+@media (max-width: 700px) {
+  .online-page {
+    padding: 20px 16px 30px;
+  }
+  .online-header {
+    margin-bottom: 35px;
+    gap: 12px;
+  }
+  .online-wordmark {
+    display: none;
+  }
+  .online-heading {
+    margin-bottom: 25px;
+  }
+  .online-heading h1 {
+    font-size: 34px;
+  }
+  .online-heading > p {
+    font-size: 12px;
+  }
+  .online-lobby-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .online-track > img {
+    height: 150px;
+  }
+  .online-track-content,
+  .online-roster {
+    padding: 20px;
+  }
+  .online-track-content h2 {
+    font-size: 25px;
+  }
+  .online-search-timer {
+    margin-top: 17px;
+  }
+  .online-search-timer strong {
+    font-size: 36px;
+  }
+  .online-invite {
+    padding: 20px;
+  }
+  .online-invite-link {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+  }
+  .online-invite-link input {
+    flex-basis: 100%;
+  }
+  .online-invite-link button {
+    width: 100%;
+    justify-content: center;
+  }
+  .online-error {
+    padding: 25px;
+  }
+  .online-error button {
+    width: 100%;
+    justify-content: center;
   }
 }

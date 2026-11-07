@@ -1308,3 +1308,74 @@
     margin-top: 0;
   }
 }
+
+.race-online-status {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 74px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: #12282ecc;
+  color: #fff;
+  font-size: 9px;
+  text-align: center;
+  pointer-events: none;
+}
+.race-online-results {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0;
+  text-align: left;
+}
+.race-online-results li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 0;
+  border-bottom: 1px solid #ffffff22;
+  font-size: 11px;
+}
+.race-online-results li > span {
+  flex: 1;
+}
+.race-online-results small {
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: #ffffff22;
+  font-size: 8px;
+}
+@media (max-height: 550px) {
+  .race-online-status {
+    top: 12px;
+    font-size: 8px;
+    max-width: 32%;
+  }
+}
+
+.race-standing .race-ai-badge {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 1px 3px;
+  border: 1px solid #ffffff55;
+  border-radius: 3px;
+  color: #e1e9e7;
+  font-size: 7px;
+  font-style: normal;
+  line-height: 1.2;
+}
+.race-standing > small {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.race-standing b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
