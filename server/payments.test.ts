@@ -28,10 +28,10 @@ const json = (data: unknown) =>
   new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } });
 afterEach(() => vi.unstubAllGlobals());
 describe('provider boundary', () => {
-  it('is disabled without explicit complete configuration; sandbox must be explicit', async () => {
+  it('is disabled without complete Arco configuration, including the removed sandbox mode', async () => {
     expect(createPaymentGateway({}).mode).toBe('disabled');
     expect(createPaymentGateway({ PAYMENT_MODE: 'arco' }).mode).toBe('disabled');
-    expect(createPaymentGateway({ PAYMENT_MODE: 'sandbox' }).mode).toBe('sandbox');
+    expect(createPaymentGateway({ PAYMENT_MODE: 'sandbox' }).mode).toBe('disabled');
     await expect(
       createPaymentGateway({}).create({ id: 'a', login: 'alice', rub: 311, method: 'card' }),
     ).rejects.toThrow();

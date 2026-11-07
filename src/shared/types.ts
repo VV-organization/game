@@ -32,7 +32,7 @@ export interface User {
   owned: string[];
   equipped: Record<string, string>;
 }
-export type PaymentMode = 'sandbox' | 'arco' | 'disabled';
+export type PaymentMode = 'arco' | 'disabled';
 export type PaymentMethod = 'card' | 'sbp';
 export type PaymentStatus = 'pending' | 'success' | 'failed';
 export interface Topup {

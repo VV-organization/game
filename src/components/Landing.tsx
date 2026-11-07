@@ -39,6 +39,7 @@ interface LandingProps {
   onLogin: () => void;
   signedIn: boolean;
   onTopup: (rub: number, productName?: string) => void;
+  topupEnabled: boolean;
   products: Product[];
   popularIds?: string[];
   catalogError?: string;
@@ -213,6 +214,7 @@ export function Landing({
   onLogin,
   signedIn,
   onTopup,
+  topupEnabled,
   products,
   popularIds,
   catalogError,
@@ -407,6 +409,15 @@ export function Landing({
                       </div>
                       <button
                         className="landing-button landing-button-orange"
+                        disabled={!topupEnabled}
+                        title={
+                          !topupEnabled
+                            ? t(
+                                'Top-ups are temporarily unavailable',
+                                'Пополнение временно недоступно',
+                              )
+                            : undefined
+                        }
                         onClick={() => onTopup(rub, product.name)}
                       >
                         {t(`Top up ${number(rub)} ₽`, `Пополнить на ${number(rub)} ₽`)}
@@ -442,10 +453,12 @@ export function Landing({
           )}
           <p className="landing-shop-note">
             <Check size={15} />
-            {t(
-              'Top-ups add Fapix to your balance. You choose and buy the item in your garage.',
-              'Пополнение зачисляет Fapix на баланс. Саму вещь ты выбираешь и покупаешь в гараже.',
-            )}
+            {topupEnabled
+              ? t(
+                  'Top-ups add Fapix to your balance. You choose and buy the item in your garage.',
+                  'Пополнение зачисляет Fapix на баланс. Саму вещь ты выбираешь и покупаешь в гараже.',
+                )
+              : t('Top-ups are temporarily unavailable.', 'Пополнение временно недоступно.')}
           </p>
         </section>
 

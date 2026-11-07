@@ -22,7 +22,8 @@ export type TopupRow = {
   fapix: number;
   method: PaymentMethod;
   status: PaymentStatus;
-  mode: PaymentMode;
+  // Old rows remain readable without making sandbox a runtime payment mode.
+  mode: PaymentMode | 'sandbox';
   provider_id: string | null;
   provider_config: string | null;
   checkout_url: string | null;
@@ -40,7 +41,7 @@ type AccountRow = {
 
 export class Store {
   readonly db: DatabaseSync;
-  constructor(path: string, economy: 'sandbox' | 'live') {
+  constructor(path: string, economy: 'disabled' | 'live') {
     this.db = new DatabaseSync(path);
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;
    CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY,value TEXT NOT NULL);
@@ -57,13 +58,17 @@ export class Store {
       this.db.exec('ALTER TABLE topups ADD COLUMN review_reason TEXT');
     const previous = this.db.prepare('SELECT value FROM settings WHERE key=?').get('economy') as
       { value: string } | undefined;
-    if (previous && previous.value !== economy) {
+    if (
+      previous &&
+      previous.value !== 'live' &&
+      (economy !== 'disabled' || previous.value !== 'sandbox')
+    ) {
       this.db.close();
       throw new Error('Sandbox and real wallets require separate databases');
     }
     this.db
       .prepare('INSERT OR IGNORE INTO settings(key,value) VALUES (?,?)')
-      .run('economy', economy);
+      .run('economy', 'live');
   }
   close() {
     this.db.close();

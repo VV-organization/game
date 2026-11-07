@@ -1148,11 +1148,6 @@ input {
   margin: 10px 0;
   color: #b7bfd1;
 }
-.sandbox-actions {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
 .payment-state .secondary {
   margin-top: 10px;
 }
@@ -1690,9 +1685,6 @@ td small {
   .toast {
     bottom: 85px;
     font-size: 12px;
-  }
-  .sandbox-actions {
-    flex-direction: column;
   }
   .history td {
     font-size: 11px;

@@ -86,6 +86,7 @@ export function Wallet({
     [restoreAttempt, setRestoreAttempt] = useState(0),
     [restoreFailure, setRestoreFailure] = useState<{
       unavailable: boolean;
+      retired?: boolean;
       message: string;
     } | null>(null),
     [pollTick, setPollTick] = useState(0),
@@ -127,6 +128,16 @@ export function Wallet({
       }
     }
   }
+  function retirePayment(error: unknown) {
+    const failure = error as Error & { status?: number; code?: string };
+    if (failure.status !== 410 || failure.code !== 'PAYMENT_RETIRED') return false;
+    sequence.current++;
+    setPayment(null);
+    setRestoreFailure({ unavailable: true, retired: true, message: failure.message });
+    requestKey.current = null;
+    forgetPending();
+    return true;
+  }
   useEffect(() => {
     if (!initialPaymentId) return;
     const epoch = ++generation.current;
@@ -151,6 +162,7 @@ export function Wallet({
       })
       .catch((e) => {
         if (epoch === generation.current) {
+          if (retirePayment(e)) return;
           // Only a structured local payment error establishes that this payment
           // is unavailable. A gateway/network failure leaves its outcome unknown.
           const failure = e as Error & { status?: number; code?: string };
@@ -221,7 +233,7 @@ export function Wallet({
   }
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (busy || restoring || restoreFailure || !valid) return;
+    if (mode !== 'arco' || busy || restoring || restoreFailure || !valid) return;
     const epoch = generation.current;
     setError('');
     setMissing(false);
@@ -247,7 +259,7 @@ export function Wallet({
       if (epoch === generation.current) setBusy(false);
     }
   }
-  async function check(outcome?: 'success' | 'failed', quiet = false) {
+  async function check(quiet = false) {
     const p = current.current.payment;
     if (!p) return;
     const epoch = generation.current,
@@ -257,14 +269,13 @@ export function Wallet({
       setError('');
     }
     try {
-      const next = await api<Payment>(
-        `/topups/${p.id}${outcome ? '/sandbox' : ''}`,
-        outcome ? { outcome } : undefined,
-      );
+      const next = await api<Payment>(`/topups/${p.id}`);
       if (epoch === generation.current && order === sequence.current) accept({ ...p, ...next });
     } catch (e) {
-      if (epoch === generation.current && order === sequence.current && !quiet)
-        setError((e as Error).message);
+      if (epoch === generation.current && order === sequence.current) {
+        if (retirePayment(e)) return;
+        if (!quiet) setError((e as Error).message);
+      }
     } finally {
       if (epoch === generation.current) {
         if (!quiet) setBusy(false);
@@ -274,7 +285,7 @@ export function Wallet({
   }
   useEffect(() => {
     if (!payment || payment.status !== 'pending' || busy) return;
-    const id = setTimeout(() => void check(undefined, true), 6000);
+    const id = setTimeout(() => void check(true), 6000);
     return () => clearTimeout(id);
   }, [payment, busy, pollTick]);
   function clearPayment() {
@@ -289,7 +300,7 @@ export function Wallet({
     forgetPending();
   }
   function openCheckout() {
-    if (!payment?.checkoutUrl) return;
+    if (mode !== 'arco' || !payment?.checkoutUrl) return;
     const returnUrl = new URL(`/?payment=${encodeURIComponent(payment.id)}`, location.origin).href;
     if ((payment.method || method) === 'card') {
       const form = document.createElement('form');
@@ -342,13 +353,7 @@ export function Wallet({
       </div>
       {tab === 'topup' ? (
         <>
-          {mode !== 'arco' && (
-            <p className="notice">
-              {mode === 'sandbox'
-                ? 'Тестовый кошелёк. Настоящие деньги не списываются.'
-                : 'Оплата пока недоступна: магазин подключает платёжного провайдера.'}
-            </p>
-          )}
+          {mode !== 'arco' && <p className="notice">Пополнение временно недоступно</p>}
           {restoring ? (
             <div className="empty" role="status">
               Восстанавливаем платёж…
@@ -361,18 +366,22 @@ export function Wallet({
               <p role="alert" className="error">
                 {restoreFailure.message}
               </p>
-              <p>
-                {restoreFailure.unavailable
-                  ? 'Проверь ссылку и аккаунт, с которого был создан платёж. При смене аккаунта повтори проверку.'
-                  : 'Платёж сохранён. Повтори проверку позже — новый платёж создавать не нужно.'}
-              </p>
-              <button
-                className="secondary full"
-                onClick={() => setRestoreAttempt((attempt) => attempt + 1)}
-              >
-                <RefreshCw size={17} />
-                Повторить проверку
-              </button>
+              {!restoreFailure.retired && (
+                <>
+                  <p>
+                    {restoreFailure.unavailable
+                      ? 'Проверь ссылку и аккаунт, с которого был создан платёж. При смене аккаунта повтори проверку.'
+                      : 'Платёж сохранён. Повтори проверку позже — новый платёж создавать не нужно.'}
+                  </p>
+                  <button
+                    className="secondary full"
+                    onClick={() => setRestoreAttempt((attempt) => attempt + 1)}
+                  >
+                    <RefreshCw size={17} />
+                    Повторить проверку
+                  </button>
+                </>
+              )}
               {restoreFailure.unavailable && (
                 <button
                   className="text-button"
@@ -432,20 +441,14 @@ export function Wallet({
                     </p>
                   )}
                   {payment.checkoutUrl && !payment.requiresReview && (
-                    <button className="primary full" onClick={openCheckout}>
+                    <button
+                      className="primary full"
+                      disabled={mode !== 'arco'}
+                      onClick={openCheckout}
+                    >
                       Открыть страницу оплаты
                       <ArrowRight />
                     </button>
-                  )}
-                  {payment.paymentMode === 'sandbox' && payment.status !== 'failed' && (
-                    <div className="sandbox-actions">
-                      <button className="primary" disabled={busy} onClick={() => check('success')}>
-                        Тест: успешная оплата
-                      </button>
-                      <button className="secondary" disabled={busy} onClick={() => check('failed')}>
-                        Тест: отказ
-                      </button>
-                    </div>
                   )}
                   {payment.status !== 'failed' && (
                     <button className="secondary full" disabled={busy} onClick={() => check()}>
@@ -539,7 +542,7 @@ export function Wallet({
                   СБП<small>Через приложение банка</small>
                 </button>
               </div>
-              <button className="primary full" disabled={!valid || busy || mode === 'disabled'}>
+              <button className="primary full" disabled={!valid || busy || mode !== 'arco'}>
                 {busy ? 'Подготавливаем оплату…' : `Пополнить на ${money(valid ? amount : 0)} ₽`}
                 <ArrowRight />
               </button>

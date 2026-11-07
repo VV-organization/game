@@ -57,9 +57,9 @@ function secureUrl(value: string, originOnly = false) {
     throw new Error('Invalid payment configuration');
   return url;
 }
-const inactive = (mode: 'sandbox' | 'disabled'): PaymentGateway => ({
-  mode,
-  configurationId: mode,
+const inactive = (): PaymentGateway => ({
+  mode: 'disabled',
+  configurationId: 'disabled',
   async create() {
     throw new ProviderError(false);
   },
@@ -71,8 +71,7 @@ const inactive = (mode: 'sandbox' | 'disabled'): PaymentGateway => ({
 export function createPaymentGateway(
   env: Record<string, string | undefined> = process.env,
 ): PaymentGateway {
-  if (env.PAYMENT_MODE === 'sandbox') return inactive('sandbox');
-  if (env.PAYMENT_MODE !== 'arco') return inactive('disabled');
+  if (env.PAYMENT_MODE !== 'arco') return inactive();
   const apiKey = env.ARCO_PAY_API_KEY?.trim(),
     token = env.ARCO_PAY_BEARER_TOKEN?.trim(),
     shop = env.ARCO_PAY_SHOP_ID?.trim(),
@@ -87,7 +86,7 @@ export function createPaymentGateway(
     /\s/.test(apiKey) ||
     /\s/.test(token)
   )
-    return inactive('disabled');
+    return inactive();
   let api: string, hosted: URL, origin: URL;
   try {
     api = secureUrl(env.ARCO_PAY_API_URL ?? 'https://api.clickit.team/api/v1').href.replace(
@@ -99,7 +98,7 @@ export function createPaymentGateway(
     origin = secureUrl(env.PUBLIC_URL, true);
     createPublicKey(publicKey);
   } catch {
-    return inactive('disabled');
+    return inactive();
   }
   const configurationId = createHash('sha256').update(`${api}|${shop}`).digest('hex');
   function parse(payload: any, expectedId?: string): Order {

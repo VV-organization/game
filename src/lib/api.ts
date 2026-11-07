@@ -27,7 +27,7 @@ export interface History {
   }[];
   purchases: { id: string; date: string; name: string; fapix: number; status: string }[];
 }
-export type PaymentMode = 'sandbox' | 'arco' | 'disabled';
+export type { PaymentMode } from '../shared/types';
 export async function api<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(`/api${path}`, {
     credentials: 'same-origin',

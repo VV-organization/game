@@ -69,7 +69,7 @@ export function createApplication(options: ApplicationOptions = {}) {
     gateway = options.gateway ?? createPaymentGateway(env);
   const store = new Store(
     options.dbPath ?? ':memory:',
-    gateway.mode === 'sandbox' ? 'sandbox' : 'live',
+    gateway.mode === 'arco' ? 'live' : 'disabled',
   );
   const app = express();
   app.disable('x-powered-by');
@@ -118,7 +118,7 @@ export function createApplication(options: ApplicationOptions = {}) {
       rub: row.rub,
       fapix: row.fapix,
       method: row.method,
-      paymentMode: row.mode,
+      paymentMode: gateway.mode,
       ...(row.checkout_url ? { checkoutUrl: row.checkout_url } : {}),
       status: row.status,
       ...(row.review_reason
@@ -289,6 +289,8 @@ export function createApplication(options: ApplicationOptions = {}) {
     res.json({ user: store.equip(requireUser(req).id, productId(req.body?.productId)) }),
   );
   app.post('/api/topups', async (req, res) => {
+    if (gateway.mode !== 'arco')
+      throw new ApiError(503, 'PAYMENTS_DISABLED', 'Платежи пока не подключены');
     const login = loginValue(req.body?.login),
       rub = amount(req.body?.rub),
       key = idempotency(req.body?.idempotencyKey),
@@ -298,8 +300,6 @@ export function createApplication(options: ApplicationOptions = {}) {
     const account = store.accountByLogin(login);
     if (!account)
       throw new ApiError(404, 'ACCOUNT_NOT_FOUND', 'Аккаунт не найден. Зарегистрируйтесь');
-    if (gateway.mode === 'disabled')
-      throw new ApiError(503, 'PAYMENTS_DISABLED', 'Платежи пока не подключены');
     if (!getUser(req) && !visitor(req)) {
       visitor(req, res);
       throw new ApiError(409, 'VISITOR_REQUIRED', 'Сессия оплаты подготовлена. Повторите запрос');
@@ -348,17 +348,12 @@ export function createApplication(options: ApplicationOptions = {}) {
     }
     res.status(row.review_reason ? 202 : result.created ? 201 : 200).json(topupResponse(req, row));
   });
-  app.post('/api/topups/:id/sandbox', (req, res) => {
+  app.get('/api/topups/:id', async (req, res) => {
     const row = accessTopup(req);
-    if (gateway.mode !== 'sandbox' || row.mode !== 'sandbox')
-      throw new ApiError(403, 'SANDBOX_DISABLED', 'Тестовая оплата недоступна');
-    if (!['success', 'failed'].includes(req.body?.outcome))
-      throw new ApiError(400, 'INVALID_OUTCOME', 'Выберите результат тестовой оплаты');
-    res.json(topupResponse(req, store.settle(row.id, req.body.outcome)));
+    if (row.mode === 'sandbox' && row.status === 'pending')
+      throw new ApiError(410, 'PAYMENT_RETIRED', 'Старый тестовый платёж больше недоступен');
+    res.json(topupResponse(req, await reconcile(row)));
   });
-  app.get('/api/topups/:id', async (req, res) =>
-    res.json(topupResponse(req, await reconcile(accessTopup(req)))),
-  );
   app.use('/api', (_req, res) =>
     res.status(404).json({ error: 'NOT_FOUND', message: 'Маршрут не найден' }),
   );

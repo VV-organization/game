@@ -109,6 +109,10 @@ export default function App() {
   const purchaseKey = useRef<{ id: string; key: string } | null>(null);
   const authContinuation = useRef<((account: User) => void) | null>(null);
   function openWallet(value: { rub: number; productName?: string }) {
+    if (paymentMode !== 'arco') {
+      setToast('Пополнение временно недоступно');
+      return;
+    }
     setWallet({ ...value, paymentId: savedPaymentId() });
   }
   function closeWallet() {
@@ -269,6 +273,7 @@ export default function App() {
           }}
           onLogin={() => (user ? navigate('play') : openAuth())}
           onTopup={(rub, productName) => openWallet({ rub, productName })}
+          topupEnabled={paymentMode === 'arco'}
         />
       ) : (
         <div className="paddock">
@@ -320,7 +325,15 @@ export default function App() {
                 </span>
               </div>
               <div className="header-actions">
-                <button className="balance" onClick={() => openWallet({ rub: 311 })}>
+                <button
+                  className="balance"
+                  disabled={paymentMode !== 'arco'}
+                  aria-label="Пополнить баланс"
+                  title={
+                    paymentMode !== 'arco' ? 'Пополнение временно недоступно' : 'Пополнить баланс'
+                  }
+                  onClick={() => openWallet({ rub: 311 })}
+                >
                   <span className="coin">F</span>
                   <span className="balance-amount">
                     <span>
@@ -744,8 +757,8 @@ export default function App() {
             <Smartphone size={18} /> На телефоне используй экранные кнопки.
           </p>
           <p className="notice">
-            Сейчас доступны тренировки с ботами. Сетевые гонки не подключены. Баланс пополняется
-            отдельно; результаты тренировок сохраняются на этом устройстве.
+            Сейчас доступны тренировки с ботами. Сетевые гонки не подключены. Результаты тренировок
+            сохраняются на этом устройстве.
           </p>
           {user && (
             <button

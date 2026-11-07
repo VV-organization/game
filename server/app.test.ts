@@ -1,14 +1,40 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Store } from './store';
 import { createApplication } from './app';
 import { products, popularIds } from './catalog';
-import type { PaymentGateway } from './payments';
-import { ProviderError } from './payments';
+import type { PaymentGateway, PaymentRequest } from './payments';
+import { createPaymentGateway, ProviderError } from './payments';
 
 let server: Server;
 let base: string;
 let application: ReturnType<typeof createApplication>;
 const clients: Record<string, string> = {};
+function testGateway(): PaymentGateway {
+  const orders = new Map<string, PaymentRequest>();
+  return {
+    mode: 'arco',
+    configurationId: 'test-shop',
+    async create(input) {
+      orders.set(input.id, input);
+      input.onOrderCreated?.(input.id);
+      return { providerId: input.id, checkoutUrl: `https://checkout.example/${input.id}` };
+    },
+    async status(providerId) {
+      const order = orders.get(providerId);
+      if (!order) throw new ProviderError(false);
+      return {
+        status: 'pending',
+        merchantOrderId: order.id,
+        rub: order.rub,
+        method: order.method,
+      };
+    },
+  };
+}
 async function request(path: string, body?: unknown, client = 'alice', method?: string) {
   const response = await fetch(base + path, {
     method: method ?? (body === undefined ? 'GET' : 'POST'),
@@ -44,12 +70,14 @@ async function fund(rub = 5205, client = 'alice') {
     { login: client, rub, method: 'card', idempotencyKey: crypto.randomUUID() },
     client,
   );
-  return request(`/api/topups/${result.body.id}/sandbox`, { outcome: 'success' }, client);
+  application.store.settle(result.body.id, 'success');
+  return request(`/api/topups/${result.body.id}`, undefined, client);
 }
-async function replaceGateway(gateway: PaymentGateway) {
+async function replaceGateway(gateway: PaymentGateway, dbPath = ':memory:') {
+  const next = createApplication({ dbPath, gateway });
   await new Promise<void>((r) => server.close(() => r()));
   application.close();
-  application = createApplication({ dbPath: ':memory:', gateway });
+  application = next;
   server = createServer(application.app);
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   const a = server.address();
@@ -58,7 +86,7 @@ async function replaceGateway(gateway: PaymentGateway) {
 }
 beforeEach(async () => {
   Object.keys(clients).forEach((k) => delete clients[k]);
-  application = createApplication({ dbPath: ':memory:', env: { PAYMENT_MODE: 'sandbox' } });
+  application = createApplication({ dbPath: ':memory:', gateway: testGateway() });
   server = createServer(application.app);
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   const a = server.address();
@@ -148,7 +176,7 @@ describe('money and ownership', () => {
       rub: 311,
       fapix: 622,
       method: 'sbp',
-      paymentMode: 'sandbox',
+      paymentMode: 'arco',
       status: 'pending',
     });
   });
@@ -167,7 +195,7 @@ describe('money and ownership', () => {
     expect(responses[0].body.id).toBe(responses[1].body.id);
     expect((await request('/api/history')).body.topups).toHaveLength(1);
   });
-  it('validates money and does not let a disabled provider produce credit', async () => {
+  it('validates money and the recipient before creating a payment', async () => {
     await register();
     for (const rub of [0, -1, 0.01, Number.MAX_SAFE_INTEGER, '311', null])
       expect(
@@ -198,15 +226,13 @@ describe('money and ownership', () => {
     expect(first.status).toBe(201);
     expect((await request('/api/topups', body)).body.id).toBe(first.body.id);
     expect((await request('/api/topups', { ...body, rub: 584 })).status).toBe(409);
-    await Promise.all([
-      request(`/api/topups/${first.body.id}/sandbox`, { outcome: 'success' }),
-      request(`/api/topups/${first.body.id}/sandbox`, { outcome: 'success' }),
-    ]);
+    application.store.settle(first.body.id, 'success');
+    application.store.settle(first.body.id, 'success');
     expect((await request('/api/session')).body.user.balance).toBe(622);
-    await request(`/api/topups/${first.body.id}/sandbox`, { outcome: 'failed' });
+    application.store.settle(first.body.id, 'failed');
     expect((await request('/api/session')).body.user.balance).toBe(622);
     const failed = await request('/api/topups', { ...body, idempotencyKey: 'failure-topup-key' });
-    await request(`/api/topups/${failed.body.id}/sandbox`, { outcome: 'failed' });
+    application.store.settle(failed.body.id, 'failed');
     expect((await request('/api/history')).body.topups).toHaveLength(2);
     expect((await request('/api/session')).body.user.balance).toBe(622);
   });
@@ -219,7 +245,8 @@ describe('money and ownership', () => {
       'guest',
     );
     expect((await request(`/api/topups/${t.body.id}`, undefined, 'stranger')).status).toBe(404);
-    const paid = await request(`/api/topups/${t.body.id}/sandbox`, { outcome: 'success' }, 'guest');
+    application.store.settle(t.body.id, 'success');
+    const paid = await request(`/api/topups/${t.body.id}`, undefined, 'guest');
     expect(paid.body.user).toBeUndefined();
     expect((await request('/api/session')).body.user.balance).toBe(622);
   });
@@ -349,25 +376,138 @@ describe('verified payment settlement', () => {
     expect(create).toHaveBeenCalledTimes(1);
     expect(result.body.user.balance).toBe(0);
   });
-  it('fails closed with payments disabled and never enables the sandbox endpoint', async () => {
-    await replaceGateway({
-      mode: 'disabled',
-      configurationId: 'disabled',
-      create: vi.fn(),
-      status: vi.fn(),
+  it.each([undefined, 'disabled', 'sandbox'])(
+    'refuses topups without changing the wallet when PAYMENT_MODE is %s',
+    async (mode) => {
+      await replaceGateway(createPaymentGateway({ PAYMENT_MODE: mode }));
+      await register();
+      const before = (await request('/api/session')).body.user;
+      const response = await request('/api/topups', {
+        login: 'alice',
+        rub: 311,
+        method: 'card',
+        idempotencyKey: 'disabled-test-key',
+      });
+      expect(response.status).toBe(503);
+      expect(response.body.error).toBe('PAYMENTS_DISABLED');
+      expect((await request('/api/topups', {})).status).toBe(503);
+      expect((await request('/api/session')).body).toMatchObject({
+        paymentMode: 'disabled',
+        user: before,
+      });
+      expect((await request('/api/history')).body.topups).toHaveLength(0);
+      expect(application.store.db.prepare('SELECT COUNT(*) AS count FROM ledger').get()).toEqual({
+        count: 0,
+      });
+    },
+  );
+  it.each(['arco', 'disabled'] as const)(
+    'returns 404 for the removed sandbox endpoint in %s mode without crediting an existing topup',
+    async (mode) => {
+      if (mode === 'disabled') await replaceGateway(createPaymentGateway({}));
+      const registered = await register();
+      const topup = application.store.createTopup({
+        userId: registered.body.user.id,
+        creatorHash: 'fixture',
+        key: 'removed-endpoint-key',
+        rub: 311,
+        method: 'card',
+        mode: 'arco',
+        configurationId: 'test-shop',
+      }).row;
+      for (const outcome of ['success', 'failed']) {
+        const response = await request(`/api/topups/${topup.id}/sandbox`, { outcome });
+        expect(response.status).toBe(404);
+        expect(response.body.error).toBe('NOT_FOUND');
+      }
+      expect(application.store.topup(topup.id)?.status).toBe('pending');
+      expect((await request('/api/session')).body.user.balance).toBe(0);
+      expect(application.store.db.prepare('SELECT COUNT(*) AS count FROM ledger').get()).toEqual({
+        count: 0,
+      });
+    },
+  );
+  it('serves a legacy wallet with payments disabled and cannot settle its old sandbox topup', async () => {
+    const directory = mkdtempSync(join(tmpdir(), 'fapix-api-test-'));
+    const file = join(directory, 'legacy.sqlite');
+    const fixture = new Store(file, 'live');
+    const account = fixture.register('legacy_user', 'salt:hash');
+    const session = fixture.createSession(account.id);
+    const topup = fixture.createTopup({
+      userId: account.id,
+      creatorHash: 'legacy-fixture',
+      key: 'legacy-pending-key',
+      rub: 311,
+      method: 'card',
+      mode: 'arco',
+      configurationId: 'test-shop',
+    }).row;
+    const completed = (['success', 'failed'] as const).map((status) => {
+      const row = fixture.createTopup({
+        userId: account.id,
+        creatorHash: 'legacy-fixture',
+        key: `legacy-${status}-key`,
+        rub: 1,
+        method: 'card',
+        mode: 'arco',
+        configurationId: 'test-shop',
+      }).row;
+      return fixture.settle(row.id, status);
     });
-    await register();
-    expect(
-      (
-        await request('/api/topups', {
-          login: 'alice',
-          rub: 311,
-          method: 'card',
-          idempotencyKey: 'disabled-test-key',
-        })
-      ).status,
-    ).toBe(503);
-    expect((await request('/api/history')).body.topups).toHaveLength(0);
+    const user = fixture.user(account.id);
+    fixture.db.prepare("UPDATE settings SET value='sandbox' WHERE key='economy'").run();
+    fixture.db.prepare("UPDATE topups SET mode='sandbox',provider_config='sandbox'").run();
+    fixture.close();
+    try {
+      await replaceGateway(createPaymentGateway({ PAYMENT_MODE: 'disabled' }), file);
+      clients.alice = `fapix_session=${session}`;
+      expect((await request('/api/session')).body).toMatchObject({
+        user,
+        paymentMode: 'disabled',
+      });
+      const before = {
+        topups: application.store.db.prepare('SELECT * FROM topups ORDER BY id').all(),
+        ledger: application.store.db.prepare('SELECT * FROM ledger ORDER BY id').all(),
+        history: application.store.history(user.id),
+      };
+      const retired = await request(`/api/topups/${topup.id}`);
+      expect(retired.status).toBe(410);
+      expect(retired.body).toMatchObject({
+        error: 'PAYMENT_RETIRED',
+        message: 'Старый тестовый платёж больше недоступен',
+      });
+      expect((await request(`/api/topups/${topup.id}`, undefined, 'stranger')).status).toBe(404);
+      for (const row of completed) {
+        const response = await request(`/api/topups/${row.id}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({ paymentMode: 'disabled', status: row.status });
+      }
+      expect(
+        (await request(`/api/topups/${topup.id}/sandbox`, { outcome: 'success' })).status,
+      ).toBe(404);
+      expect((await request('/api/payments/arco/callback', {})).status).toBe(503);
+      await application.reconcilePending();
+      expect(application.store.topup(topup.id)?.status).toBe('pending');
+      expect((await request('/api/session')).body.user).toEqual(user);
+      expect(application.store.db.prepare('SELECT * FROM topups ORDER BY id').all()).toEqual(
+        before.topups,
+      );
+      expect(application.store.db.prepare('SELECT * FROM ledger ORDER BY id').all()).toEqual(
+        before.ledger,
+      );
+      expect((await request('/api/history')).body).toEqual(before.history);
+      expect(
+        application.store.db.prepare("SELECT value FROM settings WHERE key='economy'").get(),
+      ).toEqual({
+        value: 'sandbox',
+      });
+      expect(() => createApplication({ dbPath: file, gateway: testGateway() })).toThrow(
+        'separate databases',
+      );
+    } finally {
+      if (application.store.db.isOpen) await replaceGateway(testGateway());
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
   it('validates provider account, amount and method before one durable credit', async () => {
     let merchant = '',
@@ -391,7 +531,7 @@ describe('verified payment settlement', () => {
       idempotencyKey: 'verified-test-key',
     });
     const id = topup.body.id;
-    expect((await request(`/api/topups/${id}/sandbox`, { outcome: 'success' })).status).toBe(403);
+    expect((await request(`/api/topups/${id}/sandbox`, { outcome: 'success' })).status).toBe(404);
     expect((await request(`/api/topups/${id}`)).body.user.balance).toBe(0);
     observed = { ...observed, status: 'success', rub: 312 };
     expect((await request(`/api/topups/${id}`)).status).toBe(502);

@@ -19,7 +19,7 @@ const emptyHistory: History = { topups: [], purchases: [] };
 const pending = {
   id: 'payment-1',
   status: 'pending',
-  paymentMode: 'sandbox' as const,
+  paymentMode: 'arco' as const,
   login: 'alice',
   rub: 311,
   method: 'card' as const,
@@ -38,7 +38,7 @@ function deferred<T>() {
 function props() {
   return {
     user: alice as User | null,
-    mode: 'sandbox' as const,
+    mode: 'arco' as const,
     initialRub: 311,
     onClose: vi.fn(),
     onUser: vi.fn(),
@@ -53,10 +53,102 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 
 describe('wallet recovery and account context', () => {
+  it('blocks a disabled top-up button and programmatic form submission without an API request', async () => {
+    mockedApi.mockResolvedValueOnce({ exists: true }).mockResolvedValueOnce(pending);
+    const interaction = userEvent.setup();
+    render(<Wallet {...props()} mode="disabled" />);
+    const submit = screen.getByRole('button', { name: /Пополнить на/ }) as HTMLButtonElement;
+    expect(submit.disabled).toBe(true);
+    await interaction.click(submit);
+    await act(async () => {
+      fireEvent.submit(submit.closest('form')!);
+    });
+    expect(mockedApi).not.toHaveBeenCalled();
+    expect(screen.getByText('Пополнение временно недоступно')).toBeTruthy();
+    expect(screen.queryAllByRole('button', { name: /^Тест:/ })).toHaveLength(0);
+  });
+
+  it.each(['disabled', 'arco'] as const)(
+    'does not expose simulation actions for a legacy saved payment when the wallet is %s',
+    async (mode) => {
+      mockedApi.mockResolvedValueOnce({ ...pending, paymentMode: 'sandbox' });
+      render(<Wallet {...props()} mode={mode} initialPaymentId="payment-1" />);
+      await screen.findByRole('heading', { name: 'Ожидаем оплату' });
+      expect(screen.queryAllByRole('button', { name: /^Тест:/ })).toHaveLength(0);
+      expect(mockedApi.mock.calls).toEqual([['/topups/payment-1']]);
+    },
+  );
+
+  it('disables a restored checkout while payments are unavailable and retains the pending payment', async () => {
+    const submitCheckout = vi
+      .spyOn(HTMLFormElement.prototype, 'submit')
+      .mockImplementation(() => {});
+    mockedApi.mockResolvedValueOnce({
+      ...pending,
+      checkoutUrl: 'https://checkout.example/payment-1',
+    });
+    const interaction = userEvent.setup();
+    render(<Wallet {...props()} mode="disabled" initialPaymentId="payment-1" />);
+    const checkout = (await screen.findByRole('button', {
+      name: 'Открыть страницу оплаты',
+    })) as HTMLButtonElement;
+    expect(checkout.disabled).toBe(true);
+    await interaction.click(checkout);
+    fireEvent.click(checkout);
+    expect(submitCheckout).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem('fapix-pending-payment')).toBe('payment-1');
+    expect(screen.getByRole('button', { name: 'Проверить статус' })).toBeTruthy();
+  });
+
+  it.each(['restore', 'poll'] as const)(
+    'forgets an explicitly retired payment during %s without retrying it or creating a new top-up',
+    async (stage) => {
+      vi.useFakeTimers();
+      sessionStorage.setItem('fapix-pending-payment', 'payment-1');
+      sessionStorage.setItem('fapix-payment-request', JSON.stringify({ key: 'old-request' }));
+      sessionStorage.setItem(
+        'fapix-payment-intent',
+        JSON.stringify({ paymentId: 'payment-1', productName: 'Apex GT-R' }),
+      );
+      if (stage === 'poll') mockedApi.mockResolvedValueOnce(pending);
+      mockedApi.mockRejectedValueOnce(
+        Object.assign(new Error('Старый тестовый платёж больше недоступен'), {
+          status: 410,
+          code: 'PAYMENT_RETIRED',
+        }),
+      );
+      const callbacks = props();
+      await act(async () => {
+        render(<Wallet {...callbacks} initialPaymentId="payment-1" />);
+      });
+      if (stage === 'poll')
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(6000);
+        });
+      expect(screen.getByRole('heading', { name: 'Платёж недоступен' })).toBeTruthy();
+      expect(sessionStorage.getItem('fapix-pending-payment')).toBeNull();
+      expect(sessionStorage.getItem('fapix-payment-request')).toBeNull();
+      expect(sessionStorage.getItem('fapix-payment-intent')).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Повторить проверку' })).toBeNull();
+      expect(screen.queryByRole('button', { name: /Пополнить на/ })).toBeNull();
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(18000);
+      });
+      expect(mockedApi.mock.calls).toEqual(
+        stage === 'restore'
+          ? [['/topups/payment-1']]
+          : [['/topups/payment-1'], ['/topups/payment-1']],
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Закрыть восстановление' }));
+      expect(callbacks.onClose).toHaveBeenCalledOnce();
+    },
+  );
+
   it('continues the selected purchase for the actual login chosen in registration', async () => {
     const registered: User = { ...alice, id: 'registered-id', login: 'pilot_final' };
     mockedApi.mockImplementation(async (path) => {
@@ -218,13 +310,11 @@ describe('wallet recovery and account context', () => {
     vi.useFakeTimers();
     const callbacks = props();
     const oldPoll = deferred<unknown>();
-    mockedApi.mockImplementation(async (path) => {
-      if (path.startsWith('/accounts/')) return { exists: true };
-      if (path === '/topups') return pending;
-      if (path.endsWith('/sandbox'))
-        return { ...pending, status: 'success', user: { ...alice, balance: 622 } };
-      return oldPoll.promise;
-    });
+    mockedApi
+      .mockResolvedValueOnce({ exists: true })
+      .mockResolvedValueOnce(pending)
+      .mockReturnValueOnce(oldPoll.promise)
+      .mockResolvedValueOnce({ ...pending, status: 'success', user: { ...alice, balance: 622 } });
     render(<Wallet {...callbacks} />);
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /Пополнить на/ }));
@@ -233,9 +323,9 @@ describe('wallet recovery and account context', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(6000);
     });
-    expect(mockedApi).toHaveBeenCalledWith('/topups/payment-1', undefined);
+    expect(mockedApi.mock.calls[2]?.[0]).toBe('/topups/payment-1');
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Тест: успешная оплата' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Проверить статус' }));
     });
     expect(screen.getByRole('heading', { name: 'Баланс пополнен' })).toBeTruthy();
 
@@ -304,18 +394,14 @@ describe('wallet recovery and account context', () => {
           keys.push((body as { idempotencyKey: string }).idempotencyKey);
           return { ...pending, id: `payment-${keys.length}` };
         }
-        if (path.endsWith('/sandbox')) return { ...pending, status: outcome };
+        if (path === '/topups/payment-1') return { ...pending, status: outcome };
         return pending;
       });
       const first = render(<Wallet {...callbacks} />);
       await interaction.click(screen.getByRole('button', { name: /Пополнить на/ }));
       await screen.findByRole('heading', { name: 'Ожидаем оплату' });
       expect(sessionStorage.getItem('fapix-payment-request')).not.toBeNull();
-      await interaction.click(
-        screen.getByRole('button', {
-          name: outcome === 'success' ? 'Тест: успешная оплата' : 'Тест: отказ',
-        }),
-      );
+      await interaction.click(screen.getByRole('button', { name: 'Проверить статус' }));
       await screen.findByRole('heading', {
         name: outcome === 'success' ? 'Баланс пополнен' : 'Платёж не прошёл',
       });
@@ -398,6 +484,8 @@ describe('wallet recovery and account context', () => {
     { status: 404, code: 'PAYMENT_NOT_FOUND', authoritative: true },
     { status: 403, code: 'PAYMENT_ACCESS_DENIED', authoritative: true },
     { status: 404, code: 'NOT_FOUND', authoritative: false },
+    { status: 410, code: 'PROVIDER_UNAVAILABLE', authoritative: false },
+    { status: 502, code: 'PAYMENT_RETIRED', authoritative: false },
   ])(
     'distinguishes authoritative payment errors from an upstream $status/$code during restore',
     async ({ status, code, authoritative }) => {
