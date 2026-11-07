@@ -6,6 +6,9 @@ import { createDecor } from './decor';
 import { frameObject } from './framing';
 import { createHelmet } from './helmets';
 import { createRacingSuit } from './racing-suits';
+import { createNumberPlate } from './number-plates';
+import { updateUnderglow } from './underglow';
+import { createEffectStudio, studioEmitter } from './effect-studio';
 import type { Customization } from './types';
 
 export type ThumbnailProduct = { category: string; color: string; variant: number; name: string };
@@ -109,8 +112,9 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
   const engine = sharedRenderer();
   if (!engine) return null;
   const config: Customization = customization || {
+    ...(product.category === 'decal' ? { car: 1, color: '#253747' } : {}),
     [product.category]: colorCategories.has(product.category) ? product.color : product.variant,
-    ...(['helmet', 'suit'].includes(product.category)
+    ...(['helmet', 'suit', 'underglow', 'trail'].includes(product.category)
       ? { [`${product.category}Style`]: product.variant }
       : {}),
   };
@@ -122,13 +126,17 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
         ? createHelmet(product.variant, product.color)
         : product.category === 'suit'
           ? createRacingSuit(product.variant, product.color, 'display')
-          : null;
+          : product.category === 'plate'
+            ? createNumberPlate(product.variant)
+            : null;
   if (product.category === 'decor' && !isolated) return null;
+  const effects = product.category === 'underglow' || product.category === 'trail';
+  const effectStudio = effects ? createEffectStudio(config, product.category === 'trail') : null;
   const { scene, kart } = isolated
     ? { scene: new THREE.Scene(), kart: null }
     : workshop
       ? createGarageScene(config)
-      : studioScene(config);
+      : effectStudio || studioScene(config);
   const camera = new THREE.PerspectiveCamera(workshop ? 38 : 35, 4 / 3, 0.1, 80);
   camera.position.set(workshop ? 8.6 : 5.8, workshop ? 5.4 : 3.5, workshop ? 10 : 6.8);
   camera.lookAt(0, workshop ? 1.1 : 1.0, 0);
@@ -165,8 +173,7 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
     frameObject(camera, isolated);
   }
   if (product.category === 'plate') {
-    camera.position.set(-5.4, 2.9, -6.4);
-    camera.lookAt(0, 0.95, 0);
+    if (isolated) frameObject(camera, isolated, 1.22, [0.25, 0.12, 2]);
   }
   if (product.category === 'windowTint') {
     camera.position.set(3.5, 2.9, 4.8);
@@ -184,42 +191,31 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
     camera.position.set(4.7, 4.7, 5.8);
     camera.lookAt(0, 1, 0.15);
   }
-  if (config.underglow) {
-    const glowLight = new THREE.PointLight(config.underglow, 3, 4, 1.5);
-    glowLight.position.set(0, 0.25, 0);
-    scene.add(glowLight);
-  }
-  if (product.category === 'trail' && kart) {
-    kart.userData.exhaust.forEach((flame) => {
-      flame.visible = true;
-    });
-    camera.position.set(-5.6, 3.4, -6.8);
-    camera.lookAt(0, 0.8, -0.6);
-    // A still of the same colored sparkles emitted behind a moving kart in Race.
-    const geometry = new THREE.IcosahedronGeometry(0.16, 0);
-    const material = new THREE.MeshBasicMaterial({
-      color: product.color,
-      transparent: true,
-      opacity: 0.7,
-    });
-    for (let i = 0; i < 18; i++) {
-      const spark = new THREE.Mesh(geometry, material);
-      spark.position.set((i % 2 ? -1 : 1) * (0.7 + i * 0.012), 0.3 + i * 0.035, -1.7 - i * 0.13);
-      spark.scale.setScalar(1 - i * 0.035);
-      scene.add(spark);
+  if (effectStudio) {
+    updateUnderglow(effectStudio.kart.userData.glow, 1.25);
+    if (effectStudio.trail) {
+      const emitter = studioEmitter();
+      for (let i = 0; i < 100; i++) effectStudio.trail.update(1 / 60, emitter);
+      camera.fov = 40;
+      camera.updateProjectionMatrix();
+      camera.position.set(5.6, 5.8, -8.6);
+      camera.lookAt(0, 0.65, -2.2);
+    } else {
+      camera.position.set(4.4, 5.7, 5.4);
+      camera.lookAt(0, 0.45, 0);
     }
   }
   try {
-    engine.setClearColor(workshop ? '#253849' : '#000000', workshop ? 1 : 0);
+    engine.setClearColor(
+      workshop ? '#253849' : effects ? '#101725' : '#000000',
+      workshop || effects ? 1 : 0,
+    );
     engine.render(scene, camera);
     return engine.domElement.toDataURL('image/webp', 0.88);
   } catch {
     return null;
   } finally {
     // The cached result is an ordinary image; the model and GPU resources are released.
-    scene.traverse((object) => {
-      if (object instanceof THREE.Light && 'shadow' in object) object.shadow?.dispose();
-    });
     disposeScene(scene);
     engine.renderLists.dispose();
   }

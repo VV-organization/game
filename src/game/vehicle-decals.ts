@@ -9,12 +9,12 @@ export function surfacePatch(
   length: number,
   side = 0,
 ) {
-  const columns = 10,
-    rows = 10,
+  const columns = 20,
+    rows = 14,
     positions: number[] = [],
     uvs: number[] = [],
     indices: number[] = [],
-    valid: boolean[] = [];
+    hitObjects: Array<THREE.Object3D | undefined> = [];
   const ray = new THREE.Raycaster();
   for (let row = 0; row <= rows; row++)
     for (let col = 0; col <= columns; col++) {
@@ -25,7 +25,7 @@ export function surfacePatch(
         : new THREE.Vector3(center[0] + (u - 0.5) * width, 4, center[2] + (v - 0.5) * length);
       ray.set(origin, side ? new THREE.Vector3(-side, 0, 0) : new THREE.Vector3(0, -1, 0));
       const hit = ray.intersectObjects(surfaces, false)[0];
-      valid.push(Boolean(hit));
+      hitObjects.push(hit?.object);
       if (hit) {
         const point = hit.point;
         positions.push(point.x + side * 0.012, point.y + (side ? 0 : 0.012), point.z);
@@ -38,8 +38,11 @@ export function surfacePatch(
         b = a + 1,
         c = a + columns + 1,
         d = c + 1;
-      if (valid[a] && valid[b] && valid[c]) indices.push(a, c, b);
-      if (valid[b] && valid[c] && valid[d]) indices.push(b, c, d);
+      // Never stretch a decal triangle across different disconnected body panels.
+      if (hitObjects[a] && hitObjects[a] === hitObjects[b] && hitObjects[a] === hitObjects[c])
+        indices.push(a, c, b);
+      if (hitObjects[b] && hitObjects[b] === hitObjects[c] && hitObjects[b] === hitObjects[d])
+        indices.push(b, c, d);
     }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>FApix — номера, винилы и эффекты</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #161822;
+        color: #f8f4eb;
+        font:
+          13px/1.4 system-ui,
+          sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        gap: 12px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0;
+      }
+      nav {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      a,
+      button {
+        color: inherit;
+        background: #303647;
+        border: 0;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+      }
+      article {
+        background: #242735;
+        border: 1px solid #3d4253;
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .art {
+        aspect-ratio: 4/3;
+        position: relative;
+        background: radial-gradient(ellipse at 50% 65%, #394152, #242735 75%);
+      }
+      .art img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      .copy {
+        padding: 10px;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 14px;
+      }
+      p {
+        color: #abb4c6;
+        min-height: 48px;
+        margin: 0 0 12px;
+      }
+      .garage {
+        height: 70vh;
+        margin-top: 18px;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        header {
+          flex-direction: column;
+          align-items: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/docs/research/finish-review.ts"></script>
+  </body>
+</html>

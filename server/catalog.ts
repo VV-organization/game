@@ -5,6 +5,17 @@ import { bodyDesigns } from '../src/shared/body-designs';
 import { decorDesigns } from '../src/shared/decor-designs';
 import { helmetDesigns } from '../src/shared/helmet-designs';
 import { suitDesigns } from '../src/shared/suit-designs';
+import { plateDesigns } from '../src/shared/plate-designs';
+import { liveryDesigns } from '../src/shared/livery-designs';
+import { underglowDesigns } from '../src/shared/underglow-designs';
+import { trailDesigns } from '../src/shared/trail-designs';
+
+const finishDesigns: Partial<Record<CategoryId, readonly { description: string }[]>> = {
+  plate: plateDesigns,
+  decal: liveryDesigns,
+  underglow: underglowDesigns,
+  trail: trailDesigns,
+};
 
 const definitions: {
   id: CategoryId;
@@ -144,7 +155,8 @@ export const products: Product[] = definitions.flatMap((def) =>
                 ? `Ливрея «${themes[i % 20]} ${i < 20 ? 'Sport' : 'Pro'}»`
                 : `${def.prefix} ${edition}`;
     const productDescription =
-      def.id === 'car'
+      finishDesigns[def.id]?.[i]?.description ??
+      (def.id === 'car'
         ? carDesigns[i].description
         : def.id === 'body'
           ? bodyDesigns[i].description
@@ -158,7 +170,7 @@ export const products: Product[] = definitions.flatMap((def) =>
                   ? i < 5
                     ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'
                     : 'Мастерская Pro: два инструментальных шкафа, верхняя световая балка и клетчатая разметка пола.'
-                  : description[def.id];
+                  : description[def.id]);
     return {
       id: `${def.id}-${String(i + 1).padStart(2, '0')}`,
       name,

@@ -8,10 +8,12 @@ export type Customization = {
   wheels?: number;
   car?: number;
   trail?: string;
+  trailStyle?: number;
   garage?: number;
   decal?: number;
   plate?: number;
   underglow?: string;
+  underglowStyle?: number;
   windowTint?: string;
   decor?: number;
   profile?: number;

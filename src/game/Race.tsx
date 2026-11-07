@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import * as THREE from 'three';
 import { createKart, disposeScene } from './kart';
+import { updateUnderglow } from './underglow';
+import { createTrailEffect } from './trail-effects';
 import { createWorld } from './world';
 import {
   angleDifference,
@@ -141,23 +143,18 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
       scene.add(model);
       return model;
     });
-    const particles = new THREE.InstancedMesh(
-      new THREE.IcosahedronGeometry(0.16, 0),
-      new THREE.MeshBasicMaterial({
-        color: saved.trail || '#d9ebe0',
-        transparent: true,
-        opacity: 0.7,
-        depthWrite: false,
-      }),
-      100,
-    );
-    particles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    particles.frustumCulled = false;
-    scene.add(particles);
-    const motes = Array.from({ length: 100 }, () => ({ x: 0, y: -100, z: 0, life: 0 }));
-    let moteIndex = 0,
-      moteTick = 0;
-    const dummy = new THREE.Object3D();
+    const trail = createTrailEffect(saved.trailStyle, saved.trail);
+    scene.add(trail.object);
+    const emitter = {
+      x: 0,
+      y: 0.3,
+      z: 0,
+      heading: 0,
+      speed: 0,
+      active: false,
+      boosting: false,
+      drifting: false,
+    };
     const camera = new THREE.PerspectiveCamera(59, 1, 0.1, 700),
       cameraPosition = new THREE.Vector3(),
       cameraLook = new THREE.Vector3();
@@ -335,6 +332,9 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
         );
         model.rotation.y = car.heading;
         model.rotation.z = -car.steer * Math.min(0.06, Math.abs(car.speed) * 0.002);
+        // Ground projection stays level while the chassis leans and bounces.
+        model.userData.glow.rotation.z = -model.rotation.z;
+        model.userData.glow.position.y = 0.15 - model.position.y;
         model.userData.frontWheels.forEach((w) => (w.rotation.y = car.steer * 0.35));
         model.userData.driver.rotation.z = car.steer * 0.1;
         model.userData.exhaust.forEach((f, j) => {
@@ -342,35 +342,19 @@ export function Race({ trackId, customization = {}, onExit, onFinish }: RaceProp
           f.scale.y = 0.7 + Math.sin(visualTime * 40 + j) * 0.3;
         });
         model.userData.shield.visible = car.shield > 0;
+        updateUnderglow(model.userData.glow, visualTime);
       }
-      if (race.phase === 'racing') {
-        moteTick += dt;
-        if (
-          moteTick > 0.035 &&
-          player.speed > 8 &&
-          (saved.trail || player.drifting || player.boosting)
-        ) {
-          moteTick = 0;
-          for (const side of [-1, 1]) {
-            const mote = motes[moteIndex++ % motes.length];
-            mote.x = player.x - Math.sin(player.heading) * 1.7 + Math.cos(player.heading) * side;
-            mote.z = player.z - Math.cos(player.heading) * 1.7 - Math.sin(player.heading) * side;
-            mote.y = 0.3;
-            mote.life = 1;
-          }
-        }
-        for (let i = 0; i < motes.length; i++) {
-          const mote = motes[i];
-          mote.life = Math.max(0, mote.life - dt * 0.9);
-          mote.y += dt * 0.9;
-          dummy.position.set(mote.x, mote.y, mote.z);
-          dummy.scale.setScalar(mote.life * (player.drifting ? 2.2 : 1.2));
-          dummy.rotation.set(mote.life * 3, mote.life * 2, 0);
-          dummy.updateMatrix();
-          particles.setMatrixAt(i, dummy.matrix);
-        }
-        particles.instanceMatrix.needsUpdate = true;
-      }
+      emitter.x = player.x;
+      emitter.z = player.z;
+      emitter.heading = player.heading;
+      emitter.speed = player.speed;
+      emitter.active =
+        race.phase === 'racing' &&
+        player.speed > 8 &&
+        Boolean(saved.trail || saved.trailStyle || player.drifting || player.boosting);
+      emitter.boosting = player.boosting;
+      emitter.drifting = player.drifting;
+      if (race.phase !== 'paused') trail.update(dt, emitter);
       world.pickups.forEach((item, i) => {
         item.rotation.y = visualTime * 1.5 + i;
         item.position.y = 1.7 + Math.sin(visualTime * 2 + i) * 0.25;

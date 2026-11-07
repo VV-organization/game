@@ -525,7 +525,7 @@ export default function App() {
                   </div>
                   {(preview || page === 'garage') && (
                     <div className="garage-preview">
-                      {preview && ['profile', 'trail'].includes(preview.category) ? (
+                      {preview && preview.category === 'profile' ? (
                         <ProductArt product={preview} products={products} />
                       ) : (
                         <Suspense fallback={loading}>
@@ -534,7 +534,11 @@ export default function App() {
                             focus={
                               preview?.category === 'decor' ||
                               preview?.category === 'helmet' ||
-                              preview?.category === 'suit'
+                              preview?.category === 'suit' ||
+                              preview?.category === 'plate' ||
+                              preview?.category === 'decal' ||
+                              preview?.category === 'underglow' ||
+                              preview?.category === 'trail'
                                 ? preview.category
                                 : undefined
                             }
@@ -544,7 +548,7 @@ export default function App() {
                       <div>
                         <span className="eyebrow">
                           {preview
-                            ? ['profile', 'trail'].includes(preview.category)
+                            ? preview.category === 'profile'
                               ? 'ПРЕДПРОСМОТР'
                               : 'ПРИМЕРКА'
                             : 'ВЫБРАННЫЙ КАРТ'}

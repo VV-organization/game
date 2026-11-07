@@ -27,6 +27,26 @@ const equipped = Object.freeze({
 });
 
 describe('customizationFor', () => {
+  it('preserves light patterns and trail motion through equip, preview and restoring equipment', () => {
+    const finishes = [
+      item('light-08', 'underglow', 8, '#252935'),
+      item('trail-06', 'trail', 6, '#ff5386'),
+      item('trail-20', 'trail', 20, '#4d295c'),
+    ];
+    const worn = Object.freeze({ underglow: 'light-08', trail: 'trail-06' });
+    expect(customizationFor(worn, finishes, finishes[2])).toEqual({
+      underglow: '#252935',
+      underglowStyle: 8,
+      trail: '#4d295c',
+      trailStyle: 20,
+    });
+    expect(customizationFor(worn, finishes)).toEqual({
+      underglow: '#252935',
+      underglowStyle: 8,
+      trail: '#ff5386',
+      trailStyle: 6,
+    });
+  });
   it('preserves equipment geometry as well as colors through equip and temporary preview', () => {
     const gear = [
       item('helmet-03', 'helmet', 3, '#3388bb'),
@@ -59,6 +79,7 @@ describe('customizationFor', () => {
       decal: 9,
       wheels: 5,
       underglow: '#cc66ff',
+      underglowStyle: 2,
     });
   });
 

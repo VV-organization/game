@@ -30,7 +30,7 @@ export function customizationFor(
     result[product.category] = colorCategories.has(product.category)
       ? product.color
       : product.variant;
-    if (product.category === 'helmet' || product.category === 'suit')
+    if (['helmet', 'suit', 'underglow', 'trail'].includes(product.category))
       result[`${product.category}Style`] = product.variant;
   }
   return result as Customization;

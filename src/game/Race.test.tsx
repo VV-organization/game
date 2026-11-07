@@ -35,6 +35,7 @@ vi.mock('./kart', async (importOriginal) => ({
       frontWheels: [],
       driver: new THREE.Group(),
       exhaust: [],
+      glow: new THREE.Group(),
       shield: new THREE.Mesh(),
     };
     return model;
