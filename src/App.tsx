@@ -811,10 +811,6 @@ export default function App() {
           <p>
             <Smartphone size={18} /> На телефоне используй экранные кнопки.
           </p>
-          <p className="notice">
-            Сейчас доступны тренировки с ботами. Сетевые гонки не подключены. Результаты тренировок
-            сохраняются на этом устройстве.
-          </p>
           {user && (
             <button
               className="secondary full"
