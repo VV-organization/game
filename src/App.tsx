@@ -529,7 +529,10 @@ export default function App() {
                         <ProductArt product={preview} products={products} />
                       ) : (
                         <Suspense fallback={loading}>
-                          <KartPreview customization={shownCustomization} />
+                          <KartPreview
+                            customization={shownCustomization}
+                            focus={preview?.category === 'decor' ? 'decor' : undefined}
+                          />
                         </Suspense>
                       )}
                       <div>

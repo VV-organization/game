@@ -2,6 +2,7 @@ import source from '../docs/research/prices.json';
 import type { CategoryId, Product } from '../src/shared/types';
 import { carDesigns } from '../src/shared/car-designs';
 import { bodyDesigns } from '../src/shared/body-designs';
+import { decorDesigns } from '../src/shared/decor-designs';
 
 const definitions: {
   id: CategoryId;
@@ -83,18 +84,6 @@ const garages = Array.from(
   { length: 10 },
   (_, i) => `${garageThemes[i % 5]}${i >= 5 ? ' Pro' : ''}`,
 );
-const decorKinds = ['Кубок пилота', 'Грузовые ящики', 'Гоночный флаг', 'Пальма в кадке'];
-const decorFinishes = ['Классика', 'Коралл', 'Индиго', 'Песок', 'Неон'];
-const decorDescriptions = [
-  'Кубок на подставке для твоей мастерской.',
-  'Набор грузовых ящиков для мастерской.',
-  'Флаг на стойке рядом с твоим картом.',
-  'Декоративное растение в кадке для мастерской.',
-];
-const decor = Array.from(
-  { length: 20 },
-  (_, i) => `${decorKinds[i % 4]} — ${decorFinishes[Math.floor(i / 4)]}`,
-);
 const themes = [
   'Город',
   'Ночь',
@@ -146,7 +135,7 @@ export const products: Product[] = definitions.flatMap((def) =>
         : def.id === 'garage'
           ? garages[i]
           : def.id === 'decor'
-            ? decor[i]
+            ? decorDesigns[i].name
             : def.id === 'color'
               ? `${edition} ${i < 10 ? 'Metallic' : 'Satin'}`
               : def.id === 'decal'
@@ -158,7 +147,7 @@ export const products: Product[] = definitions.flatMap((def) =>
         : def.id === 'body'
           ? bodyDesigns[i].description
           : def.id === 'decor'
-            ? `${decorDescriptions[i % 4]} Отделка «${decorFinishes[Math.floor(i / 4)]}».`
+            ? decorDesigns[i].description
             : def.id === 'garage'
               ? i < 5
                 ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'

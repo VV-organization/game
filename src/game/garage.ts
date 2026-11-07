@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createKart } from './kart';
+import { createDecor } from './decor';
 import type { Customization } from './types';
 
 export function createGarageScene(config: Customization = {}) {
@@ -20,8 +21,7 @@ export function createGarageScene(config: Customization = {}) {
   scene.add(fill);
   const kart = createKart(config);
   scene.add(kart);
-  const garage = config.garage || 0,
-    decor = config.decor || 0;
+  const garage = config.garage || 0;
   const themes = [
     ['#52616a', '#30424c', '#ff976b'],
     ['#697e84', '#435a62', '#b4e5e9'],
@@ -115,7 +115,7 @@ export function createGarageScene(config: Customization = {}) {
       new THREE.TorusGeometry(0.58, 0.2, 8, 16),
       '#1b2931',
       -4.7,
-      0.05 + j * 0.37,
+      -0.09 + j * 0.37,
       -2.9,
     );
     tire.rotation.x = Math.PI / 2;
@@ -126,78 +126,14 @@ export function createGarageScene(config: Customization = {}) {
     build(new THREE.BoxGeometry(0.35, 0.035, 0.04), '#c2d0d0', 4.5, 0.17 + j * 0.24, -3.05);
   }
   for (const x of [-4.8, 4.8]) {
-    build(new THREE.BoxGeometry(0.65, 0.09, 0.65), '#22333e', x, -0.2, 1.4);
-    build(new THREE.ConeGeometry(0.27, 0.8, 8), theme[2], x, 0.22, 1.4);
+    build(new THREE.BoxGeometry(0.65, 0.09, 0.65), '#22333e', x, -0.245, 1.4);
+    build(new THREE.ConeGeometry(0.27, 0.8, 8), theme[2], x, 0.175, 1.4);
   }
+  const decor = createDecor(config.decor ?? 0);
   if (decor) {
-    const prop = decor % 4,
-      finish = Math.min(4, Math.floor((decor - 1) / 4));
-    const finishes = [
-      ['#e8be55', '#9caaa2', '#79ac8c'],
-      ['#ed876b', '#e2b2a4', '#64a899'],
-      ['#a99aeb', '#777caf', '#8ca9d0'],
-      ['#d2b17b', '#9b8e75', '#b6ad78'],
-      ['#84e3b8', '#526d68', '#9edc6d'],
-    ];
-    const [primary, secondary, leafColor] = finishes[finish];
-    if (prop === 0) {
-      build(new THREE.CylinderGeometry(0.45, 0.32, 0.65, 8), primary, -3.9, 0.08, -1.6);
-      build(new THREE.CylinderGeometry(0.46, 0.46, 0.055, 8), secondary, -3.9, 0.33, -1.6);
-      for (let i = 0; i < 6; i++) {
-        const leaf = build(
-          new THREE.ConeGeometry(0.25, 1.7 + finish * 0.06, 4),
-          leafColor,
-          -3.9 + Math.sin(i) * 0.25,
-          1,
-          -1.6 + Math.cos(i) * 0.25,
-        );
-        leaf.rotation.z = Math.sin(i) * 0.4;
-      }
-    }
-    if (prop === 1) {
-      build(new THREE.BoxGeometry(0.85, 0.9, 0.85), secondary, 3.9, 0.2, -1.7);
-      build(new THREE.CylinderGeometry(0.23, 0.32, 0.15, 12), primary, 3.9, 0.74, -1.7);
-      build(new THREE.CylinderGeometry(0.08, 0.12, 0.5, 8), primary, 3.9, 1, -1.7);
-      const cup = build(new THREE.ConeGeometry(0.36, 0.6, 12), primary, 3.9, 1.5, -1.7);
-      cup.rotation.z = Math.PI;
-      for (const side of [-1, 1]) {
-        const handle = build(
-          new THREE.TorusGeometry(0.24, 0.045, 6, 12),
-          primary,
-          3.9 + side * 0.3,
-          1.42,
-          -1.7,
-        );
-        handle.scale.x = 0.7;
-      }
-    }
-    if (prop === 2) {
-      for (let i = 0; i < 3; i++) {
-        const x = 3.9 + (i % 2) * 0.8,
-          y = 0.12 + Math.floor(i / 2) * 0.8;
-        build(new THREE.BoxGeometry(0.75, 0.75, 0.75), i === 1 ? secondary : primary, x, y, -1.7);
-        for (const offset of [-0.23, 0.23])
-          build(new THREE.BoxGeometry(0.075, 0.78, 0.78), theme[1], x + offset, y, -1.7);
-      }
-    }
-    if (prop === 3) {
-      build(new THREE.CylinderGeometry(0.08, 0.08, 3.5, 8), '#d8e3dd', -4, 1.35, -1.4);
-      build(new THREE.CylinderGeometry(0.35, 0.4, 0.1, 12), secondary, -4, -0.22, -1.4);
-      const flag = build(new THREE.BoxGeometry(1.15, 0.8, 0.035), primary, -3.45, 2.5, -1.4);
-      flag.rotation.y = 0.2;
-      for (let i = 0; i < 4; i++)
-        for (let j = 0; j < 3; j++)
-          if ((i + j) % 2 === 0) {
-            const square = build(
-              new THREE.BoxGeometry(0.26, 0.25, 0.045),
-              secondary,
-              -3.85 + i * 0.27,
-              2.25 + j * 0.25,
-              -1.37,
-            );
-            square.rotation.y = 0.2;
-          }
-    }
+    const side = (config.decor! - 1) % 4 >= 2 ? -1 : 1;
+    decor.position.set(side * 4.8, -0.285, -0.6);
+    scene.add(decor);
   }
   const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(30, 30),
@@ -205,7 +141,7 @@ export function createGarageScene(config: Customization = {}) {
   );
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
-  ground.position.y = -0.03;
+  ground.position.y = -0.285;
   scene.add(ground);
-  return { scene, kart };
+  return { scene, kart, decor };
 }
