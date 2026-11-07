@@ -1,6 +1,7 @@
 import source from '../docs/research/prices.json';
 import type { CategoryId, Product } from '../src/shared/types';
 import { carDesigns } from '../src/shared/car-designs';
+import { bodyDesigns } from '../src/shared/body-designs';
 
 const definitions: {
   id: CategoryId;
@@ -154,13 +155,15 @@ export const products: Product[] = definitions.flatMap((def) =>
     const productDescription =
       def.id === 'car'
         ? carDesigns[i].description
-        : def.id === 'decor'
-          ? `${decorDescriptions[i % 4]} Отделка «${decorFinishes[Math.floor(i / 4)]}».`
-          : def.id === 'garage'
-            ? i < 5
-              ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'
-              : 'Мастерская Pro: два инструментальных шкафа, верхняя световая балка и клетчатая разметка пола.'
-            : description[def.id];
+        : def.id === 'body'
+          ? bodyDesigns[i].description
+          : def.id === 'decor'
+            ? `${decorDescriptions[i % 4]} Отделка «${decorFinishes[Math.floor(i / 4)]}».`
+            : def.id === 'garage'
+              ? i < 5
+                ? 'Цветное оформление мастерской: подиум, панельная стена и световые акценты.'
+                : 'Мастерская Pro: два инструментальных шкафа, верхняя световая балка и клетчатая разметка пола.'
+              : description[def.id];
     return {
       id: `${def.id}-${String(i + 1).padStart(2, '0')}`,
       name,

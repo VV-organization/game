@@ -125,6 +125,7 @@ function tempest(parent: THREE.Group, m: VehicleMaterials): VehicleLayout {
   }
   const ducktail = rounded(parent, m.paint, [1.98, 0.13, 0.29], [0, 1.09, -1.7], 0.035);
   ducktail.rotation.x = 0.24;
+  ducktail.name = 'stock-rear-wing';
   return layout;
 }
 

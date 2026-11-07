@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import type { Customization } from './types';
 import { getCarDesign } from '../shared/car-designs';
+import { bodyDesigns } from '../shared/body-designs';
 import { buildClassicVehicle } from './vehicles-classic';
 import { buildModernVehicle } from './vehicles-modern';
-import { mesh, rod, rounded } from './vehicle-parts';
+import { mesh, rounded } from './vehicle-parts';
+import { buildBodyKit } from './body-kits';
 import { surfacePatch } from './vehicle-decals';
 
 export type KartModel = THREE.Group & {
@@ -18,45 +20,6 @@ export type KartModel = THREE.Group & {
 };
 const mat = (color: THREE.ColorRepresentation, roughness = 0.48, metalness = 0.05) =>
   new THREE.MeshStandardMaterial({ color, roughness, metalness });
-
-function supportCanard(
-  kart: THREE.Group,
-  shell: THREE.Mesh[],
-  canard: THREE.Mesh,
-  side: number,
-  material: THREE.Material,
-) {
-  canard.updateMatrixWorld(true);
-  const triangle = new THREE.Triangle(),
-    candidate = new THREE.Vector3();
-  for (const z of [-0.16, 0.16]) {
-    const mount = canard.localToWorld(new THREE.Vector3(-side * 0.08, 0, z));
-    let distance = Infinity;
-    const contact = new THREE.Vector3();
-    for (const surface of shell) {
-      const positions = surface.geometry.attributes.position,
-        indices = surface.geometry.index;
-      const count = indices?.count || positions.count;
-      for (let i = 0; i < count; i += 3) {
-        for (const [offset, vertex] of [triangle.a, triangle.b, triangle.c].entries())
-          vertex
-            .fromBufferAttribute(positions, indices ? indices.getX(i + offset) : i + offset)
-            .applyMatrix4(surface.matrixWorld);
-        triangle.closestPointToPoint(mount, candidate);
-        const squaredDistance = mount.distanceToSquared(candidate);
-        if (squaredDistance < distance) {
-          distance = squaredDistance;
-          contact.copy(candidate);
-        }
-      }
-    }
-    if (distance > 0.001 && Number.isFinite(distance)) {
-      // Overlap both ends with their parts; the bracket never stops just short of the shell.
-      contact.addScaledVector(contact.clone().sub(mount).normalize(), 0.035);
-      rod(kart, material, mount.toArray(), contact.toArray(), 0.037);
-    }
-  }
-}
 
 function vinylTexture(variant: number) {
   const pattern = (variant - 1) % 20,
@@ -236,6 +199,9 @@ function vinylTexture(variant: number) {
 export function createKart(customization: Customization = {}, number = 1): KartModel {
   const kart = new THREE.Group() as KartModel;
   const design = getCarDesign(customization.car);
+  const bodyVariant = customization.body ?? 0;
+  const hasBodyKit =
+    Number.isInteger(bodyVariant) && bodyVariant >= 1 && bodyVariant <= bodyDesigns.length;
   const color = customization.color || design.color;
   const paint = mat(color, 0.33, 0.18),
     dark = mat('#182329'),
@@ -253,8 +219,12 @@ export function createKart(customization: Customization = {}, number = 1): KartM
     design.variant <= 5
       ? buildClassicVehicle(design.variant, kart, materials)
       : buildModernVehicle(design.variant, kart, materials);
+  if (hasBodyKit)
+    kart.traverse((part) => {
+      if (part.name === 'stock-front-wing' || part.name === 'stock-rear-wing') part.visible = false;
+    });
   const shell: THREE.Mesh[] = [];
-  kart.traverse((part) => {
+  kart.traverseVisible((part) => {
     if (part instanceof THREE.Mesh && part.material === paint) shell.push(part);
   });
   kart.updateMatrixWorld(true);
@@ -486,51 +456,16 @@ export function createKart(customization: Customization = {}, number = 1): KartM
     Math.min(0.42, hood.length * 0.7),
   );
   kart.add(badge);
-  if (customization.body) {
-    const style = (customization.body - 1) % 4;
-    const finish = Math.min(4, Math.floor((customization.body - 1) / 4));
-    const aero = mat(['#e9dec3', '#f48d73', '#9b9ae6', '#c7aa72', '#88d7bd'][finish], 0.3, 0.25);
-    // Small fitted canards keep each vehicle's negative space and wheel clearance intact.
-    for (const side of [-1, 1]) {
-      rounded(
-        kart,
-        aero,
-        [0.13 + style * 0.035, 0.13 + style * 0.05, layout.side.length],
-        [side * (layout.side.x + 0.025), layout.side.y - 0.18, layout.side.z],
-        0.045,
-      );
-      const canard = rounded(
-        kart,
-        aero,
-        [0.28, 0.055, 0.48 + style * 0.05],
-        [
-          side * Math.min(1.12, layout.bodyWidth * 0.43),
-          Math.max(0.29, layout.wheelRadius * 0.6),
-          layout.noseZ - 0.32,
-        ],
-        0.025,
-      );
-      canard.rotation.z = side * (0.1 + style * 0.07);
-      supportCanard(kart, shell, canard, side, silver);
-    }
-    if (style > 1) {
-      const rearWing = rounded(
-        kart,
-        aero,
-        [Math.min(2.25, layout.bodyWidth + 0.26), 0.1, 0.32 + style * 0.05],
-        [0, layout.rear.y + 0.52, layout.tailZ + 0.14],
-        0.04,
-      );
-      rearWing.rotation.x = style === 3 ? -0.13 : 0;
-      for (const side of [-1, 1])
-        rounded(
-          kart,
-          dark,
-          [0.07, 0.36, 0.09],
-          [side * layout.bodyWidth * 0.29, layout.rear.y + 0.3, layout.tailZ + 0.13],
-          0.025,
-        );
-    }
+  if (hasBodyKit) {
+    kart.add(
+      buildBodyKit({
+        variant: bodyVariant,
+        carVariant: design.variant,
+        layout,
+        shell,
+        materials,
+      }),
+    );
   }
   if (customization.decal) {
     const vinyl = new THREE.MeshBasicMaterial({

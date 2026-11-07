@@ -124,6 +124,10 @@ function renderProduct(product: ThumbnailProduct, customization?: Customization)
     camera.position.set(6.2, 2.6, 5.6);
     camera.lookAt(0, 0.85, 0);
   }
+  if (product.category === 'body') {
+    camera.position.set(5, 3.2, 6.4);
+    camera.lookAt(0, 1.05, 0);
+  }
   if (product.category === 'decal') {
     camera.position.set(4.7, 4.7, 5.8);
     camera.lookAt(0, 1, 0.15);

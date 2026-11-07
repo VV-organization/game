@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FApix — обвесы / визуальная проверка</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #141720;
+        color: #f6f3ec;
+        font:
+          13px/1.4 system-ui,
+          sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+      p {
+        color: #b0b9c9;
+        margin: 0;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      a {
+        color: #e1e7f1;
+        background: #303647;
+        border-radius: 7px;
+        padding: 8px 10px;
+        text-decoration: none;
+      }
+      a[aria-current='page'] {
+        background: #ff8351;
+        color: #141720;
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+      article {
+        background: #242936;
+        border: 1px solid #3d4352;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .art {
+        aspect-ratio: 4/3;
+        position: relative;
+        background: radial-gradient(ellipse at 50% 85%, #3a4358, #242936 75%);
+      }
+      .art img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+      }
+      .copy {
+        padding: 10px 12px 14px;
+      }
+      .number {
+        color: #ff996c;
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 4px 0 6px;
+      }
+      .copy p {
+        font-size: 11px;
+        min-height: 46px;
+      }
+      .links {
+        display: flex;
+        gap: 6px;
+        margin-top: 9px;
+      }
+      .links a {
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+      footer {
+        color: #a1adbc;
+        font-size: 11px;
+        margin-top: 12px;
+      }
+      .garage {
+        height: 70vh;
+      }
+      body[data-mode='fit'] main {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+      body[data-mode='race'] {
+        padding: 0;
+      }
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        body[data-mode='fit'] main {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        header {
+          flex-direction: column;
+          align-items: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/docs/research/body-kit-review.ts"></script>
+  </body>
+</html>

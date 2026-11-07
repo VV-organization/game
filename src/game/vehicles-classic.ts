@@ -140,6 +140,11 @@ export function buildClassicVehicle(
       { z: 1.5, width: 0.22, y: 0.75, height: 0.13 },
       { z: 2.12, width: 0.13, y: 0.58, height: 0.1 },
     ]);
+    const frontWing = new THREE.Group(),
+      rearWing = new THREE.Group();
+    frontWing.name = 'stock-front-wing';
+    rearWing.name = 'stock-rear-wing';
+    parent.add(frontWing, rearWing);
     for (const side of [-1, 1]) {
       const pod = hull(parent, m.paint, [
         { z: -1.6, width: 0.16, y: 0.59, height: 0.19 },
@@ -149,15 +154,15 @@ export function buildClassicVehicle(
       ]);
       pod.position.x = side * 0.7;
       rounded(parent, m.dark, [0.37, 0.25, 0.07], [side * 0.74, 0.66, 0.47], 0.03);
-      rounded(parent, m.dark, [0.1, 0.37, 0.54], [side * 1.28, 0.4, 1.92], 0.035);
-      rod(parent, m.dark, [side * 0.55, 0.64, -1.52], [side * 0.55, 1.43, -1.64], 0.06);
-      rounded(parent, m.paint, [0.1, 0.42, 0.64], [side * 1.04, 1.43, -1.69], 0.035);
+      rounded(frontWing, m.dark, [0.1, 0.37, 0.54], [side * 1.28, 0.4, 1.92], 0.035);
+      rod(rearWing, m.dark, [side * 0.55, 0.64, -1.52], [side * 0.55, 1.43, -1.64], 0.06);
+      rounded(rearWing, m.paint, [0.1, 0.42, 0.64], [side * 1.04, 1.43, -1.69], 0.035);
     }
-    const wing = rounded(parent, m.paint, [2.56, 0.11, 0.53], [0, 0.36, 1.94], 0.045);
+    const wing = rounded(frontWing, m.paint, [2.56, 0.11, 0.53], [0, 0.36, 1.94], 0.045);
     wing.rotation.x = -0.07;
-    rounded(parent, m.accent, [2.4, 0.045, 0.12], [0, 0.45, 1.77], 0.02);
-    rounded(parent, m.paint, [2.1, 0.14, 0.64], [0, 1.48, -1.66], 0.055);
-    rounded(parent, m.dark, [1.86, 0.06, 0.4], [0, 1.4, -1.65], 0.03);
+    rounded(frontWing, m.accent, [2.4, 0.045, 0.12], [0, 0.45, 1.77], 0.02);
+    rounded(rearWing, m.paint, [2.1, 0.14, 0.64], [0, 1.48, -1.66], 0.055);
+    rounded(rearWing, m.dark, [1.86, 0.06, 0.4], [0, 1.4, -1.65], 0.03);
     const intake = ellipsoid(parent, m.paint, [0.28, 0.45, 0.37], [0, 1.4, -1.01]);
     intake.rotation.x = -0.2;
     rounded(parent, m.dark, [0.28, 0.2, 0.07], [0, 1.56, -0.68], 0.05);
