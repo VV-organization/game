@@ -37,5 +37,5 @@
 ### Task 3: Public acceptance
 
 - [x] Verify HTTPS assets/API, disabled payments and shared race with two independent browser sessions.
-- [ ] Verify persisted account across a second actual push/deployment; confirm env cleanup and old application removal.
-- [ ] Update deployment documentation with actual evidence; stop QA processes/tabs.
+- [x] Verify persisted account across a second actual push/deployment; confirm env cleanup and old application removal.
+- [x] Update deployment documentation with actual evidence; stop QA processes/tabs.
