@@ -24,18 +24,18 @@
 
 ### Task 1: Container and workflow
 
-- [ ] Add Dockerfile, .dockerignore, docker-compose.yaml and deploy.yaml.
-- [ ] Verify compose with temporary env without overwriting local .env; build image, exercise API/catalog/static/WSS in isolated container.
-- [ ] Run application tests and format/build checks; review deployment diff.
+- [x] Add Dockerfile, .dockerignore, docker-compose.yaml and deploy.yaml.
+- [x] Verify compose with temporary env without overwriting local .env; build image, exercise API/catalog/static/WSS in isolated container.
+- [x] Run application tests and format/build checks; review deployment diff.
 
 ### Task 2: Server and first push
 
-- [ ] Install dedicated runner with repository registration, service and game-stage label; create protected runtime env and UID1000 data directory.
-- [ ] Archive old code/config and consistent old SQLite; verify archive before removing old container/volume/releases.
-- [ ] Commit and push main to trigger workflow; inspect exact Actions run, Docker state and logs.
+- [x] Install dedicated runner with repository registration, service and game-stage label; create protected runtime env and UID1000 data directory.
+- [x] Archive old code/config and consistent old SQLite; verify archive before removing old container/volume/releases.
+- [x] Commit and push main to trigger workflow; inspect exact Actions run, Docker state and logs.
 
 ### Task 3: Public acceptance
 
-- [ ] Verify HTTPS assets/API, disabled payments and shared race with two independent browser sessions.
+- [x] Verify HTTPS assets/API, disabled payments and shared race with two independent browser sessions.
 - [ ] Verify persisted account across a second actual push/deployment; confirm env cleanup and old application removal.
 - [ ] Update deployment documentation with actual evidence; stop QA processes/tabs.
