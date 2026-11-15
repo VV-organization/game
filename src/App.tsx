@@ -834,6 +834,15 @@ export default function App() {
             <footer className="game-footer">
               <span>FApix Racing</span>
               <span>Маленькие карты. Очень личные победы.</span>
+              <div className="game-payment-marks" aria-label="Платёжные системы">
+                <span className="game-payment-mark">
+                  <img src="/assets/payments/mir.svg" alt="МИР" width={62} height={24} />
+                </span>
+                <span className="game-payment-mark game-payment-sbp">
+                  <img src="/assets/payments/sbp.svg" alt="" width={23} height={28} />
+                  СБП
+                </span>
+              </div>
               <button onClick={() => setHelp(true)}>Управление и помощь</button>
             </footer>
           </div>

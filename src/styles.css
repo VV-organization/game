@@ -657,6 +657,8 @@ button:hover:not(:disabled) {
 }
 .game-footer {
   display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
   justify-content: space-between;
   align-items: center;
   padding: 24px 40px;
@@ -673,6 +675,30 @@ button:hover:not(:disabled) {
   font-size: 10px;
   background: none;
   color: #969caf;
+}
+.game-payment-marks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.game-payment-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 40px;
+  border-radius: 8px;
+  background: #fff;
+}
+.game-payment-mark img {
+  display: block;
+  object-fit: contain;
+}
+.game-payment-sbp {
+  gap: 6px;
+  color: #25314a;
+  font-size: 16px;
+  font-weight: 800;
 }
 .catalog-controls {
   display: flex;
@@ -1656,6 +1682,11 @@ td small {
   }
   .game-footer {
     padding: 20px 16px;
+  }
+  .game-payment-marks {
+    order: 1;
+    flex-basis: 100%;
+    justify-content: center;
   }
   .catalog-controls {
     gap: 10px;
