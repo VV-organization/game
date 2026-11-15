@@ -58,6 +58,68 @@ afterEach(() => {
 });
 
 describe('wallet recovery and account context', () => {
+  it('keeps unavailable SBP disabled and creates only a card top-up', async () => {
+    mockedApi.mockResolvedValueOnce({ exists: true }).mockResolvedValueOnce(pending);
+    render(<Wallet {...props()} methods={['card']} />);
+    const sbp = screen.getByRole('button', { name: /СБП/ }) as HTMLButtonElement;
+    expect(sbp.disabled).toBe(true);
+    fireEvent.click(sbp);
+    await userEvent.setup().click(screen.getByRole('button', { name: /Пополнить на/ }));
+    await waitFor(() =>
+      expect(mockedApi).toHaveBeenCalledWith(
+        '/topups',
+        expect.objectContaining({ method: 'card' }),
+      ),
+    );
+  });
+  it('prevents opening a restored invoice for a disabled payment method while keeping status checks', async () => {
+    mockedApi.mockResolvedValueOnce({
+      ...pending,
+      method: 'sbp',
+      checkoutUrl: 'https://qr.nspk.ru/example',
+    });
+    render(<Wallet {...props()} methods={['card']} initialPaymentId="payment-1" />);
+    const open = (await screen.findByRole('button', {
+      name: 'Открыть страницу оплаты',
+    })) as HTMLButtonElement;
+    expect(open.disabled).toBe(true);
+    expect(screen.getByRole('button', { name: 'Проверить статус' })).toBeTruthy();
+  });
+  it('opens Clickit through a native POST with local return URLs and preserves the pending invoice', async () => {
+    let submitted:
+      { action: string; method: string; fields: Record<string, FormDataEntryValue> } | undefined;
+    vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(function (
+      this: HTMLFormElement,
+    ) {
+      submitted = {
+        action: this.action,
+        method: this.method.toLowerCase(),
+        fields: Object.fromEntries(new FormData(this)),
+      };
+    });
+    mockedApi.mockResolvedValueOnce({
+      ...pending,
+      checkoutUrl: 'https://payment.clickit.team/provider-order-1',
+    });
+    const callbacks = props();
+    render(<Wallet {...callbacks} initialPaymentId="payment-1" />);
+    await userEvent
+      .setup()
+      .click(await screen.findByRole('button', { name: 'Открыть страницу оплаты' }));
+    expect(submitted).toEqual({
+      action: 'https://payment.clickit.team/provider-order-1',
+      method: 'post',
+      fields: {
+        successUrl: `${location.origin}/?payment=payment-1`,
+        failUrl: `${location.origin}/?payment=payment-1`,
+      },
+    });
+    expect(sessionStorage.getItem('fapix-pending-payment')).toBe('payment-1');
+    expect(callbacks.onUser).not.toHaveBeenCalled();
+    expect(callbacks.onComplete).not.toHaveBeenCalled();
+    expect(mockedApi.mock.calls.map(([path]) => path)).toEqual(['/topups/payment-1']);
+  });
+
   it('blocks a disabled top-up button and programmatic form submission without an API request', async () => {
     mockedApi.mockResolvedValueOnce({ exists: true }).mockResolvedValueOnce(pending);
     const interaction = userEvent.setup();

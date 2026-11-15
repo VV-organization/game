@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { api, money, quickAmounts, type User, type PaymentMode, type History } from '../lib/api';
 import { Modal } from './Modal';
+import type { PaymentMethod } from '../shared/types';
+const allMethods: PaymentMethod[] = ['card', 'sbp'];
 type Payment = {
   id: string;
   status: string;
@@ -24,6 +26,7 @@ type Payment = {
 interface Props {
   user: User | null;
   mode: PaymentMode;
+  methods?: PaymentMethod[];
   initialRub: number;
   productName?: string;
   initialPaymentId?: string;
@@ -68,6 +71,7 @@ export function savedPaymentId() {
 export function Wallet({
   user,
   mode,
+  methods = allMethods,
   initialRub,
   productName,
   initialPaymentId,
@@ -79,7 +83,7 @@ export function Wallet({
   const [tab, setTab] = useState('topup'),
     [rub, setRub] = useState(String(initialRub)),
     [login, setLogin] = useState(user?.login || ''),
-    [method, setMethod] = useState<'card' | 'sbp'>('card');
+    [method, setMethod] = useState<'card' | 'sbp'>(methods[0] ?? 'card');
   const [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
     [restoring, setRestoring] = useState(!!initialPaymentId),
@@ -105,6 +109,9 @@ export function Wallet({
     requestKey = useRef<{ signature: string; key: string } | null>(null);
   const amount = Number(rub),
     valid = Number.isSafeInteger(amount) && amount >= 1 && amount <= 100000;
+  useEffect(() => {
+    if (!methods.includes(method) && methods[0]) setMethod(methods[0]);
+  }, [methods, method]);
   function accept(p: Payment) {
     setPayment((old) =>
       old?.id === p.id && terminal(old.status) && p.status === 'pending' ? old : p,
@@ -233,7 +240,15 @@ export function Wallet({
   }
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (mode !== 'arco' || busy || restoring || restoreFailure || !valid) return;
+    if (
+      mode !== 'arco' ||
+      !methods.includes(method) ||
+      busy ||
+      restoring ||
+      restoreFailure ||
+      !valid
+    )
+      return;
     const epoch = generation.current;
     setError('');
     setMissing(false);
@@ -300,7 +315,8 @@ export function Wallet({
     forgetPending();
   }
   function openCheckout() {
-    if (mode !== 'arco' || !payment?.checkoutUrl) return;
+    if (mode !== 'arco' || !payment?.checkoutUrl || !methods.includes(payment.method || method))
+      return;
     const returnUrl = new URL(`/?payment=${encodeURIComponent(payment.id)}`, location.origin).href;
     if ((payment.method || method) === 'card') {
       const form = document.createElement('form');
@@ -443,7 +459,7 @@ export function Wallet({
                   {payment.checkoutUrl && !payment.requiresReview && (
                     <button
                       className="primary full"
-                      disabled={mode !== 'arco'}
+                      disabled={mode !== 'arco' || !methods.includes(payment.method || method)}
                       onClick={openCheckout}
                     >
                       Открыть страницу оплаты
@@ -528,21 +544,32 @@ export function Wallet({
                 <button
                   type="button"
                   className={method === 'card' ? 'selected' : ''}
-                  onClick={() => setMethod('card')}
+                  disabled={!methods.includes('card')}
+                  onClick={() => methods.includes('card') && setMethod('card')}
                 >
                   <CreditCard />
-                  Банковская карта<small>МИР и другие карты</small>
+                  Банковская карта
+                  <small>
+                    {methods.includes('card') ? 'МИР и другие карты' : 'Временно недоступно'}
+                  </small>
                 </button>
                 <button
                   type="button"
                   className={method === 'sbp' ? 'selected' : ''}
-                  onClick={() => setMethod('sbp')}
+                  disabled={!methods.includes('sbp')}
+                  onClick={() => methods.includes('sbp') && setMethod('sbp')}
                 >
                   <QrCode />
-                  СБП<small>Через приложение банка</small>
+                  СБП
+                  <small>
+                    {methods.includes('sbp') ? 'Через приложение банка' : 'Временно недоступно'}
+                  </small>
                 </button>
               </div>
-              <button className="primary full" disabled={!valid || busy || mode !== 'arco'}>
+              <button
+                className="primary full"
+                disabled={!valid || busy || mode !== 'arco' || !methods.includes(method)}
+              >
                 {busy ? 'Подготавливаем оплату…' : `Пополнить на ${money(valid ? amount : 0)} ₽`}
                 <ArrowRight />
               </button>

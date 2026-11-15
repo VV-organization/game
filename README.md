@@ -80,13 +80,14 @@ npm start
 
 Production предполагает HTTPS. Secure-cookie сессии нельзя проверять как обычную HTTP-установку на произвольном домене; для локальной разработки используйте `npm run dev`.
 
-## Настройка Arco Pay
+## Настройка Clickit
 
 Реальный режим включается только явно:
 
 ```dotenv
 PAYMENT_MODE=arco
 PUBLIC_URL=https://your-racing-domain.example
+ARCO_PAY_METHODS=card
 ARCO_PAY_SHOP_ID=your_shop_id
 ARCO_PAY_API_KEY=your_api_key
 ARCO_PAY_BEARER_TOKEN=your_bearer_token
@@ -100,11 +101,11 @@ ARCO_PAY_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
 Адаптер реализует merchant-протокол **Arco Pay / Clickit**, проверенный по текущему коду соседних витрин:
 
 - API по умолчанию: `https://api.clickit.team/api/v1`.
-- Карточная форма: `https://payment.paidlayer.com`.
+- Карточная форма: `https://payment.clickit.team`.
 - СБП: создание IPS-заказа и получение ссылки `https://qr.nspk.ru/...`.
 - Callback этого проекта: `PUBLIC_URL/api/payments/arco/callback`.
 
-Это проверка программного контракта, а не успешная проверка живого мерчанта. Рабочие ключи, разрешённые способы оплаты, доступность callback, реальное списание и зачисление ещё требуют проверки в выбранном окружении провайдера. Без полного корректного конфига сервер остаётся в режиме `disabled`.
+16 ноября 2026 проверены собственные реквизиты магазина 1502 и создание реальных счетов по 10 ₽. Карточная форма Clickit открывается. Для СБП Clickit создаёт QR, но НСПК отклоняет его с `RQ05014` («uniQrId не найдено»), поэтому в серверном окружении разрешена только карта: `ARCO_PAY_METHODS=card`. Допустимые значения настройки — `card`, `sbp`, `card,sbp`; некорректная настройка отключает платежи. UI получает доступные методы от сервера; недоступный метод также отклоняется API до создания счёта. Проверка ранее созданных операций продолжает работать независимо от доступности новых платежей. Реальное списание и начисление через банк ещё не проверены. Без полного корректного конфига сервер остаётся в режиме `disabled`.
 
 Адреса можно переопределить через `ARCO_PAY_API_URL` и `ARCO_PAY_PAYMENT_ORIGIN`, если провайдер выдал другой endpoint. Не смешивайте этот контракт с отдельным API `api.arcpay.space/v1`.
 
@@ -116,7 +117,7 @@ ARCO_PAY_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
 
 1. Настройте постоянный каталог SQLite с правом записи только сервисному пользователю, например `DATABASE_PATH=/var/lib/fapix-racing/fapix.sqlite`.
 2. Установите `PUBLIC_URL` и направьте весь HTTPS-origin через reverse proxy на приложение. API, интерфейс и WebSocket `/ws/race` должны оставаться на одном origin; proxy должен передавать WebSocket Upgrade.
-3. Пропускайте callback на `/api/payments/arco/callback` без изменения тела и заголовка `Payment-Sign`.
+3. Пропускайте callback на `/api/payments/arco/callback` без изменения тела и заголовка `Payment-Sign`. Разрешите native POST в CSP: `form-action 'self' https://payment.clickit.team`. Актуальная конфигурация — [deploy/Caddyfile](deploy/Caddyfile); она применяется на сервере отдельно от шаблонного workflow.
 4. Запускайте `npm start` под менеджером процессов с перезапуском после сбоя.
 5. Проверяйте `GET /api/health`, но отдельно проверяйте регистрацию, сохранность покупок и фактический платёжный путь.
 

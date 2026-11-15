@@ -1,101 +1,48 @@
-# Arco Pay integration in FApix Racing
+# Подключение Clickit — 16 ноября 2026
 
-Verified from local source on 6 November 2026. No real payment was created; no neighbouring credentials, environment files or production records were read or copied.
+## Контракт
 
-## Contract and source distinction
+Источник: [официальная документация Clickit](https://doc.clickit.team/), разделы создания заказа, статуса, уведомлений, формы и СБП. Сверены текущие исходники `gems-storefront/backend/src/modules/providers/arco-pay/arco-pay.client.ts` и `frontend/src/lib/hosted-checkout.ts`, инструкции Shootbaam и Locker. Секреты соседних магазинов не использовались.
 
-The user selected **Arco Pay**. The implementation follows the merchant protocol currently used by Shardsmarket and OnyxShop. The current local Shardsmarket integration is branded **Arco Pay / Clickit** and uses `https://api.clickit.team/api/v1` with the hosted form at `https://payment.paidlayer.com`. This is different from the newer unrelated `api.arcpay.space/v1` protocol. Domains are configurable; no merchant identity is inherited from another shop.
+Это протокол `api.clickit.team/api/v1`, не отдельный `api.arcpay.space`. В коде сохранены имена `arco` и `ARCO_PAY_*` для совместимости. Платёжная страница — `https://payment.clickit.team/{OrderId}`.
 
-Read-only source evidence:
+Предоставленные пользователем реквизиты разделены на `x-api-key` и `Authorization: Bearer …`; магазин 1502 подтверждён ответами провайдера. Callback public key взят из раздела «Сервис уведомлений» официальной документации, а не из метода шифрования карточных данных. Ключи находятся только в закрытом серверном env, не в git и не в клиентской сборке.
 
-- `/Users/anton/Finext/shardsmarket/backend/src/modules/providers/arco-pay/arco-pay.client.ts`: create/status request envelopes, headers, amount units, shop validation, hosted CARD URL.
-- `/Users/anton/Finext/shardsmarket/backend/src/modules/providers/arco-pay/arco-pay-webhook-signature.ts`: RSA-SHA1 signature over the original request bytes.
-- `/Users/anton/Finext/shardsmarket/docs/operations/arco-pay.md`: current merchant protocol, authoritative statuses and required CARD form POST handoff.
-- `/Users/anton/Finext/onyxshop/backend/src/services/topUpService.ts` and `backend/src/arcopay/{client,types}.ts`: IPS creation, QR registration and NSPK URL restrictions.
+## Создание и возврат
 
-These are current code contracts, not proof of provider availability or merchant readiness. This project's own active credentials and permitted payment methods have not been verified.
+- API: POST JSON, `x-api-key`, `Authorization`, уникальный `x-req-id`; ограничение времени 10 секунд, ответа 1 MiB, запрет redirect.
+- CARD: `/payments/create`, `Type=PayIn`, `PaymentTypes=[CARD]`, `IsForm=true`, `LifeTime=900`, сумма целых RUB ×100. Собственный UUID сохранён в SQLite до запроса и используется в `MerchantOrderId` и `x-req-id`.
+- IPS: отдельный заказ `PaymentTypes=[IPS]`, `IsForm=false`, затем `/payments/ips/qrcData`, `QrcType=02`, `TemplateVersion=01`, `QrTtl=15`. Provider OrderId сохранён до запроса QR. Разрешены только HTTPS-ссылки `qr.nspk.ru`.
+- Callback: `https://fapixracing.com/api/payments/arco/callback`.
+- Обе ссылки возврата: `https://fapixracing.com/?payment=<локальный UUID>`.
+- CARD открывается native HTML form POST с `successUrl` и `failUrl`. CSP разрешает этот POST только на `payment.clickit.team`. СБП использует GET.
+- Возврат и состояние страницы не начисляют деньги. Локальная запись восстанавливается только у создателя или получателя; посторонний клиент получает 404.
 
-The MIR and SBP footer SVG assets were reused from `/Users/anton/Finext/shardsmarket/frontend/public/payments/` and visually verified locally. Their presence does not establish merchant payment-method availability.
+## Подтверждение и сохранность денег
 
-## Implemented requests
+Подпись `Payment-Sign` проверяется RSA-SHA1 по исходным байтам. Даже подписанный callback только вызывает отдельный запрос `/payments/status`. До начисления сверяются ShopId, OrderId, MerchantOrderId, сумма, RUB, метод и сохранённая конфигурация провайдера.
 
-All provider requests use POST, JSON, Bearer token, `x-api-key` and `x-req-id`. Redirect following is forbidden; timeout is 10 seconds; responses are bounded to 1 MiB. Client responses never expose provider messages or credentials.
+Только `CHARGED` для карты и `IPS_ACCEPTED` для СБП означают оплату. `CREATED`, `AUTHORIZED`, `QRCDATA_CREATED` и неизвестные состояния не начисляют Fapix. Уникальная проводка и изменение баланса выполняются в одной SQLite-транзакции. Повторный callback, polling и фоновая сверка не дублируют начисление. Поздний успешный статус может исправить предыдущий отказ.
 
-### Card
+Если создание завершилось неопределённо, сохраняется `create_unconfirmed`, а повтор не создаёт новый платёж. Подписанный callback и независимый status могут восстановить привязку. Без подтверждения необходима проверка в кабинете провайдера; ручного фиктивного зачисления нет.
 
-`POST /payments/create` sends:
+Фоновая сверка работает каждые 30 секунд, до 50 операций за проход. Добавлено отдельное `last_checked_at`: неудачные попытки тоже перемещают операцию в конец очереди, поэтому старые ошибки не блокируют новые оплаты. Миграция SQLite аддитивная, аккаунты и старые операции сохраняются.
 
-- `MerchantOrderId`: persistent local top-up UUID; the same UUID is `x-req-id`.
-- `Amount`: rubles × 100, integer kopeks. Currency is RUB.
-- `Type: PayIn`, `PaymentTypes: [CARD]`, `IsForm: true`, `LifeTime: 900`.
-- `CallbackUrl`: own PUBLIC_URL + `/api/payments/arco/callback`.
-- Both return URLs: own PUBLIC_URL + `/?payment=<local UUID>`.
+## Реальные проверки и ограничение СБП
 
-The returned order must match shop, merchant order, amount, currency and method when supplied. The hosted URL is constructed from the validated OrderId and configured hosted origin.
+Созданы два неоплаченных счёта по 10 ₽ на техническом аккаунте `qa_clickit_mwiehysw`. Платёжные записи остаются в базе для сверки; баланс — 0.
 
-The browser should navigate to the CARD hosted form by HTML form **POST**, with `successUrl` and `failUrl` fields set to the current FApix payment return URL. Shardsmarket records stale provider-localStorage redirects when ordinary GET navigation is used. The payment return query is a lookup key, never proof of settlement.
+| Метод | Локальный ID                           | Provider OrderId                       | Наблюдение                                                                              |
+| ----- | -------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------- |
+| Карта | `57d73bff-7f86-4c9e-b0e0-2c9c5c3ed213` | `e8c2bad1-0c67-452b-9406-dec464c8222e` | CREATE принят, статус CREATED; карточная форма с суммой 10 ₽ и полями карты открывается |
+| СБП   | `ccbd233d-1c6c-4ea7-b095-9d15d8a8ca25` | `978c70a8-a61d-43d4-bec2-21afe264b531` | CREATE и QR приняты, статус QRCDATA_CREATED; НСПК отклоняет QR                          |
 
-### SBP
+QR `AD100073NTMRD90L96CQO6UCDJA4DR7O`: мобильный браузер запросил `https://upc.cbrpay.ru/v1/payment-link/AD100073NTMRD90L96CQO6UCDJA4DR7O` и получил HTTP 400, `RQ05014`, «Значение uniQrId не найдено», спустя примерно 3 минуты после создания при TTL 15 минут. На экране — «QR-код недействителен». Успешная генерация QR у Clickit не означает, что НСПК принимает ссылку.
 
-Create uses `PaymentTypes: [IPS]` and `IsForm: false`. The verified provider OrderId is persisted **before** requesting the QR.
+Поэтому новые пополнения разрешены только картой (`ARCO_PAY_METHODS=card`). СБП недоступен в UI и API; сверка существующих IPS-платежей сохранена. Для включения СБП провайдер должен исправить маршрут магазина или выдать рабочий терминал. Данные выше подходят для обращения в поддержку, секреты передавать не нужно. На карточной форме провайдера также видна кнопка SBP; выбор её в проверочном CARD-заказе привёл к fail-return, без оплаты. Эту внешнюю кнопку контролирует Clickit.
 
-`POST /payments/ips/qrcData` sends `OrderId`, `QrcType: 02`, `TemplateVersion: 01`, `QrTtl: 15`. The returned order is checked again. Only an HTTPS `qr.nspk.ru` URL with no custom port, credentials or fragment is accepted. The browser follows this URL by GET. A saved OrderId permits retrying QR generation without creating a second provider order.
+## Проверки в коде
 
-### Status and callbacks
+Покрыты default Clickit origin, native POST и свои return URLs, запрет недоступного метода на UI/API/adapter, сохранение сверки ранее созданного IPS, ошибка метода/суммы/merchant без проводок, валидная и поддельная подпись, повторные callbacks/polling/reconciliation на одну проводку, справедливая очередь при 50 старых ошибках, изоляция аккаунтов, идемпотентность, восстановление и перезапуск SQLite.
 
-`POST /payments/status` sends saved `OrderId`. Before any credit, the server checks provider OrderId, configured ShopId, RUB currency, exact kopeks/rubles, local MerchantOrderId, method when supplied and persisted provider configuration identity.
-
-Only **CHARGED** (CARD) and **IPS_ACCEPTED** (IPS) credit Fapix. CREATED, AUTHORIZED, QRCDATA_CREATED and intermediate statuses do not. DECLINED, CHARGE_DECLINED, VOIDED and EXPIRED display failure. Unknown or refund-related states do not create new credit.
-
-Callback `Payment-Sign` is verified as canonical base64 RSA-SHA1 over raw request bytes with this project's public key. A valid callback only triggers a fresh provider status request. It cannot directly credit from body fields. A signed early callback can recover the provider ID after an ambiguous CREATE response, but cannot overwrite an existing different binding.
-
-The browser may poll an owned payment; the server also reconciles saved unresolved provider IDs every 30 seconds. Positive settlement is final and exactly one ledger credit is allowed. A later authoritative success may correct an earlier failure.
-
-## Local wallet and access rules
-
-- Fresh accounts start with zero Fapix. No client race-result endpoint grants money.
-- SQLite stores users, scrypt password hashes, hashed session tokens, purchases, ownership, top-ups and a unique-reference ledger.
-- Every credit and purchase is a transaction. Duplicate provider delivery and duplicate client purchase keys cannot duplicate balances or ownership.
-- Financial history belongs to the account. A guest may pay for a named account, but receives no private user, balance, inventory or session for that recipient.
-- Top-up resume is permitted only to the creating browser/account or recipient account. Unrelated sessions receive 404.
-- Authenticated top-up idempotency is bound to the account, including parallel first requests. Guest idempotency is bound to the HttpOnly visitor cookie initialised by `GET /api/session`; the frontend must obtain that session before creating a guest payment. A guest POST without an established cookie returns 409 VISITOR_REQUIRED and a cookie, without inserting any payment. Two concurrent first requests therefore cannot create duplicate orders.
-- Login is case-insensitive, 3–24 ASCII letters/digits/underscores. Passwords are 8–128 characters.
-- Session cookies are HttpOnly, SameSite=Lax, Secure when NODE_ENV=production. JSON mutation requests enforce same-origin checks. Auth/mutation requests are rate limited.
-- Top-ups accept **whole rubles from 1 to 100,000**. Every product price and balance uses integer Fapix. This is an explicit implementation policy because VV-136 does not define fractional rubles.
-- Bundles have a fixed displayed price. Existing component ownership is preserved; components are not duplicated. An entirely owned bundle cannot be purchased.
-
-## Configuration
-
-Default: `PAYMENT_MODE=disabled`. Missing or invalid real-provider configuration also results in disabled mode; it never silently falls back to sandbox.
-
-For local demonstration only: `PAYMENT_MODE=sandbox`. No bank is contacted. The UI must label this mode; funding is through the explicit sandbox success/failure action. By default it uses `data/fapix-sandbox.sqlite`. The database itself records sandbox/live identity and refuses to reopen a sandbox wallet as a real one.
-
-For real payments:
-
-| Variable | Meaning |
-| --- | --- |
-| PAYMENT_MODE | arco |
-| PUBLIC_URL | This project's public HTTPS origin, no path/query |
-| ARCO_PAY_SHOP_ID | This project's merchant shop ID |
-| ARCO_PAY_API_KEY | This project's API key |
-| ARCO_PAY_BEARER_TOKEN | This project's bearer token |
-| ARCO_PAY_PUBLIC_KEY | Provider callback public key, PEM; escaped newlines accepted |
-| ARCO_PAY_API_URL | Optional; default current merchant API above |
-| ARCO_PAY_PAYMENT_ORIGIN | Optional; default current hosted origin above |
-| DATABASE_PATH | Optional persistent SQLite file; live default data/fapix.sqlite |
-| NODE_ENV | production for HTTPS deployment and secure cookies |
-| HOST / PORT | Bind settings; default 127.0.0.1:3001 |
-
-The process loads an optional local `.env` via Node's built-in loader. `.env.example` contains no credentials. In production use a persistent disk, a TLS reverse proxy and backups appropriate to the wallet database.
-
-## Remaining deployment and provider work
-
-1. Supply and verify this project's own merchant configuration, allowed CARD/IPS channels and public callback endpoint.
-2. Validate actual hosted CARD handoff, SBP QR registration, callback signature, successful settlement and exactly-once credit with the intended provider environment. Local mock tests do not establish these.
-3. If CREATE returns an ambiguous transport result before any OrderId is available, persist `review_reason=create_unconfirmed`. The API returns 202 with the existing local ID, `status=pending`, `requiresReview=true` and a user-facing explanation; retries and GET preserve this state. The API does not repeat CREATE. A signed callback followed by independent status verification can bind the provider ID, restore the existing checkout or settle the original payment. Without a callback it requires merchant-side investigation; no unsupported lookup-by-merchant endpoint is invented. A known order with temporarily unavailable checkout is marked `checkout_unavailable` and can recover without creating another provider order.
-4. Refund processing, chargeback handling, receipts/fiscal integration, account recovery and operational admin tooling are outside VV-136's specified API and are not implemented.
-5. SQLite is intended for one application instance on a persistent local filesystem. Multi-instance deployment requires a shared transactional database and coordinated reconciliation.
-
-## Verification performed
-
-Vitest covers authoritative versus intermediate provider states, invalid shops/currency/IDs/amounts, tampered signatures, QR flow ordering, disabled configuration, account/session isolation, duplicate credit, concurrent idempotency, insufficient balance, duplicate ownership, equip authorization, private history, payment resume, persistence after restart and sandbox/live database separation. Full suite and TypeScript check passed after implementation. No production API request or bank charge was attempted.
+Провайдер в автоматических тестах заменён контролируемым ответом. Реальные банковское списание, доставка успешного callback и итоговое зачисление пока не выполнены; для этого требуется одна оплата пользователем. Ни тестовая подпись, ни открытая форма не являются доказательством settlement. Возвраты/чарджбэки, фискализация и административный кабинет не добавлялись.

@@ -56,6 +56,8 @@ export class Store {
     const topupColumns = this.db.prepare('PRAGMA table_info(topups)').all() as { name: string }[];
     if (!topupColumns.some((c) => c.name === 'review_reason'))
       this.db.exec('ALTER TABLE topups ADD COLUMN review_reason TEXT');
+    if (!topupColumns.some((c) => c.name === 'last_checked_at'))
+      this.db.exec("ALTER TABLE topups ADD COLUMN last_checked_at TEXT NOT NULL DEFAULT ''");
     const previous = this.db.prepare('SELECT value FROM settings WHERE key=?').get('economy') as
       { value: string } | undefined;
     if (
@@ -229,9 +231,14 @@ export class Store {
   pendingTopups(): TopupRow[] {
     return this.db
       .prepare(
-        "SELECT * FROM topups WHERE mode='arco' AND status!='success' AND provider_id IS NOT NULL ORDER BY updated_at ASC LIMIT 50",
+        "SELECT * FROM topups WHERE mode='arco' AND status!='success' AND provider_id IS NOT NULL ORDER BY last_checked_at ASC, updated_at ASC, id ASC LIMIT 50",
       )
       .all() as TopupRow[];
+  }
+  markTopupChecked(id: string) {
+    this.db
+      .prepare('UPDATE topups SET last_checked_at=? WHERE id=?')
+      .run(new Date().toISOString(), id);
   }
   purchase(userId: string, productId: string, key: string): User {
     const product = productById.get(productId);

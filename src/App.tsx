@@ -34,6 +34,7 @@ import { api, money, type Product, type User, type PaymentMode } from './lib/api
 import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
 import { Wallet, savedPaymentId } from './components/Wallet';
+import type { PaymentMethod, SessionResponse } from './shared/types';
 import { Modal } from './components/Modal';
 import { Catalog, categoryNames, ProductArt } from './components/Catalog';
 import { CarStats, getStatMax } from './components/CarStats';
@@ -98,6 +99,7 @@ export default function App() {
     [authRegister, setAuthRegister] = useState(false),
     [user, setUser] = useState<User | null>(null),
     [paymentMode, setPaymentMode] = useState<PaymentMode>('disabled'),
+    [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]),
     [loadError, setLoadError] = useState(''),
     [loaded, setLoaded] = useState(false),
     [auth, setAuth] = useState<string | null>(null),
@@ -161,12 +163,13 @@ export default function App() {
     try {
       const [c, s] = await Promise.all([
         api<{ products: Product[]; popularIds: string[] }>('/catalog'),
-        api<{ user: User | null; paymentMode: PaymentMode }>('/session'),
+        api<SessionResponse>('/session'),
       ]);
       setProducts(c.products);
       setPopularIds(c.popularIds);
       setUser(s.user);
       setPaymentMode(s.paymentMode);
+      setPaymentMethods(s.paymentMethods ?? []);
       setLoaded(true);
     } catch (e) {
       setLoadError((e as Error).message);
@@ -853,6 +856,7 @@ export default function App() {
         <Wallet
           user={user}
           mode={paymentMode}
+          methods={paymentMethods}
           initialRub={wallet.rub}
           initialPaymentId={wallet.paymentId}
           productName={wallet.productName}

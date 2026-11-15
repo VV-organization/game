@@ -242,11 +242,14 @@ export function createApplication(options: ApplicationOptions = {}) {
       );
     next();
   });
-  app.get('/api/health', (_req, res) => res.json({ status: 'ok', paymentMode: gateway.mode }));
+  const paymentMethods = gateway.mode === 'arco' ? (gateway.methods ?? ['card', 'sbp']) : [];
+  app.get('/api/health', (_req, res) =>
+    res.json({ status: 'ok', paymentMode: gateway.mode, paymentMethods }),
+  );
   app.get('/api/catalog', (_req, res) => res.json({ products, categories, popularIds }));
   app.get('/api/session', (req, res) => {
     visitor(req, res);
-    res.json({ user: getUser(req), paymentMode: gateway.mode });
+    res.json({ user: getUser(req), paymentMode: gateway.mode, paymentMethods });
   });
   app.post('/api/auth/register', async (req, res) => {
     const login = loginValue(req.body?.login),
@@ -299,6 +302,12 @@ export function createApplication(options: ApplicationOptions = {}) {
       method = req.body?.method;
     if (method !== 'card' && method !== 'sbp')
       throw new ApiError(400, 'INVALID_METHOD', 'Выберите карту или СБП');
+    if (!paymentMethods.includes(method))
+      throw new ApiError(
+        503,
+        'PAYMENT_METHOD_DISABLED',
+        'Этот способ оплаты временно недоступен. Выберите другой',
+      );
     const account = store.accountByLogin(login);
     if (!account)
       throw new ApiError(404, 'ACCOUNT_NOT_FOUND', 'Аккаунт не найден. Зарегистрируйтесь');
@@ -378,6 +387,8 @@ export function createApplication(options: ApplicationOptions = {}) {
     reconciling = true;
     try {
       for (const row of store.pendingTopups()) {
+        // Persist attempts, including failures, so one old batch cannot starve later payments.
+        store.markTopupChecked(row.id);
         try {
           await reconcile(row);
         } catch {

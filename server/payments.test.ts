@@ -28,6 +28,26 @@ const json = (data: unknown) =>
   new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } });
 afterEach(() => vi.unstubAllGlobals());
 describe('provider boundary', () => {
+  it('disables new SBP when only card is enabled but still verifies existing IPS payments', async () => {
+    const fetcher = vi.fn().mockResolvedValue(json(order('IPS_ACCEPTED', { PaymentType: 'IPS' })));
+    vi.stubGlobal('fetch', fetcher);
+    const gateway = createPaymentGateway({ ...env, ARCO_PAY_METHODS: 'card' });
+    expect(gateway.methods).toEqual(['card']);
+    await expect(
+      gateway.create({ id: 'new-sbp', login: 'alice', rub: 10, method: 'sbp' }),
+    ).rejects.toThrow();
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(await gateway.status('provider-order-1')).toMatchObject({
+      status: 'success',
+      method: 'sbp',
+    });
+  });
+  it.each(['', 'bitcoin', 'card,something'])(
+    'fails closed for invalid configured methods %s',
+    (methods) => {
+      expect(createPaymentGateway({ ...env, ARCO_PAY_METHODS: methods }).mode).toBe('disabled');
+    },
+  );
   it('is disabled without complete Arco configuration, including the removed sandbox mode', async () => {
     expect(createPaymentGateway({}).mode).toBe('disabled');
     expect(createPaymentGateway({ PAYMENT_MODE: 'arco' }).mode).toBe('disabled');
@@ -45,7 +65,7 @@ describe('provider boundary', () => {
       rub: 311,
       method: 'card',
     });
-    expect(result.checkoutUrl).toBe('https://payment.paidlayer.com/provider-order-1');
+    expect(result.checkoutUrl).toBe('https://payment.clickit.team/provider-order-1');
     const [url, options] = fetcher.mock.calls[0];
     expect(url).toBe('https://api.clickit.team/api/v1/payments/create');
     expect(JSON.parse(options.body)).toMatchObject({

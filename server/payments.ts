@@ -20,6 +20,7 @@ export interface PaymentObservation {
 }
 export interface PaymentGateway {
   mode: PaymentMode;
+  methods?: PaymentMethod[];
   configurationId: string;
   create(request: PaymentRequest): Promise<ProviderPayment>;
   status(providerId: string): Promise<PaymentObservation>;
@@ -59,6 +60,7 @@ function secureUrl(value: string, originOnly = false) {
 }
 const inactive = (): PaymentGateway => ({
   mode: 'disabled',
+  methods: [],
   configurationId: 'disabled',
   async create() {
     throw new ProviderError(false);
@@ -72,6 +74,11 @@ export function createPaymentGateway(
   env: Record<string, string | undefined> = process.env,
 ): PaymentGateway {
   if (env.PAYMENT_MODE !== 'arco') return inactive();
+  const configuredMethods = (env.ARCO_PAY_METHODS ?? 'card,sbp')
+    .split(',')
+    .map((method) => method.trim());
+  if (configuredMethods.some((method) => method !== 'card' && method !== 'sbp')) return inactive();
+  const methods = [...new Set(configuredMethods)] as PaymentMethod[];
   const apiKey = env.ARCO_PAY_API_KEY?.trim(),
     token = env.ARCO_PAY_BEARER_TOKEN?.trim(),
     shop = env.ARCO_PAY_SHOP_ID?.trim(),
@@ -94,7 +101,7 @@ export function createPaymentGateway(
       '',
     );
     if (new URL(api).search) throw new Error();
-    hosted = secureUrl(env.ARCO_PAY_PAYMENT_ORIGIN ?? 'https://payment.paidlayer.com', true);
+    hosted = secureUrl(env.ARCO_PAY_PAYMENT_ORIGIN ?? 'https://payment.clickit.team', true);
     origin = secureUrl(env.PUBLIC_URL, true);
     createPublicKey(publicKey);
   } catch {
@@ -206,10 +213,12 @@ export function createPaymentGateway(
   }
   return {
     mode: 'arco',
+    methods,
     configurationId,
     checkout,
     async create(input) {
       if (
+        !methods.includes(input.method) ||
         !Number.isSafeInteger(input.rub) ||
         input.rub < 1 ||
         input.rub > 100000 ||

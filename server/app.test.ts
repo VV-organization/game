@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
+import { generateKeyPairSync, sign } from 'node:crypto';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -162,6 +163,140 @@ describe('accounts and authorization', () => {
   });
 });
 describe('money and ownership', () => {
+  it('credits once across signed Clickit callbacks, polling and reconciliation using authoritative status', async () => {
+    const keys = generateKeyPairSync('rsa', { modulusLength: 2048 });
+    const gateway = createPaymentGateway({
+      PAYMENT_MODE: 'arco',
+      ARCO_PAY_METHODS: 'card',
+      PUBLIC_URL: 'https://racing.example',
+      ARCO_PAY_API_KEY: 'test-key',
+      ARCO_PAY_BEARER_TOKEN: 'test-token',
+      ARCO_PAY_SHOP_ID: '999',
+      ARCO_PAY_PUBLIC_KEY: keys.publicKey.export({ type: 'spki', format: 'pem' }).toString(),
+    });
+    await replaceGateway(gateway);
+    await register();
+    let merchantId = '',
+      status = 'CREATED';
+    const response = (state: string) => ({
+      Response: { Success: true },
+      Order: {
+        OrderId: 'clickit-order',
+        MerchantOrderId: merchantId,
+        ShopId: 999,
+        Amount: 1000,
+        Currency: 'RUB',
+        Status: state,
+        PaymentType: 'CARD',
+      },
+    });
+    const nativeFetch = globalThis.fetch;
+    const spy = vi.spyOn(globalThis, 'fetch').mockImplementation(async (url, init) => {
+      if (!String(url).startsWith('https://api.clickit.team/')) return nativeFetch(url, init);
+      if (String(url).endsWith('/create'))
+        merchantId = JSON.parse(String(init?.body)).MerchantOrderId;
+      return new Response(JSON.stringify(response(status)), {
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    try {
+      const created = await request('/api/topups', {
+        login: 'alice',
+        rub: 10,
+        method: 'card',
+        idempotencyKey: 'signed-callback-test',
+      });
+      expect(created.status).toBe(201);
+      const raw = JSON.stringify(response('CHARGED'));
+      const signature = sign('RSA-SHA1', Buffer.from(raw), keys.privateKey).toString('base64');
+      const callback = (body = raw) =>
+        nativeFetch(base + '/api/payments/arco/callback', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'Payment-Sign': signature },
+          body,
+        });
+      expect((await callback('{}')).status).toBe(401);
+      expect((await callback()).status).toBe(200);
+      expect((await request('/api/session')).body.user.balance).toBe(0);
+      status = 'CHARGED';
+      const replies = await Promise.all([
+        callback(),
+        callback(),
+        request(`/api/topups/${merchantId}`),
+        application.reconcilePending(),
+      ]);
+      expect((replies[0] as Response).status).toBe(200);
+      expect((replies[1] as Response).status).toBe(200);
+      expect((await request('/api/session')).body.user.balance).toBe(20);
+      expect(application.store.db.prepare('SELECT amount,reference FROM ledger').all()).toEqual([
+        { amount: 20, reference: `topup:${merchantId}` },
+      ]);
+      expect((await request('/api/history')).body.topups[0]).toMatchObject({
+        status: 'success',
+        rub: 10,
+        fapix: 20,
+      });
+    } finally {
+      spy.mockRestore();
+    }
+  });
+  it('checks a newer payment even when 50 older status requests keep failing', async () => {
+    let payableId = '';
+    await replaceGateway({
+      ...testGateway(),
+      status: async (id) => {
+        if (id !== payableId) throw new ProviderError();
+        return { status: 'success', rub: 10, method: 'card', merchantOrderId: id };
+      },
+    });
+    const user = application.store.register('queue_test', 'not-a-real-login-hash');
+    for (let index = 0; index < 51; index++) {
+      const { row } = application.store.createTopup({
+        userId: user.id,
+        creatorHash: 'queue-test',
+        key: `queue-${index}`,
+        rub: 10,
+        method: 'card',
+        mode: 'arco',
+        configurationId: 'test-shop',
+      });
+      application.store.attachProvider(row.id, row.id, 'https://payment.clickit.team/' + row.id);
+      application.store.db
+        .prepare('UPDATE topups SET updated_at=? WHERE id=?')
+        .run(`2026-01-01T00:00:${String(index).padStart(2, '0')}.000Z`, row.id);
+      if (index === 50) payableId = row.id;
+    }
+    await application.reconcilePending();
+    await application.reconcilePending();
+    expect(application.store.user(user.id).balance).toBe(20);
+    expect(application.store.topup(payableId)?.status).toBe('success');
+    expect(application.store.db.prepare('SELECT COUNT(*) AS n FROM ledger').get()).toMatchObject({
+      n: 1,
+    });
+  });
+  it('publishes enabled methods and rejects unavailable SBP before creating a payment', async () => {
+    await replaceGateway({ ...testGateway(), methods: ['card'] });
+    await register();
+    expect((await request('/api/session')).body.paymentMethods).toEqual(['card']);
+    const rejected = await request('/api/topups', {
+      login: 'alice',
+      rub: 10,
+      method: 'sbp',
+      idempotencyKey: 'disabled-sbp-request',
+    });
+    expect(rejected.status).toBe(503);
+    expect(rejected.body.error).toBe('PAYMENT_METHOD_DISABLED');
+    expect(application.store.db.prepare('SELECT COUNT(*) AS n FROM topups').get()).toMatchObject({
+      n: 0,
+    });
+    const accepted = await request('/api/topups', {
+      login: 'alice',
+      rub: 10,
+      method: 'card',
+      idempotencyKey: 'allowed-card-request',
+    });
+    expect(accepted.status).toBe(201);
+  });
   it('returns immutable payment details for a safe resume after navigation', async () => {
     await register();
     const created = await request('/api/topups', {
@@ -511,7 +646,11 @@ describe('verified payment settlement', () => {
   });
   it('validates provider account, amount and method before one durable credit', async () => {
     let merchant = '',
-      observed = { status: 'pending' as 'pending' | 'success', rub: 311, method: 'card' as const };
+      observed = {
+        status: 'pending' as 'pending' | 'success',
+        rub: 311,
+        method: 'card' as 'card' | 'sbp',
+      };
     const gateway: PaymentGateway = {
       mode: 'arco',
       configurationId: 'test-shop',
@@ -540,6 +679,13 @@ describe('verified payment settlement', () => {
     merchant = 'foreign-merchant';
     expect((await request(`/api/topups/${id}`)).status).toBe(502);
     merchant = id;
+    observed.method = 'sbp';
+    expect((await request(`/api/topups/${id}`)).status).toBe(502);
+    expect((await request('/api/session')).body.user.balance).toBe(0);
+    expect(application.store.db.prepare('SELECT COUNT(*) AS n FROM ledger').get()).toMatchObject({
+      n: 0,
+    });
+    observed.method = 'card';
     expect((await request(`/api/topups/${id}`)).body.user.balance).toBe(622);
     expect((await request(`/api/topups/${id}`)).body.user.balance).toBe(622);
     expect((await request('/api/history')).body.topups).toHaveLength(1);

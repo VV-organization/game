@@ -58,4 +58,5 @@ export interface CatalogResponse {
 export interface SessionResponse {
   user: User | null;
   paymentMode: PaymentMode;
+  paymentMethods: PaymentMethod[];
 }
