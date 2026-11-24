@@ -1358,17 +1358,6 @@
   }
 }
 
-.race-standing .race-ai-badge {
-  display: inline-block;
-  margin-right: 4px;
-  padding: 1px 3px;
-  border: 1px solid #ffffff55;
-  border-radius: 3px;
-  color: #e1e9e7;
-  font-size: 7px;
-  font-style: normal;
-  line-height: 1.2;
-}
 .race-standing > small {
   flex-shrink: 0;
   white-space: nowrap;

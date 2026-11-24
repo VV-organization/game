@@ -245,6 +245,14 @@ describe('race controls', () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
+  it('lists practice standings with names and the local driver marker', () => {
+    render(<Race trackId="coast" onExit={() => {}} onFinish={() => {}} />);
+    const race = vi.mocked(createRace).mock.results.at(-1)!.value;
+    const standings = document.querySelector('.race-standings')!;
+    expect(standings.textContent).toContain(race.cars[1].name);
+    expect(standings.textContent).not.toMatch(/БОТ|\bAI\b/u);
+    expect(standings.querySelector('.is-you small')?.textContent).toBe('ТЫ');
+  });
   it('starts the audio session from a mobile driving gesture', () => {
     let sessions = 0;
     vi.stubGlobal(
@@ -405,7 +413,7 @@ describe('authoritative online race', () => {
     expect(createKart).toHaveBeenCalledTimes(6);
     expect(createKart).toHaveBeenNthCalledWith(1, online.roster[0].customization, 1);
     expect(createKart).toHaveBeenNthCalledWith(2, online.roster[1].customization, 2);
-    expect(screen.getAllByText('AI')).toHaveLength(4);
+    expect(screen.queryByText('AI')).toBeNull();
   });
   it('sends reset commands and never changes authoritative cars', () => {
     const online = runtime();
@@ -439,7 +447,7 @@ describe('authoritative online race', () => {
       `3. ${online.roster[0].name}`,
     ]);
     expect(rows[0].textContent).toContain('ТЫ');
-    expect(rows[1].textContent).toContain('AI');
+    expect(rows[1].querySelector('small')).toBeNull();
     expect(rows[1].textContent).toContain('DNF');
     expect(results.map((entry) => entry.carId)).toEqual([0, 1, 2]);
   });

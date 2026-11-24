@@ -607,8 +607,8 @@ export function Landing({
               <h3>{t('Pick your playground.', 'Выбирай свой мир.')}</h3>
               <p>
                 {t(
-                  'Find a circuit you love. Learn the corners, chase the perfect line and challenge the AI drivers.',
-                  'Найди любимую трассу. Изучай повороты, лови идеальную траекторию и обгоняй соперников-ботов.',
+                  'Find a circuit you love. Learn the corners and find your line through each turn.',
+                  'Найди любимую трассу. Изучай повороты и выбирай момент для обгона.',
                 )}
               </p>
             </li>

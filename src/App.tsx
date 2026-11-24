@@ -631,7 +631,7 @@ export default function App() {
                           {raceMode === 'online'
                             ? 'До 6 гонщиков'
                             : raceFormat.opponents
-                              ? 'Ты и 5 ботов'
+                              ? `Соперников: ${raceFormat.opponents}`
                               : 'Только ты'}
                         </span>
                         <span>
@@ -652,7 +652,7 @@ export default function App() {
                               )
                             }
                           />
-                          <small>Подбор до 30 с · свободные места займёт AI</small>
+                          <small>Подбор до 30 с</small>
                         </div>
                       )}
                       <button

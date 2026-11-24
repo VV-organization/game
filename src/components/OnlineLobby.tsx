@@ -52,8 +52,6 @@ export function OnlineLobby({
   const track = tracks[room?.trackId || 'coast'];
   const invite = room ? `${location.origin}/play?room=${encodeURIComponent(room.roomId)}` : '';
   const failed = state.connection === 'error' || state.connection === 'closed';
-  const connected =
-    room?.roster.filter((driver) => driver.kind === 'human' && driver.connected).length || 0;
   async function copyInvite() {
     try {
       await navigator.clipboard.writeText(invite);
@@ -124,7 +122,7 @@ export function OnlineLobby({
                 />
               </div>
               <p className="online-rule">
-                Полная решётка стартует сразу. Через 30 секунд свободные места займёт AI.
+                Подбор длится до 30 секунд. Если все места заняты, заезд начнётся раньше.
               </p>
             </div>
           </section>
@@ -133,16 +131,17 @@ export function OnlineLobby({
               <h2>На старте</h2>
               <span>
                 <Users size={16} />
-                {connected} / {ONLINE_CAPACITY}
+                {room?.roster.length ?? 0} / {ONLINE_CAPACITY}
               </span>
             </div>
             <div className="online-seats">
               {Array.from({ length: ONLINE_CAPACITY }, (_, id) => {
                 const driver = room?.roster.find((entry) => entry.id === id);
+                const reconnecting = driver?.kind === 'human' && !driver.connected;
                 return (
                   <div
                     key={id}
-                    className={`online-seat ${driver ? 'is-filled' : ''} ${driver?.id === room?.localCarId ? 'is-you' : ''}`}
+                    className={`online-seat ${driver ? 'is-filled' : ''} ${driver && driver.id === room?.localCarId ? 'is-you' : ''}`}
                   >
                     <span className="online-seat-number">0{id + 1}</span>
                     <div className="online-seat-avatar">
@@ -155,12 +154,16 @@ export function OnlineLobby({
                     <div>
                       <b>{driver?.name || 'Ищем гонщика'}</b>
                       <small>
-                        {driver
-                          ? `${driver.kind === 'bot' ? 'AI' : driver.id === room?.localCarId ? 'ТЫ' : 'ИГРОК'}${driver.connected ? ' · На связи' : ' · Переподключается'}`
-                          : 'Свободное место'}
+                        {!driver
+                          ? 'Свободное место'
+                          : reconnecting
+                            ? 'Переподключается'
+                            : driver.id === room?.localCarId
+                              ? 'ТЫ'
+                              : 'На старте'}
                       </small>
                     </div>
-                    {driver?.connected && <Check className="online-ready" size={16} />}
+                    {driver && !reconnecting && <Check className="online-ready" size={16} />}
                   </div>
                 );
               })}

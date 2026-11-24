@@ -663,9 +663,6 @@ export function Race({
                 <i style={{ background: car.color }} />
                 <b>{car.name}</b>
                 <small>
-                  {online?.roster.find((entry) => entry.id === car.id)?.kind === 'bot' && (
-                    <em className="race-ai-badge">AI</em>
-                  )}
                   {car.eliminatedAt !== null
                     ? 'ВЫБЫЛ'
                     : car.didNotFinish
@@ -674,9 +671,7 @@ export function Race({
                         ? 'ТЫ'
                         : car.finishTime
                           ? 'ФИН'
-                          : online
-                            ? ''
-                            : 'БОТ'}
+                          : ''}
                 </small>
               </div>
             ))}
@@ -947,7 +942,6 @@ export function Race({
                           {entry.position}. {driver?.name ?? `Гонщик ${carId + 1}`}
                         </span>
                         {carId === localCarId && <small>ТЫ</small>}
-                        {driver?.kind === 'bot' && <small>AI</small>}
                         <b>
                           {entry.didNotFinish
                             ? 'DNF'

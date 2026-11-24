@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 import type { OnlineClientView } from '../game/online-client';
@@ -45,6 +45,22 @@ it('shows real roster, remaining slots and the server deadline despite a differe
     '/play?room=ABC123',
   );
   expect(document.body.textContent).not.toContain('private');
+});
+it('shows grid positions and reserves the reconnecting status for interrupted connections', () => {
+  const state = queued();
+  state.room!.roster[0].connected = false;
+  state.room!.roster.push({
+    id: 2,
+    name: 'NOVA',
+    kind: 'bot',
+    connected: false,
+    customization: {},
+  });
+  render(<OnlineLobby state={state} onCancel={vi.fn()} onRetry={vi.fn()} onFindOther={vi.fn()} />);
+  expect(screen.getByText('Переподключается').parentElement?.textContent).toContain('racer_one');
+  expect(within(screen.getByText('NOVA').parentElement!).getByText('На старте')).toBeTruthy();
+  expect(screen.getByText('ТЫ').parentElement?.textContent).toContain('turbo_anton');
+  expect(document.body.textContent).not.toMatch(/\bAI\b|бот(?:ов|ами|ы)?/iu);
 });
 it('lets a player cancel or retry an unavailable server without pretending a race started', async () => {
   const cancel = vi.fn(),
