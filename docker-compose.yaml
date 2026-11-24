@@ -9,6 +9,7 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 3001
+      FRONTEND_ASSET_ARCHIVE: /app/data/frontend-assets
     ports:
       - '127.0.0.1:3001:3001'
     volumes:

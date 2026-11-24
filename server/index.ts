@@ -14,7 +14,7 @@ mkdirSync(dirname(dbPath), { recursive: true });
 const application = createApplication({ dbPath });
 const distribution = resolve(root, 'dist');
 if (existsSync(distribution)) {
-  mountFrontend(application.app, distribution);
+  mountFrontend(application.app, distribution, process.env.FRONTEND_ASSET_ARCHIVE);
 }
 const server = createServer(application.app);
 const online = attachOnlineServer(server, {

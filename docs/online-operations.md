@@ -9,6 +9,7 @@ Push в `main` запускает `.github/workflows/deploy.yaml`: checkout, к�
 - Runner `game-stage` работает отдельным пользователем `game-runner` как systemd service `actions.runner.VV-organization-game.game-stage.service`.
 - Постоянное окружение: `/home/game-runner/.envs/game/.env`, права `600`. Оно не хранится в git и не попадает в Docker build context.
 - Compose project `game`, service `api`; Node 24 запускает API, frontend и WebSocket одним процессом от пользователя `node`.
+- При старте контейнер сохраняет статические файлы текущей веб-сборки в `/app/data/frontend-assets`. Сервер также раздаёт файлы трёх предыдущих сборок для вкладок, открытых до обновления.
 - Caddy завершает HTTPS и направляет запросы на `127.0.0.1:3001`. В контейнере приложение слушает `0.0.0.0:3001`.
 - SQLite хранится на хосте в `/opt/game/volumes/api/fapix.sqlite`; пересборка и замена контейнера не удаляют базу. Локальная тестовая база на сервер не переносилась.
 - Платёжное окружение настраивается отдельно: `PAYMENT_MODE=arco`, `ARCO_PAY_METHODS=card` для Clickit. Доступные методы возвращают `/api/health` и `/api/session`. Подробнее — [проверка интеграции](research/payment-integration.md).

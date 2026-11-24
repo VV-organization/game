@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import express from 'express';
 import { createServer, type Server } from 'node:http';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,11 +15,18 @@ const page = '<!doctype html><html><body><div id="root">FApix Racing</div></body
 
 beforeEach(async () => {
   directory = mkdtempSync(join(tmpdir(), 'fapix-static-'));
-  mkdirSync(join(directory, 'assets'));
-  writeFileSync(join(directory, 'index.html'), page);
-  writeFileSync(join(directory, 'assets', 'index-AbCd1234.css'), 'body { color: orange; }');
+  const build = join(directory, 'dist');
+  mkdirSync(join(build, 'assets'), { recursive: true });
+  writeFileSync(join(build, 'assets', 'index-AbCd1234.css'), 'body { color: orange; }');
+  const archive = join(directory, 'asset-cache');
+  writeFileSync(join(build, 'assets', 'Race-OldHash12.js'), 'export default 123');
+  writeFileSync(join(build, 'index.html'), page.replace('FApix Racing', 'Previous release'));
+  mountFrontend(express(), build, archive);
+  rmSync(join(build, 'assets', 'Race-OldHash12.js'));
+  writeFileSync(join(build, 'assets', 'Race-NewHash2.js'), 'export default 456');
+  writeFileSync(join(build, 'index.html'), page);
   application = createApplication({ dbPath: ':memory:', env: {} });
-  mountFrontend(application.app, directory);
+  mountFrontend(application.app, build, archive);
   server = createServer(application.app);
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
   const address = server.address();
@@ -38,6 +46,16 @@ describe('production frontend serving', () => {
     expect(response.headers.get('content-type')).toContain('text/css');
     expect(response.headers.get('cache-control')).toBe('public, max-age=31536000, immutable');
     expect(await response.text()).toBe('body { color: orange; }');
+  });
+
+  it('serves the lazy race module requested by a tab opened on the previous release', async () => {
+    const response = await fetch(base + '/assets/Race-OldHash12.js');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('javascript');
+    expect(response.headers.get('cache-control')).toBe('public, max-age=31536000, immutable');
+    expect(await response.text()).toBe('export default 123');
+    const current = await fetch(base + '/assets/Race-NewHash2.js');
+    expect(await current.text()).toBe('export default 456');
   });
 
   it('returns a real 404 for stale assets and preserves JSON API 404s', async () => {
