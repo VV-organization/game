@@ -18,6 +18,7 @@ import {
   Zap,
 } from 'lucide-react';
 import * as THREE from 'three';
+import { cupTime } from '../shared/weekly-cup';
 import { createKart, disposeScene } from './kart';
 import { updateUnderglow } from './underglow';
 import { createTrailEffect } from './trail-effects';
@@ -43,6 +44,7 @@ import './Race.css';
 
 export type { RaceResult } from '../shared/race-formats';
 export type RaceProps = {
+  cup?: boolean;
   localLogin?: string;
   trackId: string;
   formatId?: RaceFormatId;
@@ -81,6 +83,7 @@ function PowerIcon({ power, size = 24 }: { power: Power | null; size?: number })
 }
 
 export function Race({
+  cup,
   localLogin,
   trackId,
   formatId = 'classic',
@@ -899,6 +902,21 @@ export function Race({
                       ? 'Каждый поворот был твоим. Отличный заезд!'
                       : 'Ещё один заезд? Следующая победа может быть твоей.'}
             </p>
+            {cup && result && !result.didNotFinish && !result.cup && (
+              <p role="status">Сохраняем результат кубка…</p>
+            )}
+            {cup && result?.cup && (
+              <p className="cup-finish">
+                <strong>
+                  Кубок недели · {result.cup.place} место
+                  {result.cup.gained > 0 && ` ↑${result.cup.gained}`}
+                </strong>
+                <br />
+                Личный рекорд {cupTime(result.cup.bestMs)}
+                {result.cup.gapMs !== null &&
+                  ` · До позиции выше ${(result.cup.gapMs / 1000).toFixed(3)} с`}
+              </p>
+            )}
             <div className="race-results-stats">
               <div>
                 <span>ФОРМАТ</span>
@@ -959,7 +977,7 @@ export function Race({
             )}
             <button className="race-primary" onClick={restartRace}>
               <Flag size={18} />
-              ЕЩЁ ОДИН ЗАЕЗД
+              {cup ? 'УЛУЧШИТЬ ВРЕМЯ' : 'ЕЩЁ ОДИН ЗАЕЗД'}
             </button>
             <button className="race-secondary" onClick={onExit}>
               <Home size={17} />В паддок

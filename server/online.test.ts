@@ -16,11 +16,14 @@ afterEach(async () => {
   vi.restoreAllMocks();
   for (const dispose of disposals.splice(0)) await dispose();
 });
-async function setup() {
+async function setup(
+  recordCupFinish?: Parameters<typeof attachOnlineServer>[1]['recordCupFinish'],
+) {
   let time = 100000;
   const http = createServer();
   const online = attachOnlineServer(http, {
     autoTick: false,
+    recordCupFinish,
     now: () => time,
     allowedOrigins: ['http://game.test'],
     resolveIdentity: (cookie) =>
@@ -261,6 +264,52 @@ describe('authoritative online transport', () => {
     expect(state.state.track).toBeUndefined();
     expect(JSON.stringify(state)).not.toContain('actorId');
     expect(state.state.cars[1].driverKind).toBe('human');
+  });
+  it('records a driven weekly sprint in the standings and keeps ordinary races separate', async () => {
+    const app = createApplication({ env: {} });
+    try {
+      app.store.register('cup_pilot', 'unused', 'cup@example.test');
+      const record = vi.fn(app.weeklyCup.record.bind(app.weeklyCup));
+      const h = await setup(record);
+      const pilot = await h.connect('cup_pilot');
+      const regular = await h.connect('regular');
+      await pilot.send({ ...join, cup: true });
+      const room = latest(pilot.messages, 'room');
+      expect(room).toMatchObject({ cup: true, formatId: 'sprint' });
+      await regular.send({ ...join, trackId: room.trackId, formatId: 'sprint' });
+      expect(latest(regular.messages, 'room').roomId).not.toBe(room.roomId);
+      await h.advance(30000);
+      const track = simulation.createTrack(room.trackId);
+      expect(latest(pilot.messages, 'snapshot').state.cars[0].tuning.maxSpeed).toBe(44);
+      for (let seq = 0; seq < 1000; seq++) {
+        const state = latest(pilot.messages, 'snapshot');
+        if (state.results) break;
+        const car = state.state.cars[0];
+        const road = simulation.projectTrack(track, car.x, car.z);
+        const target = simulation.sampleTrack(
+          track,
+          road.t + (10 + car.speed * 0.2) / track.length,
+        );
+        const angle = Math.atan2(target.x - car.x, target.z - car.z);
+        await pilot.send({
+          type: 'input',
+          seq,
+          controls: {
+            ...controls,
+            steer: Math.max(-1, Math.min(1, simulation.angleDifference(angle, car.heading) * 2.4)),
+          },
+        });
+        await h.advance(100);
+      }
+      const result = latest(pilot.messages, 'snapshot').results[0].result;
+      expect(result.didNotFinish).not.toBe(true);
+      expect(record).toHaveBeenCalledOnce();
+      const row = app.weeklyCup.board(h.time()).rows.find((r) => r.nickname === 'cup_pilot')!;
+      expect(row.finishMs).toBe(Math.round(result.time * 1000));
+      expect(result.cup).toMatchObject({ place: row.place, bestMs: row.finishMs });
+    } finally {
+      app.close();
+    }
   });
   it('starts six clients early and moves their stable human slots independently', async () => {
     const h = await setup();

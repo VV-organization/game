@@ -13,6 +13,7 @@ COPY --from=build /app/package.json /app/tsconfig.json ./
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/server ./server
 COPY --from=build /app/src ./src
+COPY --from=build /app/docs/research/weekly-cup-benchmarks.json ./docs/research/weekly-cup-benchmarks.json
 COPY --from=build /app/docs/research/prices.json ./docs/research/prices.json
 USER node
 EXPOSE 3001

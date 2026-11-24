@@ -31,6 +31,7 @@ import { OnlineSession } from './components/OnlineSession';
 import { OnlineClient, loadSavedOnlineSession } from './game/online-client';
 import { isOnlineFormat, type OnlineJoin, type OnlineTrackId } from './shared/online-protocol';
 import { api, money, type Product, type User, type PaymentMode } from './lib/api';
+import { WeeklyCup } from './components/WeeklyCup';
 import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
 import { Wallet, savedPaymentId } from './components/Wallet';
@@ -120,6 +121,7 @@ export default function App() {
     [raceMode, setRaceMode] = useState<'online' | 'practice'>('online'),
     [roomCode, setRoomCode] = useState(''),
     [onlineClient, setOnlineClient] = useState<OnlineClient | null>(null),
+    [recordView, setRecordView] = useState<'cup' | 'history'>('cup'),
     [recordsFormat, setRecordsFormat] = useState<RaceFormatId | 'all'>('all'),
     [racing, setRacing] = useState(false),
     [busy, setBusy] = useState(''),
@@ -154,7 +156,7 @@ export default function App() {
   }
   function clearStartIntent() {
     const url = new URL(location.href);
-    for (const key of ['startMode', 'startTrack', 'startFormat', 'startRoom'])
+    for (const key of ['startMode', 'startTrack', 'startFormat', 'startRoom', 'startCup'])
       url.searchParams.delete(key);
     history.replaceState(history.state, '', url);
   }
@@ -233,6 +235,7 @@ export default function App() {
               trackId: pendingTrack.id as OnlineTrackId,
               formatId: pendingFormat.id,
               ...(room ? { roomId: room } : {}),
+              ...(query.get('startCup') === '1' ? { cup: true } : {}),
             }),
           );
       };
@@ -247,7 +250,7 @@ export default function App() {
         if (saved)
           setOnlineClient(
             new OnlineClient(
-              { formatId: saved.formatId, trackId: saved.trackId },
+              { formatId: saved.formatId, trackId: saved.trackId, cup: saved.cup },
               { resume: saved },
             ),
           );
@@ -380,6 +383,39 @@ export default function App() {
     };
     setOnlineClient(new OnlineClient(next));
   }
+  function showStandings() {
+    setRecordView('cup');
+    navigate('records');
+  }
+  async function enterCup(track: OnlineTrackId) {
+    const enter = () => {
+      setTrackId(track);
+      setFormatId('sprint');
+      setRaceMode('online');
+      setRoomCode('');
+      setPage('play');
+      history.replaceState({}, '', '/play');
+      startOnline({ cup: true, trackId: track, formatId: 'sprint' });
+    };
+    try {
+      const account = user ? (await api<SessionResponse>('/session')).user : null;
+      if (account?.emailVerified) {
+        setUser(account);
+        enter();
+        return;
+      }
+      setUser(null);
+      const url = new URL(location.href);
+      url.searchParams.set('startMode', 'online');
+      url.searchParams.set('startFormat', 'sprint');
+      url.searchParams.set('startTrack', track);
+      url.searchParams.set('startCup', '1');
+      history.replaceState(history.state, '', url);
+      openAuth(true, '', enter);
+    } catch (error) {
+      setToast((error as Error).message);
+    }
+  }
   async function startSelectedRace() {
     const enter = () => (raceMode === 'online' ? startOnline() : setRacing(true));
     try {
@@ -427,6 +463,11 @@ export default function App() {
     <>
       {page === 'home' || needsPlayAuth ? (
         <Landing
+          cup={
+            loaded
+              ? { login: user?.login, onEnter: enterCup, onStandings: showStandings }
+              : undefined
+          }
           signedIn={!!user}
           onGarage={() => navigate('garage')}
           popularIds={popularIds}
@@ -674,6 +715,7 @@ export default function App() {
                       <p className="fine-print">Прямо в браузере. Просто газуй.</p>
                     </section>
                   </div>
+                  <WeeklyCup login={user?.login} onEnter={enterCup} onStandings={showStandings} />
                   <div className="section-heading">
                     <h2>Найди свой любимый поворот.</h2>
                     <span>04 трассы · 04 настроения</span>
@@ -831,97 +873,117 @@ export default function App() {
                   <div className="page-heading">
                     <div>
                       <span className="eyebrow">КАЖДЫЙ ПОВОРОТ ИМЕЕТ ЗНАЧЕНИЕ</span>
-                      <h1>Твои заезды.</h1>
+                      <h1>Заезды.</h1>
                     </div>
                     <button className="primary" onClick={() => navigate('play')}>
                       На старт
                       <ArrowRight />
                     </button>
                   </div>
-                  <p className="muted">
-                    История тренировок на этом устройстве. За тренировки Fapix не начисляются.
-                  </p>
-                  <label className="records-filter">
-                    Формат в истории
-                    <select
-                      value={recordsFormat}
-                      onChange={(event) =>
-                        setRecordsFormat(
-                          event.target.value === 'all'
-                            ? 'all'
-                            : getRaceFormat(event.target.value).id,
-                        )
-                      }
+                  <div className="cup-views">
+                    <button
+                      aria-pressed={recordView === 'cup'}
+                      onClick={() => setRecordView('cup')}
                     >
-                      <option value="all">Все форматы</option>
-                      {RACE_FORMATS.map((format) => (
-                        <option key={format.id} value={format.id}>
-                          {format.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  {records.length ? (
-                    <div className="panel records">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Трасса</th>
-                            <th>Формат</th>
-                            <th>Результат</th>
-                            <th>Заезд</th>
-                            <th>Дата</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {visibleRecords.map((r, i) => (
-                            <tr key={i}>
-                              <td>
-                                {tracks.find((t) => t.id === r.trackId)?.name || r.trackId}
-                                {r.carVariant !== undefined && (
-                                  <small>{getCarDesign(r.carVariant).name}</small>
-                                )}
-                              </td>
-                              <td>
-                                {getRaceFormat(r.formatId).name}
-                                <small>{r.online ? 'Онлайн' : 'Тренировка'}</small>
-                              </td>
-                              <td>
-                                <b>{recordOutcome(r)}</b>
-                                {r.formatId === 'time-attack' && r.bestLap && (
-                                  <small>Лучший круг</small>
-                                )}
-                                {r.formatId === 'endurance' && r.distance !== undefined && (
-                                  <small>
-                                    {(r.distance / 1000).toLocaleString('ru-RU', {
-                                      maximumFractionDigits: 2,
-                                    })}{' '}
-                                    км · Круги: {r.completedLaps || 0}
-                                  </small>
-                                )}
-                              </td>
-                              <td>{recordTime(r.time)}</td>
-                              <td>{new Date(r.date).toLocaleDateString('ru-RU')}</td>
-                            </tr>
-                          ))}
-                          {!visibleRecords.length && (
-                            <tr>
-                              <td colSpan={5}>В этом формате пока нет заездов.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                      Кубок недели
+                    </button>
+                    <button
+                      aria-pressed={recordView === 'history'}
+                      onClick={() => setRecordView('history')}
+                    >
+                      Моя история
+                    </button>
+                  </div>
+                  {recordView === 'cup' ? (
+                    <WeeklyCup full login={user?.login} onEnter={enterCup} />
                   ) : (
-                    <div className="empty panel">
-                      <Trophy size={48} />
-                      <h2>Первая история ещё впереди.</h2>
-                      <p>Заверши заезд — здесь появится твой результат.</p>
-                      <button className="primary" onClick={() => navigate('play')}>
-                        Поехали
-                        <ArrowRight />
-                      </button>
-                    </div>
+                    <>
+                      <p className="muted">
+                        История заездов на этом устройстве. За тренировки Fapix не начисляются.
+                      </p>
+                      <label className="records-filter">
+                        Формат в истории
+                        <select
+                          value={recordsFormat}
+                          onChange={(event) =>
+                            setRecordsFormat(
+                              event.target.value === 'all'
+                                ? 'all'
+                                : getRaceFormat(event.target.value).id,
+                            )
+                          }
+                        >
+                          <option value="all">Все форматы</option>
+                          {RACE_FORMATS.map((format) => (
+                            <option key={format.id} value={format.id}>
+                              {format.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      {records.length ? (
+                        <div className="panel records">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Трасса</th>
+                                <th>Формат</th>
+                                <th>Результат</th>
+                                <th>Заезд</th>
+                                <th>Дата</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {visibleRecords.map((r, i) => (
+                                <tr key={i}>
+                                  <td>
+                                    {tracks.find((t) => t.id === r.trackId)?.name || r.trackId}
+                                    {r.carVariant !== undefined && (
+                                      <small>{getCarDesign(r.carVariant).name}</small>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {getRaceFormat(r.formatId).name}
+                                    <small>{r.online ? 'Онлайн' : 'Тренировка'}</small>
+                                  </td>
+                                  <td>
+                                    <b>{recordOutcome(r)}</b>
+                                    {r.formatId === 'time-attack' && r.bestLap && (
+                                      <small>Лучший круг</small>
+                                    )}
+                                    {r.formatId === 'endurance' && r.distance !== undefined && (
+                                      <small>
+                                        {(r.distance / 1000).toLocaleString('ru-RU', {
+                                          maximumFractionDigits: 2,
+                                        })}{' '}
+                                        км · Круги: {r.completedLaps || 0}
+                                      </small>
+                                    )}
+                                  </td>
+                                  <td>{recordTime(r.time)}</td>
+                                  <td>{new Date(r.date).toLocaleDateString('ru-RU')}</td>
+                                </tr>
+                              ))}
+                              {!visibleRecords.length && (
+                                <tr>
+                                  <td colSpan={5}>В этом формате пока нет заездов.</td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <div className="empty panel">
+                          <Trophy size={48} />
+                          <h2>Первая история ещё впереди.</h2>
+                          <p>Заверши заезд — здесь появится твой результат.</p>
+                          <button className="primary" onClick={() => navigate('play')}>
+                            Поехали
+                            <ArrowRight />
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </>
               )}

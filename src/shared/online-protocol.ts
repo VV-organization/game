@@ -19,7 +19,12 @@ export type OnlineRosterEntry = {
   customization: Customization;
   connected: boolean;
 };
-export type OnlineJoin = { formatId: OnlineFormatId; trackId: OnlineTrackId; roomId?: string };
+export type OnlineJoin = {
+  cup?: boolean;
+  formatId: OnlineFormatId;
+  trackId: OnlineTrackId;
+  roomId?: string;
+};
 export type OnlineClientMessage =
   | ({ type: 'join'; version: 1 } & OnlineJoin)
   | { type: 'resume'; version: 1; roomId: string; token: string }
@@ -29,6 +34,7 @@ export type OnlineClientMessage =
 export type OnlineResult = { carId: number; result: RaceResult };
 export type OnlineRaceSnapshot = Omit<RaceState, 'track'>;
 export type OnlineRoomMessage = {
+  cup?: boolean;
   type: 'room';
   roomId: string;
   trackId: OnlineTrackId;

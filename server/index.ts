@@ -19,6 +19,7 @@ if (existsSync(distribution)) {
 const server = createServer(application.app);
 const online = attachOnlineServer(server, {
   resolveIdentity: application.resolveOnlineIdentity,
+  recordCupFinish: (time, name, ms) => application.weeklyCup.record(time, name, ms),
   allowedOrigins: process.env.PUBLIC_URL
     ? [new URL(process.env.PUBLIC_URL).origin]
     : process.env.NODE_ENV !== 'production'

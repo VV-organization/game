@@ -14,6 +14,7 @@ import {
 } from '../shared/online-protocol';
 
 export interface SavedOnlineSession {
+  cup?: boolean;
   roomId: string;
   token: string;
   formatId: OnlineFormatId;
@@ -109,6 +110,7 @@ export class OnlineClient {
       validSaved(resume, this.now()) &&
       resume.formatId === join.formatId &&
       resume.trackId === join.trackId &&
+      Boolean(resume.cup) === Boolean(join.cup) &&
       (!join.roomId || resume.roomId === join.roomId)
         ? resume
         : null;
@@ -265,6 +267,7 @@ export class OnlineClient {
         throw new Error();
       if (this.view.room && message.roomId !== this.view.room.roomId) return;
       this.saved = {
+        ...(message.cup ? { cup: true } : {}),
         roomId: message.roomId,
         token: message.resumeToken,
         trackId: message.trackId,

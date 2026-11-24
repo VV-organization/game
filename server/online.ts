@@ -1,3 +1,4 @@
+import { cupSchedule, type CupFinish } from '../src/shared/weekly-cup';
 import { createNicknamePicker } from '../src/shared/racer-nicknames';
 import { randomBytes } from 'node:crypto';
 import type { Server } from 'node:http';
@@ -47,6 +48,8 @@ type Client = {
   joinBucket: number;
 };
 type Slot = {
+  cupFinish?: CupFinish;
+  retryCupAt?: number;
   actorId: string;
   roster: OnlineRosterEntry;
   token: string;
@@ -57,6 +60,7 @@ type Slot = {
   seq: number;
 };
 type Room = {
+  cupEnteredAt?: number;
   id: string;
   trackId: OnlineTrackId;
   formatId: OnlineFormatId;
@@ -73,6 +77,7 @@ type Room = {
 export function attachOnlineServer(
   server: Server,
   options: {
+    recordCupFinish?: (time: number, nickname: string, finishMs: number) => CupFinish;
     resolveIdentity: (cookieHeader: string) => OnlineIdentity | null;
     allowedOrigins?: string[];
     now?: () => number;
@@ -103,6 +108,7 @@ export function attachOnlineServer(
       if (slot.client)
         send(slot.client, {
           type: 'room',
+          ...(room.cupEnteredAt !== undefined ? { cup: true } : {}),
           roomId: room.id,
           trackId: room.trackId,
           formatId: room.formatId,
@@ -211,6 +217,39 @@ export function attachOnlineServer(
     announce(room);
     snapshot(room, time);
   };
+  function persistCupFinishes(room: Room, time: number) {
+    if (room.cupEnteredAt === undefined || !room.race || !options.recordCupFinish) return;
+    for (const slot of room.slots) {
+      const car = room.race.cars[slot.roster.id];
+      if (
+        slot.roster.kind !== 'human' ||
+        slot.cupFinish ||
+        car.finishTime === null ||
+        car.didNotFinish ||
+        (slot.retryCupAt ?? 0) > time
+      )
+        continue;
+      try {
+        slot.cupFinish = options.recordCupFinish(
+          room.cupEnteredAt,
+          slot.roster.name,
+          Math.round(car.finishTime * 1000),
+        );
+        const published = room.results?.find((entry) => entry.carId === car.id);
+        if (published) {
+          published.result.cup = slot.cupFinish;
+          room.tick++;
+        }
+      } catch (error) {
+        if (!slot.retryCupAt)
+          console.error(
+            'Could not save weekly cup finish',
+            error instanceof Error ? error.name : 'Error',
+          );
+        slot.retryCupAt = time + 1000;
+      }
+    }
+  }
   function tick(time = now()) {
     if (closed) return;
     if (time - lastHeartbeat >= 10000) {
@@ -250,6 +289,7 @@ export function attachOnlineServer(
         continue;
       }
       if (room.finishedAt !== undefined) {
+        persistCupFinishes(room, time);
         if (time - room.finishedAt >= 30000) removeRoom(room);
         else if (time - room.lastSnapshot >= 50) snapshot(room, time);
         continue;
@@ -274,12 +314,17 @@ export function attachOnlineServer(
           room.race.phase = 'finished';
       }
       if (time - room.lastStep > 250) room.lastStep = time;
+      persistCupFinishes(room, time);
       if (room.race.phase === 'finished') {
         if (room.formatId === 'classic' || room.formatId === 'sprint')
           for (const car of room.race.cars) if (car.finishTime === null) car.didNotFinish = true;
         room.results = room.race.cars.map((car) => ({
           carId: car.id,
-          result: { ...getRaceResult(room.race!, car.id), online: true },
+          result: {
+            ...getRaceResult(room.race!, car.id),
+            online: true,
+            ...(room.slots[car.id].cupFinish ? { cup: room.slots[car.id].cupFinish } : {}),
+          },
         }));
         room.finishedAt = time;
         snapshot(room, time);
@@ -462,6 +507,10 @@ export function attachOnlineServer(
           error(client, 'INVALID_JOIN', 'Выберите трассу и формат');
           return;
         }
+        const cup = m.cup === true;
+        const schedule = cupSchedule(time);
+        const joinTrack = cup ? schedule.trackId : (m.trackId as OnlineTrackId);
+        const joinFormat = cup ? 'sprint' : (m.formatId as OnlineFormatId);
         let room: Room | undefined;
         if (m.roomId) {
           room = rooms.get((m.roomId as string).trim().toUpperCase());
@@ -479,8 +528,10 @@ export function attachOnlineServer(
               !r.race &&
               r.deadline > time &&
               r.slots.length < 6 &&
-              r.trackId === m.trackId &&
-              r.formatId === m.formatId,
+              (r.cupEnteredAt !== undefined) === cup &&
+              (!cup || cupSchedule(r.cupEnteredAt!).week === schedule.week) &&
+              r.trackId === joinTrack &&
+              r.formatId === joinFormat,
           );
         if (!room) {
           if (rooms.size >= 64) {
@@ -493,8 +544,9 @@ export function attachOnlineServer(
           } while (rooms.has(roomId));
           room = {
             id: roomId,
-            trackId: m.trackId as OnlineTrackId,
-            formatId: m.formatId as OnlineFormatId,
+            trackId: joinTrack,
+            formatId: joinFormat,
+            ...(cup ? { cupEnteredAt: time } : {}),
             deadline: time + MATCHMAKING_MS,
             slots: [],
             lastStep: time,
@@ -510,7 +562,10 @@ export function attachOnlineServer(
             id: [0, 1, 2, 3, 4, 5].find((id) => !room!.slots.some((s) => s.roster.id === id))!,
             name: client.identity.name.slice(0, 24),
             kind: 'human',
-            customization: client.identity.customization,
+            customization:
+              room.cupEnteredAt !== undefined
+                ? { ...client.identity.customization, car: 0 }
+                : client.identity.customization,
             connected: true,
           },
           token: randomBytes(24).toString('hex'),

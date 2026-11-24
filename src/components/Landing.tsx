@@ -32,8 +32,11 @@ import type { Product } from '../lib/api';
 import { customizationFor } from '../lib/customization';
 import ProductThumbnail from '../game/ProductThumbnail';
 import './Landing.css';
+import { WeeklyCup } from './WeeklyCup';
+import type { OnlineTrackId } from '../shared/online-protocol';
 
 interface LandingProps {
+  cup?: { login?: string; onEnter: (track: OnlineTrackId) => void; onStandings: () => void };
   onPlay: (trackId?: string) => void;
   onGarage: () => void;
   onLogin: () => void;
@@ -209,6 +212,7 @@ function initialLanguage(): Language {
 }
 
 export function Landing({
+  cup,
   onPlay,
   onGarage,
   onLogin,
@@ -519,6 +523,7 @@ export function Landing({
           </div>
         </section>
 
+        {cup && <WeeklyCup {...cup} english={language === 'en'} />}
         <section className="landing-powerups" id="power-ups" aria-labelledby="powerups-title">
           <div className="landing-powerups-intro">
             <h2 id="powerups-title">

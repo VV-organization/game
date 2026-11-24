@@ -105,6 +105,7 @@ export function OnlineLobby({
               <span className="eyebrow">СЛЕДУЮЩИЙ ЗАЕЗД</span>
               <h2>{room ? track[0] : 'Подключаемся к серверу'}</h2>
               <p>
+                {room?.cup && 'Кубок недели · '}
                 {room ? getRaceFormat(room.formatId).label : 'Готовим место на стартовой решётке…'}
               </p>
               <div className="online-search-timer">

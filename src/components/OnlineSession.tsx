@@ -30,6 +30,7 @@ export function OnlineSession({
     };
   }, [client]);
   const settings: OnlineJoin = {
+    ...(state.room?.cup ? { cup: true } : {}),
     formatId: state.room?.formatId || 'classic',
     trackId: state.room?.trackId || 'coast',
   };
@@ -47,6 +48,7 @@ export function OnlineSession({
           trackId={state.room.trackId}
           formatId={state.room.formatId}
           online={state.runtime}
+          cup={state.room.cup}
           customization={
             state.runtime.roster.find((car) => car.id === state.runtime!.localCarId)?.customization
           }

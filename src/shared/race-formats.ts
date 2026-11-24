@@ -80,6 +80,7 @@ export function getRaceFormat(id: unknown): RaceFormat {
 }
 
 export type RaceResult = {
+  cup?: import('./weekly-cup').CupFinish;
   position: number;
   time: number;
   trackId: string;

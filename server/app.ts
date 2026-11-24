@@ -1,3 +1,4 @@
+import { WeeklyCup } from './weekly-cup';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { createHmac, randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { Store, ApiError, digest, type TopupRow } from './store';
@@ -76,6 +77,7 @@ export function createApplication(options: ApplicationOptions = {}) {
     options.dbPath ?? ':memory:',
     gateway.mode === 'arco' ? 'live' : 'disabled',
   );
+  const weeklyCup = new WeeklyCup(store);
   const app = express();
   app.disable('x-powered-by');
   // Caddy replaces X-Forwarded-For and the published container port is loopback-only.
@@ -253,6 +255,9 @@ export function createApplication(options: ApplicationOptions = {}) {
     next();
   });
   const paymentMethods = gateway.mode === 'arco' ? (gateway.methods ?? ['card', 'sbp']) : [];
+  app.get('/api/weekly-cup', (_req, res) =>
+    res.set('Cache-Control', 'no-store').json(weeklyCup.board(Date.now())),
+  );
   app.get('/api/health', (_req, res) =>
     res.json({ status: 'ok', paymentMode: gateway.mode, paymentMethods }),
   );
@@ -468,6 +473,7 @@ export function createApplication(options: ApplicationOptions = {}) {
     app,
     store,
     resolveOnlineIdentity,
+    weeklyCup,
     paymentMode: gateway.mode,
     reconcilePending,
     close: () => store.close(),
