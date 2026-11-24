@@ -344,7 +344,7 @@ export function Wallet({
     completed: 'Успешно',
   };
   return (
-    <Modal title="Кошелёк Fapix" onClose={onClose} wide>
+    <Modal title="Кошелёк Fapix" onClose={onClose} wide privateContent>
       <div className="wallet-balance">
         <WalletIcon />
         <div>
@@ -491,6 +491,7 @@ export function Wallet({
               <label>
                 Логин игрового аккаунта
                 <input
+                  className="ym-disable-keys"
                   value={login}
                   onChange={(e) => {
                     setLogin(e.target.value);
@@ -514,6 +515,7 @@ export function Wallet({
               <label>
                 Сумма пополнения, ₽
                 <input
+                  className="ym-disable-keys"
                   type="number"
                   inputMode="numeric"
                   value={rub}

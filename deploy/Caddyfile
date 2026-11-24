@@ -6,7 +6,7 @@ fapixracing.com {
         Referrer-Policy same-origin
         X-Frame-Options DENY
         Permissions-Policy "camera=(), microphone=(), geolocation=()"
-        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' wss://fapixracing.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://payment.clickit.team; upgrade-insecure-requests"
+        Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com https://mc.yandex.ru https://mc.yandex.com https://mc.webvisor.org https://mc.webvisor.com; font-src 'self'; connect-src 'self' wss://fapixracing.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.google.com https://mc.yandex.ru https://mc.yandex.com https://mc.webvisor.org https://mc.webvisor.com wss://mc.yandex.ru wss://mc.yandex.com wss://mc.webvisor.org wss://mc.webvisor.com; frame-src blob: https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors https://metrika.yandex.ru https://metrica.yandex.com; form-action 'self' https://payment.clickit.team; upgrade-insecure-requests"
         -Server
     }
     reverse_proxy 127.0.0.1:3001

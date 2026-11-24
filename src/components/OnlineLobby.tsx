@@ -176,7 +176,7 @@ export function OnlineLobby({
         </div>
       )}
       {room && !failed && (
-        <section className="online-invite panel">
+        <section className="online-invite panel ym-hide-content">
           <div>
             <span className="eyebrow">ПОВОРОТЫ ЛУЧШЕ С ДРУЗЬЯМИ</span>
             <h3>Пригласи в эту гонку</h3>
@@ -186,6 +186,7 @@ export function OnlineLobby({
           </div>
           <div className="online-invite-link">
             <input
+              className="ym-disable-keys"
               aria-label="Ссылка на комнату"
               readOnly
               value={invite}

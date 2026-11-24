@@ -113,6 +113,7 @@ export function Auth({
   }
   return (
     <Modal
+      privateContent
       title={checking ? 'Подтверждение почты' : register ? 'Твой путь к старту' : 'С возвращением'}
       onClose={onClose}
     >
@@ -134,6 +135,7 @@ export function Auth({
             <label>
               Логин
               <input
+                className="ym-disable-keys"
                 autoFocus
                 autoComplete="username"
                 value={login}
@@ -148,6 +150,7 @@ export function Auth({
             <label>
               Пароль
               <input
+                className="ym-disable-keys"
                 type="password"
                 autoComplete={register ? 'new-password' : 'current-password'}
                 value={password}
@@ -163,6 +166,7 @@ export function Auth({
           <label>
             Почта
             <input
+              className="ym-disable-keys"
               type="email"
               autoComplete="email"
               value={email}
@@ -176,6 +180,7 @@ export function Auth({
           <label>
             Код из письма
             <input
+              className="ym-disable-keys"
               autoFocus
               inputMode="numeric"
               autoComplete="one-time-code"

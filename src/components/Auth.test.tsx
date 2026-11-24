@@ -20,8 +20,13 @@ it('lets a player restart if another registration claims the login before verifi
     );
   const user = userEvent.setup();
   render(<Auth initialRegister onClose={vi.fn()} onUser={vi.fn()} />);
-  await user.type(await screen.findByLabelText('Код из письма'), '012345');
+  const code = await screen.findByLabelText('Код из письма');
+  expect(code.closest('dialog.ym-hide-content')).toBeTruthy();
+  expect(code.classList.contains('ym-disable-keys')).toBe(true);
+  await user.type(code, '012345');
   await user.click(screen.getByRole('button', { name: 'Подтвердить почту' }));
-  expect(await screen.findByLabelText('Логин')).toBeTruthy();
+  for (const label of ['Логин', 'Пароль', 'Почта']) {
+    expect((await screen.findByLabelText(label)).classList.contains('ym-disable-keys')).toBe(true);
+  }
   expect(screen.getByRole('alert').textContent).toContain('логин уже занят');
 });

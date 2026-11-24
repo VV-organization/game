@@ -40,6 +40,9 @@ import { Modal } from './components/Modal';
 import { Catalog, categoryNames, ProductArt } from './components/Catalog';
 import { CarStats, getStatMax } from './components/CarStats';
 import { customizationFor } from './lib/customization';
+import { gameParams, saveGameParams } from './lib/navigation';
+import { trackPage } from './lib/analytics';
+
 const Race = lazy(() => import('./game/Race'));
 const KartPreview = lazy(() => import('./game/KartPreview'));
 const tracks = [
@@ -110,7 +113,7 @@ export default function App() {
       productName?: string;
       paymentId?: string;
     } | null>(() => {
-      const paymentId = new URLSearchParams(location.search).get('payment') || savedPaymentId();
+      const paymentId = gameParams().get('payment') || savedPaymentId();
       return paymentId ? { rub: 311, paymentId } : null;
     }),
     [help, setHelp] = useState(false),
@@ -147,7 +150,9 @@ export default function App() {
   function closeWallet() {
     authContinuation.current = null;
     setWallet(null);
-    if (location.search.includes('payment=')) history.replaceState({}, '', location.pathname);
+    const params = gameParams();
+    params.delete('payment');
+    saveGameParams(params);
   }
   function openAuth(register = false, login = '', onAuthenticated?: (account: User) => void) {
     authContinuation.current = onAuthenticated || null;
@@ -155,10 +160,10 @@ export default function App() {
     setAuth(login);
   }
   function clearStartIntent() {
-    const url = new URL(location.href);
+    const params = gameParams();
     for (const key of ['startMode', 'startTrack', 'startFormat', 'startRoom', 'startCup'])
-      url.searchParams.delete(key);
-    history.replaceState(history.state, '', url);
+      params.delete(key);
+    saveGameParams(params);
   }
   function closeAuth() {
     clearStartIntent();
@@ -179,6 +184,7 @@ export default function App() {
   useEffect(() => {
     if (page === 'play' && user?.emailVerified && history.state?.pendingPlay)
       history.replaceState({}, '', '/play');
+    trackPage();
   }, [page, user?.emailVerified]);
   async function load() {
     setLoadError('');
@@ -212,7 +218,7 @@ export default function App() {
   useEffect(() => {
     if (!loaded || recoveredOnline.current) return;
     recoveredOnline.current = true;
-    const query = new URLSearchParams(location.search);
+    const query = gameParams();
     const pendingMode = query.get('startMode');
     const pendingTrack = tracks.find((t) => t.id === query.get('startTrack'));
     const pendingFormat = RACE_FORMATS.find((f) => f.id === query.get('startFormat'));
@@ -244,7 +250,7 @@ export default function App() {
       return;
     }
     const saved = loadSavedOnlineSession();
-    const invite = new URLSearchParams(location.search).get('room');
+    const invite = query.get('room');
     if (saved || (invite && /^[A-Za-z0-9]{6}$/.test(invite))) {
       const enter = () => {
         if (saved)
@@ -405,12 +411,12 @@ export default function App() {
         return;
       }
       setUser(null);
-      const url = new URL(location.href);
-      url.searchParams.set('startMode', 'online');
-      url.searchParams.set('startFormat', 'sprint');
-      url.searchParams.set('startTrack', track);
-      url.searchParams.set('startCup', '1');
-      history.replaceState(history.state, '', url);
+      const params = gameParams();
+      params.set('startMode', 'online');
+      params.set('startFormat', 'sprint');
+      params.set('startTrack', track);
+      params.set('startCup', '1');
+      saveGameParams(params);
       openAuth(true, '', enter);
     } catch (error) {
       setToast((error as Error).message);
@@ -426,12 +432,12 @@ export default function App() {
         return;
       }
       setUser(null);
-      const url = new URL(location.href);
-      url.searchParams.set('startMode', raceMode);
-      url.searchParams.set('startTrack', trackId);
-      url.searchParams.set('startFormat', formatId);
-      if (roomCode) url.searchParams.set('startRoom', roomCode);
-      history.replaceState({}, '', url);
+      const params = gameParams();
+      params.set('startMode', raceMode);
+      params.set('startTrack', trackId);
+      params.set('startFormat', formatId);
+      if (roomCode) params.set('startRoom', roomCode);
+      saveGameParams(params);
       openAuth(true, '', enter);
     } catch (e) {
       setToast((e as Error).message);
@@ -685,6 +691,7 @@ export default function App() {
                           <label htmlFor="room-code">Есть код комнаты?</label>
                           <input
                             id="room-code"
+                            className="ym-disable-keys"
                             placeholder="Например, A1B2C3"
                             value={roomCode}
                             maxLength={6}

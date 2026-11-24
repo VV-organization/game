@@ -3,6 +3,7 @@ import { cleanup, render, screen, waitFor, within } from '@testing-library/react
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import App from './App';
+import { captureGameParams, gameParams } from './lib/navigation';
 import { api } from './lib/api';
 vi.mock('./lib/api', async (load) => ({
   ...(await load<typeof import('./lib/api')>()),
@@ -34,6 +35,7 @@ it.each(['practice', 'invite'] as const)(
   'gates %s and continues the chosen race after password login',
   async (mode) => {
     if (mode === 'invite') history.replaceState({}, '', '/play?room=ABC123');
+    captureGameParams();
     const user = userEvent.setup();
     if (mode === 'practice') {
       vi.mocked(api)
@@ -44,7 +46,8 @@ it.each(['practice', 'invite'] as const)(
     if (mode === 'practice') {
       await user.click(await screen.findByRole('button', { name: 'Тренировка' }));
       await user.click(screen.getByRole('button', { name: 'Начать гонку' }));
-      expect(location.search).toContain('startMode=practice');
+      expect(gameParams().get('startMode')).toBe('practice');
+      expect(location.search).toBe('');
     }
     await screen.findByText('Твой путь к старту');
     expect(screen.queryByText('Онлайн начался')).toBeNull();

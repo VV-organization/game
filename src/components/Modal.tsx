@@ -5,11 +5,13 @@ export function Modal({
   onClose,
   children,
   wide = false,
+  privateContent = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
+  privateContent?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -20,7 +22,7 @@ export function Modal({
   return (
     <dialog
       ref={ref}
-      className={`modal ${wide ? 'wide' : ''}`}
+      className={`modal ${wide ? 'wide' : ''} ${privateContent ? 'ym-hide-content' : ''}`}
       onCancel={(e) => {
         e.preventDefault();
         onClose();
