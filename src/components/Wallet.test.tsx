@@ -251,6 +251,7 @@ describe('wallet recovery and account context', () => {
               onUser={(created) => {
                 setUser(created);
                 registration.complete?.(created);
+                setRegistration(null);
               }}
             />
           )}

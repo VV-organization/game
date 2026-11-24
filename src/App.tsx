@@ -82,6 +82,7 @@ const tracks = [
 type Page = 'home' | 'play' | 'garage' | 'shop' | 'records';
 const initialPage = (): Page => {
   const p = location.pathname.slice(1);
+  if (!p && history.state?.pendingPlay) return 'play';
   return ['play', 'garage', 'shop', 'records'].includes(p) ? (p as Page) : 'home';
 };
 type RecordItem = RaceRecord;
@@ -112,7 +113,9 @@ export default function App() {
       return paymentId ? { rub: 311, paymentId } : null;
     }),
     [help, setHelp] = useState(false),
-    [trackId, setTrackId] = useState('coast'),
+    [trackId, setTrackId] = useState(
+      () => tracks.find((t) => t.id === history.state?.pendingTrack)?.id ?? 'coast',
+    ),
     [formatId, setFormatId] = useState<RaceFormatId>('classic'),
     [raceMode, setRaceMode] = useState<'online' | 'practice'>('online'),
     [roomCode, setRoomCode] = useState(''),
@@ -126,6 +129,7 @@ export default function App() {
     [purchase, setPurchase] = useState<Product | null>(null);
   const purchaseKey = useRef<{ id: string; key: string } | null>(null);
   const recoveredOnline = useRef(false);
+  const needsPlayAuth = page === 'play' && !user?.emailVerified;
   const raceFormat = getRaceFormat(formatId);
   const visibleRecords = records.filter(
     (record) => recordsFormat === 'all' || (record.formatId || 'classic') === recordsFormat,
@@ -152,19 +156,28 @@ export default function App() {
     const url = new URL(location.href);
     for (const key of ['startMode', 'startTrack', 'startFormat', 'startRoom'])
       url.searchParams.delete(key);
-    history.replaceState({}, '', url);
+    history.replaceState(history.state, '', url);
   }
   function closeAuth() {
     clearStartIntent();
     authContinuation.current = null;
     setAuth(null);
   }
-  function navigate(next: Page) {
+  function navigate(next: Page, selectedTrack = trackId) {
     setPage(next);
-    history.pushState({}, '', next === 'home' ? '/' : `/${next}`);
+    if (next === 'play' && page === 'home' && !user?.emailVerified) {
+      // Keep the landing URL until authentication. History retains the choice across a reload.
+      history.pushState({ pendingPlay: true, pendingTrack: selectedTrack }, '', '/');
+    } else {
+      history.pushState({}, '', next === 'home' ? '/' : `/${next}`);
+    }
     window.scrollTo({ top: 0 });
     setPreview(null);
   }
+  useEffect(() => {
+    if (page === 'play' && user?.emailVerified && history.state?.pendingPlay)
+      history.replaceState({}, '', '/play');
+  }, [page, user?.emailVerified]);
   async function load() {
     setLoadError('');
     try {
@@ -185,6 +198,8 @@ export default function App() {
   useEffect(() => {
     void load();
     const pop = () => {
+      authContinuation.current = null;
+      setAuth(null);
       setPage(initialPage());
       setRacing(false);
       setOnlineClient(null);
@@ -386,7 +401,7 @@ export default function App() {
       setToast((e as Error).message);
     }
   }
-  if (onlineClient)
+  if (onlineClient && user?.emailVerified)
     return (
       <OnlineSession
         client={onlineClient}
@@ -395,7 +410,7 @@ export default function App() {
         onFinish={finish}
       />
     );
-  if (racing)
+  if (racing && user?.emailVerified)
     return (
       <Suspense fallback={loading}>
         <Race
@@ -409,7 +424,7 @@ export default function App() {
     );
   return (
     <>
-      {page === 'home' ? (
+      {page === 'home' || needsPlayAuth ? (
         <Landing
           signedIn={!!user}
           onGarage={() => navigate('garage')}
@@ -419,7 +434,7 @@ export default function App() {
           products={products}
           onPlay={(id) => {
             if (id) setTrackId(id);
-            navigate('play');
+            navigate('play', id);
           }}
           onLogin={() => (user ? navigate('play') : openAuth())}
           onTopup={(rub, productName) => openWallet({ rub, productName })}
@@ -927,15 +942,21 @@ export default function App() {
           </div>
         </div>
       )}
-      {auth !== null && (
+      {(auth !== null || (needsPlayAuth && loaded)) && (
         <Auth
-          initialRegister={authRegister}
-          initialLogin={auth}
-          onClose={closeAuth}
+          initialRegister={auth === null || authRegister}
+          initialLogin={auth ?? ''}
+          onClose={() => {
+            closeAuth();
+            if (needsPlayAuth) {
+              history.replaceState({}, '', '/');
+              setPage('home');
+            }
+          }}
           onUser={(account) => {
             setUser(account);
             const resume = authContinuation.current;
-            authContinuation.current = null;
+            closeAuth();
             resume?.(account);
           }}
         />

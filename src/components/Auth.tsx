@@ -69,10 +69,7 @@ export function Auth({
         const result = register
           ? await api<{ user: User }>('/auth/registration/verify', { code })
           : await api<{ user: User }>('/auth/login', { login, password });
-        if (alive.current) {
-          onUser(result.user);
-          onClose();
-        }
+        if (alive.current) onUser(result.user);
       } else {
         const result = checking
           ? await api<StateResponse>('/auth/registration/resend', editing ? { email } : {})
