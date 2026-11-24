@@ -26,6 +26,7 @@ export interface Product {
   bundle?: string[];
 }
 export interface User {
+  emailVerified: boolean;
   id: string;
   login: string;
   balance: number;
@@ -59,4 +60,10 @@ export interface SessionResponse {
   user: User | null;
   paymentMode: PaymentMode;
   paymentMethods: PaymentMethod[];
+}
+
+export interface RegistrationStatus {
+  maskedEmail: string;
+  expiresAt: number;
+  resendAt: number;
 }

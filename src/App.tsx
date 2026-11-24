@@ -34,7 +34,7 @@ import { api, money, type Product, type User, type PaymentMode } from './lib/api
 import { Landing } from './components/Landing';
 import { Auth } from './components/Auth';
 import { Wallet, savedPaymentId } from './components/Wallet';
-import type { PaymentMethod, SessionResponse } from './shared/types';
+import type { PaymentMethod, RegistrationStatus, SessionResponse } from './shared/types';
 import { Modal } from './components/Modal';
 import { Catalog, categoryNames, ProductArt } from './components/Catalog';
 import { CarStats, getStatMax } from './components/CarStats';
@@ -148,7 +148,14 @@ export default function App() {
     setAuthRegister(register);
     setAuth(login);
   }
+  function clearStartIntent() {
+    const url = new URL(location.href);
+    for (const key of ['startMode', 'startTrack', 'startFormat', 'startRoom'])
+      url.searchParams.delete(key);
+    history.replaceState({}, '', url);
+  }
   function closeAuth() {
+    clearStartIntent();
     authContinuation.current = null;
     setAuth(null);
   }
@@ -188,17 +195,69 @@ export default function App() {
   useEffect(() => {
     if (!loaded || recoveredOnline.current) return;
     recoveredOnline.current = true;
+    const query = new URLSearchParams(location.search);
+    const pendingMode = query.get('startMode');
+    const pendingTrack = tracks.find((t) => t.id === query.get('startTrack'));
+    const pendingFormat = RACE_FORMATS.find((f) => f.id === query.get('startFormat'));
+    if (
+      pendingTrack &&
+      pendingFormat &&
+      (pendingMode === 'practice' || (pendingMode === 'online' && isOnlineFormat(pendingFormat.id)))
+    ) {
+      setTrackId(pendingTrack.id);
+      setFormatId(pendingFormat.id);
+      setRaceMode(pendingMode);
+      const room = query.get('startRoom') || '';
+      setRoomCode(room);
+      const resume = () => {
+        clearStartIntent();
+        if (pendingMode === 'practice') setRacing(true);
+        else if (isOnlineFormat(pendingFormat.id))
+          setOnlineClient(
+            new OnlineClient({
+              trackId: pendingTrack.id as OnlineTrackId,
+              formatId: pendingFormat.id,
+              ...(room ? { roomId: room } : {}),
+            }),
+          );
+      };
+      if (user?.emailVerified) resume();
+      else openAuth(true, '', resume);
+      return;
+    }
     const saved = loadSavedOnlineSession();
     const invite = new URLSearchParams(location.search).get('room');
-    if (saved)
-      setOnlineClient(
-        new OnlineClient({ formatId: saved.formatId, trackId: saved.trackId }, { resume: saved }),
-      );
-    else if (invite && /^[A-Za-z0-9]{6}$/.test(invite)) {
-      setRoomCode(invite.toUpperCase());
-      setOnlineClient(
-        new OnlineClient({ formatId: 'classic', trackId: 'coast', roomId: invite.toUpperCase() }),
-      );
+    if (saved || (invite && /^[A-Za-z0-9]{6}$/.test(invite))) {
+      const enter = () => {
+        if (saved)
+          setOnlineClient(
+            new OnlineClient(
+              { formatId: saved.formatId, trackId: saved.trackId },
+              { resume: saved },
+            ),
+          );
+        else if (invite) {
+          setRoomCode(invite.toUpperCase());
+          setOnlineClient(
+            new OnlineClient({
+              formatId: 'classic',
+              trackId: 'coast',
+              roomId: invite.toUpperCase(),
+            }),
+          );
+        }
+      };
+      if (user?.emailVerified) enter();
+      else openAuth(true, '', enter);
+    } else if (!user) {
+      void api<{ registration: RegistrationStatus | null }>('/auth/registration')
+        .then(({ registration }) => {
+          if (registration && !authContinuation.current) {
+            setAuthRegister(true);
+            setAuth((current) => current ?? '');
+          }
+        })
+        .catch(() => {});
     }
   }, [loaded]);
   useEffect(() => {
@@ -305,6 +364,27 @@ export default function App() {
       ...(roomCode.trim() ? { roomId: roomCode.trim().toUpperCase() } : {}),
     };
     setOnlineClient(new OnlineClient(next));
+  }
+  async function startSelectedRace() {
+    const enter = () => (raceMode === 'online' ? startOnline() : setRacing(true));
+    try {
+      const current = user ? (await api<SessionResponse>('/session')).user : null;
+      if (current?.emailVerified) {
+        setUser(current);
+        enter();
+        return;
+      }
+      setUser(null);
+      const url = new URL(location.href);
+      url.searchParams.set('startMode', raceMode);
+      url.searchParams.set('startTrack', trackId);
+      url.searchParams.set('startFormat', formatId);
+      if (roomCode) url.searchParams.set('startRoom', roomCode);
+      history.replaceState({}, '', url);
+      openAuth(true, '', enter);
+    } catch (e) {
+      setToast((e as Error).message);
+    }
   }
   if (onlineClient)
     return (
@@ -563,10 +643,9 @@ export default function App() {
                       <button
                         className="primary full start-race"
                         disabled={
-                          raceMode === 'online' &&
-                          (!loaded || (!!roomCode && roomCode.length !== 6))
+                          !loaded || (raceMode === 'online' && !!roomCode && roomCode.length !== 6)
                         }
-                        onClick={() => (raceMode === 'online' ? startOnline() : setRacing(true))}
+                        onClick={() => void startSelectedRace()}
                       >
                         <Flag size={19} />
                         {raceMode === 'online'

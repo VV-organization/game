@@ -119,7 +119,7 @@ describe('authoritative online transport', () => {
       expect(app.resolveOnlineIdentity('')).toBeNull();
       expect(app.resolveOnlineIdentity('fapix_session=forged')).toBeNull();
       expect(app.resolveOnlineIdentity('fapix_visitor=invalid')).toBeNull();
-      const user = app.store.register('driver', 'unused-test-hash');
+      const user = app.store.register('driver', 'unused-test-hash', 'driver@example.test');
       const token = app.store.createSession(user.id);
       const identity = app.resolveOnlineIdentity(`fapix_session=${token}`)!;
       expect(identity.name).toBe('driver');
@@ -129,9 +129,7 @@ describe('authoritative online transport', () => {
       expect(JSON.stringify(identity)).not.toContain(token);
       app.store.logout(token);
       expect(app.resolveOnlineIdentity(`fapix_session=${token}`)).toBeNull();
-      const guest = app.resolveOnlineIdentity(`fapix_visitor=${'a'.repeat(64)}`)!;
-      expect(guest.name).toMatch(/^Гость /);
-      expect(guest.customization).toEqual({});
+      expect(app.resolveOnlineIdentity(`fapix_visitor=${'a'.repeat(64)}`)).toBeNull();
     } finally {
       app.close();
     }

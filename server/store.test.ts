@@ -10,7 +10,7 @@ describe('durable wallet', () => {
     const file = join(directory, 'wallet.sqlite');
     let store = new Store(file, 'live');
     try {
-      const user = store.register('alice', 'salt:hash');
+      const user = store.register('alice', 'salt:hash', 'alice@example.test');
       const session = store.createSession(user.id);
       const topup = store.createTopup({
         userId: user.id,
@@ -43,7 +43,7 @@ describe('durable wallet', () => {
     const file = join(directory, 'wallet.sqlite');
     let store = new Store(file, 'live');
     try {
-      const user = store.register('legacy_user', 'salt:hash');
+      const user = store.register('legacy_user', 'salt:hash', 'legacy_user@example.test');
       const session = store.createSession(user.id);
       const topup = store.createTopup({
         userId: user.id,
@@ -81,7 +81,7 @@ describe('durable wallet', () => {
     const file = join(directory, 'wallet.sqlite');
     let store = new Store(file, 'disabled');
     try {
-      const user = store.register('future_live', 'salt:hash');
+      const user = store.register('future_live', 'salt:hash', 'future_live@example.test');
       expect(store.db.prepare("SELECT value FROM settings WHERE key='economy'").get()).toEqual({
         value: 'live',
       });

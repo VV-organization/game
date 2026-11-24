@@ -1,5 +1,5 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
-import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
+import { createHmac, randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { Store, ApiError, digest, type TopupRow } from './store';
 import { createPaymentGateway, ProviderError, type PaymentGateway } from './payments';
 import { categories, products, popularIds } from './catalog';
@@ -7,6 +7,8 @@ import { customizationFor } from '../src/lib/customization';
 import type { OnlineIdentity } from '../src/shared/online-protocol';
 import type { User } from '../src/shared/types';
 
+import { Registration, registrationEmail } from './registration';
+import { registrationMailer } from './registration-mail';
 const derive = (password: string, salt: string) =>
   new Promise<Buffer>((resolve, reject) =>
     scrypt(password, salt, 64, (err, key) => (err ? reject(err) : resolve(key))),
@@ -64,6 +66,7 @@ export interface ApplicationOptions {
   dbPath?: string;
   env?: Record<string, string | undefined>;
   gateway?: PaymentGateway;
+  sendRegistrationCode?: (email: string, code: string) => Promise<void>;
 }
 
 export function createApplication(options: ApplicationOptions = {}) {
@@ -75,6 +78,13 @@ export function createApplication(options: ApplicationOptions = {}) {
   );
   const app = express();
   app.disable('x-powered-by');
+  // Caddy replaces X-Forwarded-For and the published container port is loopback-only.
+  if (env.NODE_ENV === 'production') app.set('trust proxy', 1);
+  const registration = new Registration(
+    store,
+    env.REGISTRATION_HMAC_KEY,
+    options.sendRegistrationCode ?? registrationMailer(env),
+  );
   const cookieOptions = {
     httpOnly: true,
     sameSite: 'lax' as const,
@@ -251,13 +261,52 @@ export function createApplication(options: ApplicationOptions = {}) {
     visitor(req, res);
     res.json({ user: getUser(req), paymentMode: gateway.mode, paymentMethods });
   });
+  const registrationCookie = { ...cookieOptions, maxAge: 60 * 60_000, path: '/api/auth' };
+  const registrationId = (req: Request) => digest(cookies(req).fapix_registration ?? '');
+  app.get('/api/auth/registration', (req, res) => {
+    res.json({ registration: registration.status(registrationId(req)) });
+  });
   app.post('/api/auth/register', async (req, res) => {
-    const login = loginValue(req.body?.login),
-      password = passwordValue(req.body?.password);
-    const user = store.register(login, await hashPassword(password));
-    store.logout(cookies(req).fapix_session);
-    res.cookie('fapix_session', store.createSession(user.id), cookieOptions);
-    res.status(201).json({ user });
+    const login = loginValue(req.body?.login);
+    const password = passwordValue(req.body?.password);
+    const email = registrationEmail(req.body?.email);
+    const key = env.REGISTRATION_HMAC_KEY;
+    if (!key || key.length < 32)
+      throw new ApiError(503, 'MAIL_UNAVAILABLE', 'Отправка писем временно недоступна');
+    const token =
+      req.body?.requestId && cookies(req).fapix_visitor
+        ? createHmac('sha256', key)
+            .update(JSON.stringify([cookies(req).fapix_visitor, idempotency(req.body.requestId)]))
+            .digest('hex')
+        : randomBytes(32).toString('hex');
+    res.cookie('fapix_registration', token, registrationCookie);
+    const state = await registration.issue(digest(token), req.ip ?? 'local', email, {
+      login,
+      passwordHash: await hashPassword(password),
+    });
+    res.status(202).json({ registration: state });
+  });
+  app.post('/api/auth/registration/resend', async (req, res) => {
+    const email = req.body?.email === undefined ? undefined : registrationEmail(req.body.email);
+    const state = await registration.issue(registrationId(req), req.ip ?? 'local', email);
+    res.cookie('fapix_registration', cookies(req).fapix_registration, registrationCookie);
+    res.json({ registration: state });
+  });
+  app.post('/api/auth/registration/verify', (req, res) => {
+    try {
+      const { user, token } = registration.verify(
+        registrationId(req),
+        req.body?.code,
+        cookies(req).fapix_session,
+      );
+      res.clearCookie('fapix_registration', { ...registrationCookie, maxAge: undefined });
+      res.cookie('fapix_session', token, cookieOptions);
+      res.status(201).json({ user });
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 409)
+        res.clearCookie('fapix_registration', { ...registrationCookie, maxAge: undefined });
+      throw error;
+    }
   });
   app.post('/api/auth/login', async (req, res) => {
     const login = loginValue(req.body?.login);
@@ -407,19 +456,13 @@ export function createApplication(options: ApplicationOptions = {}) {
         .filter((pair) => pair.length === 2),
     );
     const user = store.session(jar.fapix_session);
-    if (user)
+    if (user?.emailVerified)
       return {
         actorId: digest(`account:${user.id}`),
         name: user.login,
         customization: customizationFor(user.equipped, products),
       };
-    const token = jar.fapix_visitor;
-    if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
-    return {
-      actorId: digest(token),
-      name: `Гость ${digest(token).slice(0, 4)}`,
-      customization: {},
-    };
+    return null;
   };
   return {
     app,

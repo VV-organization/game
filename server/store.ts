@@ -35,6 +35,7 @@ type AccountRow = {
   id: string;
   login: string;
   password_hash: string;
+  email_verified_at: string;
   balance: number;
   equipped: string;
 };
@@ -45,7 +46,7 @@ export class Store {
     this.db = new DatabaseSync(path);
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;
    CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY,value TEXT NOT NULL);
-   CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, login TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,balance INTEGER NOT NULL DEFAULT 0 CHECK(balance>=0),equipped TEXT NOT NULL,created_at TEXT NOT NULL);
+   CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, login TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,email TEXT NOT NULL UNIQUE COLLATE NOCASE,email_verified_at TEXT NOT NULL,balance INTEGER NOT NULL DEFAULT 0 CHECK(balance>=0),equipped TEXT NOT NULL,created_at TEXT NOT NULL);
    CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires_at INTEGER NOT NULL);
    CREATE TABLE IF NOT EXISTS owned (user_id TEXT NOT NULL REFERENCES users(id),product_id TEXT NOT NULL,PRIMARY KEY(user_id,product_id));
    CREATE TABLE IF NOT EXISTS topups (id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),creator_hash TEXT NOT NULL,idem_key TEXT NOT NULL,rub INTEGER NOT NULL CHECK(rub>0),fapix INTEGER NOT NULL CHECK(fapix>0),method TEXT NOT NULL,status TEXT NOT NULL,mode TEXT NOT NULL,provider_id TEXT,provider_config TEXT,checkout_url TEXT,created_at TEXT NOT NULL,updated_at TEXT NOT NULL,UNIQUE(creator_hash,idem_key));
@@ -53,6 +54,14 @@ export class Store {
    CREATE TABLE IF NOT EXISTS ledger (id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),amount INTEGER NOT NULL,reference TEXT NOT NULL UNIQUE,created_at TEXT NOT NULL);
    CREATE INDEX IF NOT EXISTS topups_user ON topups(user_id,created_at);
    CREATE INDEX IF NOT EXISTS purchases_user ON purchases(user_id,created_at);`);
+    if (
+      !this.db
+        .prepare("SELECT 1 FROM pragma_table_info('users') WHERE name='email_verified_at'")
+        .get()
+    ) {
+      this.db.close();
+      throw new Error('Registration requires a fresh DATABASE_PATH for the account reset');
+    }
     const topupColumns = this.db.prepare('PRAGMA table_info(topups)').all() as { name: string }[];
     if (!topupColumns.some((c) => c.name === 'review_reason'))
       this.db.exec('ALTER TABLE topups ADD COLUMN review_reason TEXT');
@@ -96,6 +105,7 @@ export class Store {
     return {
       id: row.id,
       login: row.login,
+      emailVerified: !!row.email_verified_at,
       balance: row.balance,
       owned: (
         this.db
@@ -105,16 +115,18 @@ export class Store {
       equipped: JSON.parse(row.equipped),
     };
   }
-  register(login: string, passwordHash: string): User {
-    return this.transaction(() => {
-      if (this.accountByLogin(login))
-        throw new ApiError(409, 'LOGIN_TAKEN', 'Этот логин уже занят');
-      const id = randomUUID();
-      this.db
-        .prepare('INSERT INTO users(id,login,password_hash,equipped,created_at) VALUES(?,?,?,?,?)')
-        .run(id, login, passwordHash, JSON.stringify(defaultEquipped), new Date().toISOString());
-      return this.user(id);
-    });
+  register(login: string, passwordHash: string, email: string): User {
+    if (this.accountByLogin(login)) throw new ApiError(409, 'LOGIN_TAKEN', 'Этот логин уже занят');
+    if (this.db.prepare('SELECT 1 FROM users WHERE email=?').get(email))
+      throw new ApiError(409, 'EMAIL_TAKEN', 'Этот адрес уже используется');
+    const id = randomUUID();
+    const now = new Date().toISOString();
+    this.db
+      .prepare(
+        'INSERT INTO users(id,login,password_hash,email,email_verified_at,equipped,created_at) VALUES(?,?,?,?,?,?,?)',
+      )
+      .run(id, login, passwordHash, email, now, JSON.stringify(defaultEquipped), now);
+    return this.user(id);
   }
   createSession(userId: string) {
     const token = randomBytes(32).toString('hex');

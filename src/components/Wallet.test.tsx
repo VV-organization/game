@@ -13,7 +13,14 @@ vi.mock('../lib/api', async (importOriginal) => ({
 }));
 
 const mockedApi = vi.mocked(api);
-const alice: User = { id: 'alice-id', login: 'alice', balance: 0, owned: [], equipped: {} };
+const alice: User = {
+  emailVerified: true,
+  id: 'alice-id',
+  login: 'alice',
+  balance: 0,
+  owned: [],
+  equipped: {},
+};
 const bob: User = { ...alice, id: 'bob-id', login: 'bob' };
 const emptyHistory: History = { topups: [], purchases: [] };
 const pending = {
@@ -215,7 +222,16 @@ describe('wallet recovery and account context', () => {
     const registered: User = { ...alice, id: 'registered-id', login: 'pilot_final' };
     mockedApi.mockImplementation(async (path) => {
       if (path === '/accounts/pilot_draft') return { exists: false };
-      if (path === '/auth/register') return { user: registered };
+      if (path === '/auth/registration') return { registration: null };
+      if (path === '/auth/register')
+        return {
+          registration: {
+            maskedEmail: 'p***@example.test',
+            expiresAt: Date.now() + 600000,
+            resendAt: Date.now() + 60000,
+          },
+        };
+      if (path === '/auth/registration/verify') return { user: registered };
       if (path === '/accounts/pilot_final') return { exists: true };
       return { ...pending, login: registered.login, rub: 2077, method: 'sbp' };
     });
@@ -268,7 +284,10 @@ describe('wallet recovery and account context', () => {
       'pilot_final',
     );
     await interaction.type(within(authDialog).getByLabelText('Пароль'), 'secure-password-123');
-    await interaction.click(within(authDialog).getByRole('button', { name: 'Создать аккаунт' }));
+    await interaction.type(within(authDialog).getByLabelText('Почта'), 'pilot@example.test');
+    await interaction.click(within(authDialog).getByRole('button', { name: 'Получить код' }));
+    await interaction.type(await screen.findByLabelText('Код из письма'), '012345');
+    await interaction.click(within(authDialog).getByRole('button', { name: 'Подтвердить почту' }));
     await waitFor(() =>
       expect(screen.queryByRole('heading', { name: 'Твой путь к старту' })).toBeNull(),
     );

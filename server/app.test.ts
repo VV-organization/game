@@ -62,8 +62,22 @@ async function request(path: string, body?: unknown, client = 'alice', method?: 
     cookies: response.headers.getSetCookie(),
   };
 }
+const mailbox = new Map<string, string>();
+const mailOptions = {
+  env: { REGISTRATION_HMAC_KEY: 'test-only-secret-abcdefghijklmnopqrstuvwxyz' },
+  sendRegistrationCode: async (email: string, code: string) => {
+    mailbox.set(email, code);
+  },
+};
 async function register(login = 'alice', client = login) {
-  return request('/api/auth/register', { login, password: 'correct-horse-battery' }, client);
+  const email = login.toLowerCase() + '@example.test';
+  const start = await request(
+    '/api/auth/register',
+    { login, email, password: 'correct-horse-battery' },
+    client,
+  );
+  if (start.status !== 202) return start;
+  return request('/api/auth/registration/verify', { code: mailbox.get(email) }, client);
 }
 async function fund(rub = 5205, client = 'alice') {
   const result = await request(
@@ -75,7 +89,7 @@ async function fund(rub = 5205, client = 'alice') {
   return request(`/api/topups/${result.body.id}`, undefined, client);
 }
 async function replaceGateway(gateway: PaymentGateway, dbPath = ':memory:') {
-  const next = createApplication({ dbPath, gateway });
+  const next = createApplication({ ...mailOptions, dbPath, gateway });
   await new Promise<void>((r) => server.close(() => r()));
   application.close();
   application = next;
@@ -87,7 +101,7 @@ async function replaceGateway(gateway: PaymentGateway, dbPath = ':memory:') {
 }
 beforeEach(async () => {
   Object.keys(clients).forEach((k) => delete clients[k]);
-  application = createApplication({ dbPath: ':memory:', gateway: testGateway() });
+  application = createApplication({ ...mailOptions, dbPath: ':memory:', gateway: testGateway() });
   server = createServer(application.app);
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
   const a = server.address();
@@ -128,15 +142,57 @@ describe('catalog economy', () => {
   });
 });
 describe('accounts and authorization', () => {
+  it('creates neither account nor game access until the email code is consumed once', async () => {
+    const begin = await request('/api/auth/register', {
+      login: 'racer',
+      password: 'test-password',
+      email: 'RACER@example.test',
+    });
+    expect(begin.status).toBe(202);
+    expect((await request('/api/session')).body.user).toBeNull();
+    expect((await request('/api/accounts/racer')).body.exists).toBe(false);
+    expect(application.resolveOnlineIdentity(clients.alice)).toBeNull();
+    const code = mailbox.get('racer@example.test');
+    expect(code).toMatch(/^\d{6}$/);
+    expect((await request('/api/auth/registration/verify', { code }, 'stranger')).status).toBe(404);
+    expect((await request('/api/auth/registration')).body.registration).toEqual(
+      begin.body.registration,
+    );
+    const results = await Promise.all(
+      [1, 2].map(() => request('/api/auth/registration/verify', { code })),
+    );
+    expect(results.map((r) => r.status).sort()).toEqual([201, 404]);
+    expect(application.store.accountByLogin('racer')).toBeTruthy();
+  });
+
+  it('refreshes the registration cookie on resend and marks the authenticated account verified', async () => {
+    await request('/api/auth/register', {
+      login: 'test123',
+      email: 'test@example.test',
+      password: 'test-password',
+    });
+    const repeat = await request('/api/auth/registration/resend', {});
+    expect(
+      repeat.cookies.some((c) => c.startsWith('fapix_registration=') && c.includes('Max-Age=3600')),
+    ).toBe(true);
+    const result = await request('/api/auth/registration/verify', {
+      code: mailbox.get('test@example.test'),
+    });
+    expect(result.body.user.emailVerified).toBe(true);
+  });
   it('accepts the local Vite origin in development and rejects foreign origins', async () => {
     const send = (origin: string) =>
       fetch(base + '/api/auth/register', {
         method: 'POST',
         headers: { 'content-type': 'application/json', origin },
-        body: JSON.stringify({ login: 'vite_user', password: 'correct-horse-battery' }),
+        body: JSON.stringify({
+          login: 'vite_user',
+          email: 'vite@example.test',
+          password: 'correct-horse-battery',
+        }),
       });
     expect((await send('https://untrusted.example')).status).toBe(403);
-    expect((await send('http://127.0.0.1:5173')).status).toBe(201);
+    expect((await send('http://127.0.0.1:5173')).status).toBe(202);
   });
   it('starts at zero, stores only an HttpOnly session cookie and isolates sessions', async () => {
     const alice = await register();
@@ -249,7 +305,11 @@ describe('money and ownership', () => {
         return { status: 'success', rub: 10, method: 'card', merchantOrderId: id };
       },
     });
-    const user = application.store.register('queue_test', 'not-a-real-login-hash');
+    const user = application.store.register(
+      'queue_test',
+      'not-a-real-login-hash',
+      'queue_test@example.test',
+    );
     for (let index = 0; index < 51; index++) {
       const { row } = application.store.createTopup({
         userId: user.id,
@@ -566,7 +626,7 @@ describe('verified payment settlement', () => {
     const directory = mkdtempSync(join(tmpdir(), 'fapix-api-test-'));
     const file = join(directory, 'legacy.sqlite');
     const fixture = new Store(file, 'live');
-    const account = fixture.register('legacy_user', 'salt:hash');
+    const account = fixture.register('legacy_user', 'salt:hash', 'legacy_user@example.test');
     const session = fixture.createSession(account.id);
     const topup = fixture.createTopup({
       userId: account.id,

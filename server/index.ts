@@ -9,7 +9,7 @@ import { mountFrontend } from './static';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 if (existsSync(resolve(root, '.env'))) loadEnvFile(resolve(root, '.env'));
-const dbPath = process.env.DATABASE_PATH ?? resolve(root, 'data', 'fapix.sqlite');
+const dbPath = process.env.DATABASE_PATH ?? resolve(root, 'data', 'fapix-registration.sqlite');
 mkdirSync(dirname(dbPath), { recursive: true });
 const application = createApplication({ dbPath });
 const distribution = resolve(root, 'dist');

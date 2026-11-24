@@ -9,13 +9,7 @@ export interface Product {
   stats?: { speed: number; acceleration: number; handling: number };
   bundle?: string[];
 }
-export interface User {
-  id: string;
-  login: string;
-  balance: number;
-  owned: string[];
-  equipped: Record<string, string>;
-}
+export type { User } from '../shared/types';
 export interface History {
   topups: {
     id: string;
