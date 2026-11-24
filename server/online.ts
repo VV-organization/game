@@ -1,3 +1,4 @@
+import { createNicknamePicker } from '../src/shared/racer-nicknames';
 import { randomBytes } from 'node:crypto';
 import type { Server } from 'node:http';
 import { WebSocket, WebSocketServer } from 'ws';
@@ -178,13 +179,14 @@ export function attachOnlineServer(
     if (!room.race) announce(room);
   };
   const start = (room: Room, time: number) => {
+    const pickNickname = createNicknamePicker(room.slots.map((slot) => slot.roster.name));
     while (room.slots.length < 6) {
       const id = [0, 1, 2, 3, 4, 5].find((id) => !room.slots.some((s) => s.roster.id === id))!;
       room.slots.push({
         actorId: `bot:${room.id}:${id}`,
         roster: {
           id,
-          name: ['NOVA', 'GHOST', 'BLUE', 'DASH', 'PEACH', 'ORBIT'][id],
+          name: pickNickname(),
           kind: 'bot',
           customization: {},
           connected: false,

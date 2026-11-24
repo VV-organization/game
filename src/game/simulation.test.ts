@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { racerNicknames } from '../shared/racer-nicknames';
 import {
   advanceProgress,
   angleDifference,
@@ -55,6 +56,20 @@ describe('ordered circuit progress', () => {
 });
 
 describe('driving simulation', () => {
+  it('draws distinct practice names each race and reserves the local account login', () => {
+    using random = vi.spyOn(Math, 'random').mockReturnValue(0);
+    const practiceGrid = () =>
+      createRace(createTrack('coast'), 0, 'classic', {
+        localLogin: racerNicknames[0].toUpperCase(),
+      }).cars.map((car) => car.name);
+    const first = practiceGrid();
+    expect(first[0]).toBe('ТЫ');
+    expect(new Set(first).size).toBe(6);
+    expect(first).not.toContain(racerNicknames[0]);
+    for (const name of first.slice(1)) expect(racerNicknames).toContain(name);
+    random.mockReturnValue(0.9);
+    expect(practiceGrid()).not.toEqual(first);
+  });
   it('keeps race time and all cars fixed when paused', () => {
     const race = createRace(createTrack('coast'));
     race.phase = 'paused';

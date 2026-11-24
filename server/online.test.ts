@@ -8,6 +8,7 @@ import { attachOnlineServer } from './online';
 import { createApplication } from './app';
 import { customizationFor } from '../src/lib/customization';
 import { products } from './catalog';
+import { racerNicknames } from '../src/shared/racer-nicknames';
 import type { OnlineServerMessage } from '../src/shared/online-protocol';
 
 const disposals: (() => Promise<void>)[] = [];
@@ -226,7 +227,7 @@ describe('authoritative online transport', () => {
   });
   it('shares a room, preserves deadline and fills honest bots exactly at 30 seconds', async () => {
     const h = await setup(),
-      a = await h.connect('a'),
+      a = await h.connect(racerNicknames[0].toUpperCase()),
       b = await h.connect('b');
     await a.send(join);
     const deadline = latest(a.messages, 'room').deadline;
@@ -237,6 +238,7 @@ describe('authoritative online transport', () => {
     expect(latest(b.messages, 'room').deadline).toBe(deadline);
     await h.advance(28999);
     expect(latest(a.messages, 'snapshot')).toBeUndefined();
+    vi.spyOn(Math, 'random').mockReturnValue(0);
     await h.advance(1);
     const state = latest(a.messages, 'snapshot');
     expect(state.roster.map((s: any) => s.kind)).toEqual([
@@ -247,6 +249,15 @@ describe('authoritative online transport', () => {
       'bot',
       'bot',
     ]);
+    const names = state.state.cars.map((car: simulation.Car) => car.name);
+    expect(names.slice(0, 2)).toEqual([racerNicknames[0].toUpperCase(), 'b']);
+    expect(new Set(names.map((name: string) => name.toLowerCase())).size).toBe(6);
+    for (const name of names.slice(2)) expect(racerNicknames).toContain(name);
+    for (const client of [a, b]) {
+      expect(
+        latest(client.messages, 'room').roster.map((slot: { name: string }) => slot.name),
+      ).toEqual(names);
+    }
     expect(state.state.track).toBeUndefined();
     expect(JSON.stringify(state)).not.toContain('actorId');
     expect(state.state.cars[1].driverKind).toBe('human');
@@ -410,6 +421,9 @@ describe('authoritative online transport', () => {
     await a.send({ ...join, formatId: 'elimination' });
     await b.send({ ...join, formatId: 'elimination' });
     await h.advance(30000);
+    const startingNames = latest(a.messages, 'room').roster.map(
+      (slot: { name: string }) => slot.name,
+    );
     let early: any;
     for (let i = 0; i < 650; i++) {
       await h.advance(250);
@@ -429,6 +443,7 @@ describe('authoritative online transport', () => {
     expect(final.state.time).toBeCloseTo(150, 6);
     expect(final.results).toHaveLength(6);
     expect(final.results).toEqual(latest(b.messages, 'snapshot').results);
+    expect(final.state.cars.map((car: simulation.Car) => car.name)).toEqual(startingNames);
     const humanResult = final.results.find(
       (entry: any) => entry.carId === eliminatedHuman.id,
     ).result;
@@ -463,6 +478,7 @@ describe('authoritative online transport', () => {
     const room = latest(b.messages, 'room');
     await h.advance(30000);
     for (let i = 0; i < 16; i++) await h.advance(250);
+    const startingRoster = latest(b.messages, 'room').roster;
     for (let seq = 100; seq < 105; seq++) {
       await b.send({ type: 'input', seq, controls });
       await h.advance(200);
@@ -480,6 +496,7 @@ describe('authoritative online transport', () => {
       roomId: room.roomId,
       token: room.resumeToken,
     });
+    expect(latest(resumed.messages, 'room').roster).toEqual(startingRoster);
     expect(latest(resumed.messages, 'room').localCarId).toBe(1);
     expect(latest(resumed.messages, 'snapshot').state.cars[1]).toEqual(disconnected);
     expect(disconnected.progress.checkpoints).toBeGreaterThanOrEqual(before.progress.checkpoints);

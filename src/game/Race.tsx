@@ -43,6 +43,7 @@ import './Race.css';
 
 export type { RaceResult } from '../shared/race-formats';
 export type RaceProps = {
+  localLogin?: string;
   trackId: string;
   formatId?: RaceFormatId;
   customization?: Customization;
@@ -80,6 +81,7 @@ function PowerIcon({ power, size = 24 }: { power: Power | null; size?: number })
 }
 
 export function Race({
+  localLogin,
   trackId,
   formatId = 'classic',
   customization = {},
@@ -141,7 +143,8 @@ export function Race({
     const element = host.current;
     if (!element) return;
     const saved = JSON.parse(signature) as Customization;
-    const race = online?.race ?? createRace(createTrack(trackId), saved.car, formatId);
+    const race =
+      online?.race ?? createRace(createTrack(trackId), saved.car, formatId, { localLogin });
     raceRef.current = race;
     setHud({ ...race });
     if (!online) race.cars[0].color = saved.color || getCarDesign(saved.car).color;
@@ -525,7 +528,7 @@ export function Race({
       renderer.domElement.remove();
       raceRef.current = null;
     };
-  }, [trackId, formatId, restart, signature, togglePause, online, localCarId]);
+  }, [trackId, formatId, restart, signature, togglePause, online, localCarId, localLogin]);
   const setTouch =
     (control: keyof Controls, value: number | boolean) =>
     (e: React.PointerEvent<HTMLButtonElement>) => {

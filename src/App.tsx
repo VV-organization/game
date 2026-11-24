@@ -414,6 +414,7 @@ export default function App() {
     return (
       <Suspense fallback={loading}>
         <Race
+          localLogin={user.login}
           trackId={trackId}
           formatId={formatId}
           customization={customization}

@@ -1,3 +1,4 @@
+import { createNicknamePicker } from '../shared/racer-nicknames';
 import type { Customization } from './types';
 import { getRaceFormat, type RaceFormatId, type RaceResult } from '../shared/race-formats';
 
@@ -19,7 +20,11 @@ export type RaceDriver = {
   name: string;
   customization: Customization;
 };
-export type RaceOptions = { drivers?: RaceDriver[]; completion?: 'local' | 'all' };
+export type RaceOptions = {
+  localLogin?: string;
+  drivers?: RaceDriver[];
+  completion?: 'local' | 'all';
+};
 export type Car = {
   driverKind: 'human' | 'bot';
   customization: Customization;
@@ -290,7 +295,9 @@ export function createRace(
   const rules = getRaceFormat(formatId);
 
   const colors = ['#ff794b', '#ff8368', '#a78bfa', '#54c7fc', '#ffcc52', '#e98fb9'];
-  const names = ['ТЫ', 'NOVA', 'GHOST', 'BLUE', 'DASH', 'PEACH'];
+  const reservedNames = options.drivers?.map((driver) => driver.name) ?? [];
+  if (options.localLogin) reservedNames.push(options.localLogin);
+  const pickNickname = createNicknamePicker(reservedNames);
   const cars = Array.from(
     { length: options.drivers?.length ?? rules.opponents + 1 },
     (_, i): Car => {
@@ -307,7 +314,7 @@ export function createRace(
         customization,
         lastPower: false,
         didNotFinish: false,
-        name: driver?.name ?? names[i],
+        name: driver?.name ?? (i === 0 ? 'ТЫ' : pickNickname()),
         color: customization.color ?? colors[i],
         x: p.x + p.tz * lane,
         z: p.z - p.tx * lane,
